@@ -13,7 +13,7 @@ import { PageContainer } from "../../components/TemplateComponents"
 import { AdItem } from "../../components/partials/AdItem"
 
 // Types
-import { List, Category, Item } from "../../types/MainTypes"
+import { StateList, CategoryList, ItemsList } from "../../types/MainTypes"
 
 
 export const Home = () => {
@@ -48,7 +48,7 @@ export const Home = () => {
                 sort: 'desc',
                 limit: 8
             })
-            setAdList(json.descryptItens)
+            setAdList(json.ads)
         }
         getRecentAds()
     }, [])
@@ -63,7 +63,7 @@ export const Home = () => {
                             <input type="text" name="q" placeholder="O que procura?"/>
                             <select name="state" id="state">
                                 <option></option>
-                                {stateList.map((item: List, index)=> 
+                                {stateList.map((item: StateList, index)=> 
                                     <option key={index} value={item.name}>{item.name}</option>
                                 )}
                             </select>
@@ -72,7 +72,7 @@ export const Home = () => {
                     </div>
 
                     <div className="categoryList">
-                        {categories.map((item: Category, index) =>
+                        {categories.map((item: CategoryList, index) =>
                             <Link key={index} to={`/ads?cat=${item.slug}`} className="categoryItem">
                                 <img src={item.img} alt="" />
                                 <span>{item.name}</span>
@@ -88,7 +88,7 @@ export const Home = () => {
                 <h2>Anuncios Recentes</h2>
 
                 <div className="list">
-                    {adList.map((item: Item, index)=> 
+                    {adList.map((item: ItemsList, index)=> 
                         <AdItem key={index} data={item}/>
                     )}
                 </div>

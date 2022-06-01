@@ -14,8 +14,7 @@ import { PageContainer } from '../../components/TemplateComponents'
 import { AdItem } from '../../components/partials/AdItem'
 
 // Types
-import { Item } from '../../types/MainTypes'
-
+import { SingleItem, ItemsList } from '../../types/MainTypes'
 
 export const ProductPage = () => {
 
@@ -38,9 +37,10 @@ export const ProductPage = () => {
             const json = await Api.getItem(id, true)
             setPdInfo(json.productInfo)
             setLoading(false)
+            return
         }
         getItem(id)
-    }, [])
+    }, [id])
 
     // Width slide controller
     useEffect(()=> {
@@ -83,15 +83,14 @@ export const ProductPage = () => {
         }
     }
 
-
     return(
         <PageContainer>
 
             <C.BreadChumb>
                 Você está aqui: 
                 <Link to="/">Home</Link>/
-                <Link to={`/ads?state=${pdInfo.stateProduct}`}>{pdInfo.stateProduct}</Link>/
-                <Link to={`/ads?state=${pdInfo.stateProduct}&cat=${pdInfo.category}`}>{pdInfo.category}</Link>/
+                <Link to={`/ads?state=${pdInfo.state}`}>{pdInfo.state}</Link>/
+                <Link to={`/ads?state=${pdInfo.state}&cat=${pdInfo.category}`}>{pdInfo.category}</Link>/
                 <Link to="">{pdInfo.title}</Link>
             </C.BreadChumb>
 
@@ -152,7 +151,7 @@ export const ProductPage = () => {
                         <div className='createdBy box box--padding'>
                             <strong>{pdInfo.userInfo.name}</strong>
                             <small> E-mail: {pdInfo.userInfo.email}</small>
-                            <small>Estado: {pdInfo.userInfo.stateUser}</small>
+                            <small>Estado: {pdInfo.userInfo.state}</small>
                         </div>
                       </>
                     }
@@ -163,7 +162,7 @@ export const ProductPage = () => {
                     <>
                         <h2>Outros Produtos do Vendedor</h2>
                         <div className='list'>
-                            {pdInfo. others.map((item: Item, k: number)=>
+                            {pdInfo. others.map((item: ItemsList, k: number)=>
                                 <AdItem key={k} data={item} />
                             )}
                         </div>

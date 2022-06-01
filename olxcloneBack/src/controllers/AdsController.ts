@@ -27,17 +27,26 @@ export const getCategories = async (req: Request, res: Response) => {
 }
 
 export const addAction = async (req: Request, res: Response) => {
-    const errors = validationResult(req)
-    if(!errors.isEmpty()){
-        res.json({error: errors.mapped()})
+    let {title, price, priceNegotiable, description, category, state} = req.body
+    let token = req.headers.authorization?.slice(7)
+    let user = await User.findOne({token}).exec()
+
+    if(!title || !category){
+        res.json({error: "Title and/or category invalid"})
         return
-    };
-    const data = matchedData(req)
+    }
+
+    console.log(price)
+    if(price){
+        price = parseFloat(price.replace(".", "").replace(",", ".").replace("R$",""))
+    }else {
+        price = 0
+    }
 
     // Verify available State
-    if(data.state){
-        if(mongoose.Types.ObjectId.isValid(data.state)){
-            const stateItem = await State.findById(data.state)
+    if(state){
+        if(mongoose.Types.ObjectId.isValid(state)){
+            const stateItem = await State.findById(state)
             if(!stateItem){
                 res.json({
                     error: {state:{msg: "State Invalid"}}
@@ -51,9 +60,9 @@ export const addAction = async (req: Request, res: Response) => {
     }
  
     //Verify available Category 
-    if(data.category){
-        if(mongoose.Types.ObjectId.isValid(data.category) && data.category){
-            const categoryItem = await Category.findById(data.category)
+    if(category){
+        if(mongoose.Types.ObjectId.isValid(category)){
+            const categoryItem = await Category.findById(category)
             if(!categoryItem){
                 res.json({
                     error: {state:{msg: "Category Invalid"}}
@@ -65,7 +74,7 @@ export const addAction = async (req: Request, res: Response) => {
             return
         }
     }
-   
+
     // Images 
     let images: any = []
     if(req.files){
@@ -84,314 +93,263 @@ export const addAction = async (req: Request, res: Response) => {
         return
     }
 
-    //Price
-    let price = parseFloat(data.price)
-    if(!price){
-        price = 0
-    }
-
-    // PriceNegociable 
-    let priceNegociable: boolean = false
-    switch(data.priceNegociable.toLowerCase()){
-        case "true":
-        case "1":
-            priceNegociable = true
-            break;
-        case "false":
-        case "0":
-            priceNegociable = false
-            break;
-    }
-
-    let token = req.headers.authorization?.slice(7)
-    let user = await User.findOne({token})
-
-    if(user){
-        const newAds = new Ads({
-            idUser: user._id,
-            state: data.state,
-            category: data.category,
-            images,
-            dateCreated: new Date(),
-            title: data.title,
-            price,
-            priceNegociable,
-            description: data.description ? data.description : "",
-            views: 0,
-            status: "Available"
-        })
-    
-        newAds.save()
-        res.json({id: newAds._id})
-    }else {
-        res.json({error: "User not found"})
-    }
-  
-
+    const newAds = new Ads({
+        status: true,
+        idUser: user._id,
+        state,
+        dateCreated: new Date(),
+        title,
+        category,
+        price,
+        priceNegotiable: (priceNegotiable == "true") ? true : false,
+        description,
+        views: 0,
+        images
+    })
+    newAds.save()
+    res.json({id: newAds._id})
 }
 
 export const getList = async (req: Request, res: Response) => {
-    // Array Response 
-    let descryptItens : any = []
+    let {sort = "asc", offset= 0, limit = 8, q, cat, state } = req.query
+    let options: any = {status: true}
+    let total = 0
 
-    // Options to find in DB
-    let optionsFind: any = {}
+    if(q) {options.title = {'$regex': q, '$options': 'i'}}
 
-    // Querys params
-    let {sort, limit, state, category} = req.query
+    if(cat){
+        const c = await Category.findOne({slug: cat})
+        if(c){options.category = c._id}
+    }
 
-    // Get ID State 
     if(state){
-        let stateId = await State.findOne({name: state})
-        if(stateId._id){optionsFind.state = stateId._id}
+        const s = await State.findOne({name: state})
+        if(s){options.state = s._id}
     }
 
-    // Get ID Category
-    if(category){
-        let categoryId = await Category.findOne({slug: category})
-        if(categoryId._id){optionsFind.category = categoryId._id}
-    }
+    const adsTotal = await Ads.find(options)
+    total = adsTotal.length
 
-    // Config order queryParams
-    let order = 1
-    if(sort == "desc"){order = -1}
-    if(sort == "asc"){order = 1}
+    const adsData = await Ads.find(options)
+    .sort({dateCreated: (sort == "desc"? -1: 1)})
+    .skip(Number(offset))
+    .limit(Number(limit))
+    let ads = []
+    for (let i in adsData){
 
-    //Request Items
-    let listItems  = await Ads.find(optionsFind).sort({title: order}).limit(limit)
-    
-    // Get all Categories 
-    let categories = await Category.find()
-    // Get all States
-    let states = await State.find()
-
-    // Transform Categories/States/Images
-    for (let i in listItems){
-        for (let j in categories){
-            if(listItems[i].category == categories[j]._id){
-                listItems[i].category = categories[j].slug
-            }
-        }
-        for (let j in states){
-            if(listItems[i].state == states[j]._id){
-                listItems[i].state= states[j].name
-            }
+        let image = ""
+        if(adsData[i].images[0]){
+            image = `${process.env.BASE}/media/${adsData[i].images[0]}.jpg`
+        }else {
+            image = `${process.env.BASE}/media/default-img.jpg`
         }
 
-        let images: any = []
-        listItems[i].images.map((item: string)=> {
-            images.push(`${process.env.BASE}/media/${item}.jpg`) 
+        ads.push({
+            id: adsData[i]._id,
+            title: adsData[i].title,
+            price: adsData[i].price,
+            priceNegotiable: adsData[i].priceNegotiable,
+            image
         })
-        listItems[i].images = images
-        descryptItens.push(listItems[i])
     }
 
-    res.json({descryptItens})
+    res.json({ads, total})
 }
 
 export const getItem = async (req: Request, res: Response) => {
-    let {id, other} = req.query
-    let item = await Ads.findById(id)
-    let images: any = []
-    if(item){
-        let user = await User.findById(item.idUser)
-        let stateUser = await State.findById(user.state)
-        let stateProduct = await State.findById(item.state)
-        let category = await Category.findById(item.category)
-        let userInfo ={
-            name: user.name,
-            email: user.email,
-            stateUser: stateUser.name 
-        }
-        item.images.map((item: string)=> {
-            images.push(`${process.env.BASE}/media/${item}.jpg`) 
-        })
-        item.images = images
-        
-        let others = []
-        if(other){
-
-            // Get all Categories 
-            let categories = await Category.find()
-            // Get all States
-            let states = await State.find()
-
-            let otherProducts: any = {}
-            otherProducts = await Ads.find({idUser: user._id}).limit(4)
-            // Transform Categories/States/Images
-            for (let i in otherProducts){
-                for (let j in categories){
-                    if(otherProducts[i].category == categories[j]._id){
-                        otherProducts[i].category = categories[j].slug
-                    }
-                }
-                for (let j in states){
-                    if(otherProducts[i].state == states[j]._id){
-                        otherProducts[i].state= states[j].name
-                    }
-                }
-
-                let images: any = []
-                otherProducts[i].images.map((item: string)=> {
-                    images.push(`${process.env.BASE}/media/${item}.jpg`) 
-                })
-                otherProducts[i].images = images
-                others.push(otherProducts[i])
-            }
-        }
-
-        let productInfo = {
-            id: item._id,
-            stateProduct: stateProduct.name,
-            category: category.slug,
-            images: item.images,
-            dateCreated: item.dateCreated,
-            title: item.title,
-            price: item.price,
-            priceNegociable: item.priceNegociable,
-            description: item.description,
-            views: item.views,
-            status: item.status,
-            userInfo,
-            others
-        }
-        res.json({productInfo})
-    }else{
+    let {id, other = null} = req.query
+    console.log(other)
+    if(!id){
         res.status(400)
         res.json({error: "Item Not Found"})
+        return
     }
 
+    let item = await Ads.findById(id)
+    if(!item){
+        res.status(400)
+        res.json({error: "Item Not Found"})
+        return 
+    }
+
+    item.views++
+    await item.save()
+
+    let images: any = []
+    for (let i in item.images){
+        images.push(`${process.env.BASE}/media/${item.images[i]}.jpg`) 
+    }
+    if(images.length == 0){
+        images.push(`${process.env.BASE}/media/default-img.jpg`)
+    }
+
+    let category = await Category.findById(item.category)
+    let userInfo = await User.findById(item.idUser)
+    let stateUser = await State.findById(userInfo.state)
+    let stateProduct = await State.findById(item.state)
+
+
+    let others: any = []
+    if(other === "true") {
+        const otherProducts = await Ads.find({status: true, idUser: item.idUser})
+        for(let i in otherProducts){
+            if(otherProducts[i]._id.toString() !== item._id.toString()){
+                let image = ""
+                if(otherProducts[i].images[0]){
+                    image = `${process.env.BASE}/media/${otherProducts[i].images[0]}.jpg`
+                }else {
+                    image = `${process.env.BASE}/media/default-img.jpg`
+                }
+
+                others.push({
+                    id: otherProducts[i]._id,
+                    title: otherProducts[i].title,
+                    price: otherProducts[i].price,
+                    priceNegotiable: otherProducts[i].priceNegotiable,
+                    image
+                })
+            }
+        }
+    }
+
+    let productInfo = {
+        id: item._id,
+        title: item.title,
+        price: item.price,
+        priceNegotiable: item.priceNegociable,
+        description: item.description,
+        dateCreated: item.dateCreated,
+        views: item.views,
+        images,
+        category: category.slug,
+        state: stateProduct.name,
+        userInfo: {
+            name: userInfo.name,
+            email: userInfo.email,
+            state: stateUser.name
+        },
+        others
+    }
+    console.log(productInfo)
+    res.json({productInfo})   
 }
 
 export const editAction = async (req: Request, res: Response) => {
-    //Verify Errors
-    const errors = validationResult(req)
-    if(!errors.isEmpty()){
-        res.json({error: errors.mapped()})
-        return
-    };
-    const data = matchedData(req)
-
-    let id = req.params.id
+    let { id } = req.params
+    let {title, status, price, priceNegotiable, description, cat, delImages, state} = req.body
     let token = req.headers.authorization?.slice(7)
+
+    if(id.length < 12){
+        res.status(400)
+        res.json({error: "Invalid ID"})
+        return
+    }
+
     let item = await Ads.findById(id)
+    if(!item){
+        res.status(400)
+        res.json({error: "Invalid Item"})
+        return
+    }
+
     let user = await User.findOne({token})
+    if(user._id.toString() !== item.idUser){
+        res.status(400)
+        res.json({error: "User other than creator"})
+        return
+    }
 
-    if(item.idUser == user._id){
-        let updates: any  = {}
+    let updates: any = {}
 
-        //Verify Available State
-        if(data.state){
-            if(mongoose.Types.ObjectId.isValid(data.state)){
-                const existentState = await State.findById(data.state)
-                if(!existentState){
-                    res.json({error: "Invalid State"})
-                    return
-                }
-                updates.state = data.state
-            } 
-            else {
-               res.json({error: {state:{msg: "State Code Invalid"}}})
-               return
-            }
-        }
+    if(title){
+        updates.title = title
+    }
+    if(price){
+        price = parseFloat(price.replace(".", "").replace(",", ".").replace("R$",""))
+        updates.price = price
+    }
+    if(priceNegotiable){
+        updates.priceNegotiable = priceNegotiable
+    }
+    if(status){
+        updates.status = status
+    }
 
-        //Verify Available Category 
-        if(data.category){
-            if(mongoose.Types.ObjectId.isValid(data.category) && data.category){
-                const categoryItem = await Category.findById(data.category)
-                if(!categoryItem){
-                    res.status(400)
-                    res.json({
-                        error: {state:{msg: "Category Invalid"}}
-                    })
-                    return
-                }else{
-                    updates.category = data.category
-                }
-            } else {
-                res.status(400)
-                res.json({ error: { state:{msg: "Category Code Invalid" } } })
-                return
-            }
-        }
-
-        // Images
-        let newImages: any = []
-        if(req.files){
-            console.log("reqFiles", req.files)
-            let files: any = req.files
-            files.forEach( async (item: any) => {
-                newImages.push(`${process.env.BASE}/media/${item.filename}.jpg`)
-                await sharp(item.path)
-                .resize(500)
-                .toFormat("jpeg")
-                .toFile(`./public/media/${item.filename}.jpg`)
-                await unlink (item.path)
-            })
-        }else {
+    if(cat){
+        const category = await Category.findOne({slug: cat})
+        if(!category){
             res.status(400)
-            res.json({error: "Arquivo Inválido"})
+            res.json({error: "Invalid Category"})
             return
         }
-
-        // let totalImages: any = []
-        // if(data.delImages){
-        //     totalImages = [...newImages]
-        //     let delImages = data.delImages
-        //     let currentImages = item.images
-        //     for (let i in currentImages){
-        //         if (!delImages.includes(currentImages[i])){
-        //             totalImages.push(currentImages[i])
-        //         }
-        //         updates.images = totalImages
-        //     }
-        // }else{
-        //     let currentImages = item.images
-        //     totalImages = [...currentImages, ...newImages]
-        //     updates.images = totalImages
-        // }
-
-        //Title
-        if(data.title){
-            updates.title = data.title
-        }
-
-        //Price
-        if(data.price){
-            let price = parseInt(data.price)
-            if(!price){
-                res.status(400)
-                res.json({error: "Invalid Price"})
-                return
-            }else{
-                updates.price = price
-            }
-        }
-
-        //PriceNegociable
-        if(data.priceNegociable){
-            switch(data.priceNegociable.toLowerCase()){
-                case "true":
-                case "1":
-                    data.priceNegociable = true
-                    break;
-                case "false":
-                case "0":
-                    data.priceNegociable = false
-                    break;
-            }
-        }
-
-        // Description
-        if(data.description){
-            updates.description = data.description
-        }
-
-        await Ads.findOneAndUpdate({token}, {$set: updates})
-        res.status(201)
-        res.json({})
+        updates.category = category._id
     }
+
+    if(state){
+        const stateLoc = await State.findOne({name: state})
+        if(!stateLoc){
+            res.status(400)
+            res.json({error: "Invalid State"})
+            return
+        }
+        updates.state = stateLoc._id
+    }
+
+    if(description){
+        updates.description = description
+    }
+
+     // Images 
+     //(new Images)
+     let Newimages: any = []
+     if(req.files){
+        let files: any = req.files
+        let adsItem = await Ads.findById(id)
+        let itemImages = adsItem.images
+        let currentImages = (5 - itemImages.length)
+        if(files.length > currentImages) {
+            res.status(400)
+            res.json({error: "Image limit exceeded"})
+            return
+        }
+        files.forEach( async (item: any) => {
+            Newimages.push(item.filename)
+            updates.images = [...adsItem.images, ...Newimages]
+            await sharp(item.path)
+            .resize(500, 500)
+            .toFormat("jpeg")
+            .toFile(`./public/media/${item.filename}.jpg`)
+            await unlink (item.path) 
+        })
+    }
+     
+    //(delete Images)
+    let editImages: any = []
+    if(delImages){
+        let adsItem = await Ads.findById(id)
+        let itemImages = adsItem.images
+
+        let formatLink: string[] = []
+        for (let i in delImages){
+            formatLink.push(
+                delImages[i].replace(`${process.env.BASE}/media/`, "").replace(".jpg", "")
+            )
+        }
+
+        for (let i in itemImages) {
+            if(!formatLink.includes(itemImages[i])){
+                editImages.push(itemImages[i])
+            }
+        }
+
+        updates.images = [...editImages, ...Newimages]
+    }
+
+
+
+    await Ads.findByIdAndUpdate(id, {$set: updates})
+    res.status(201)
+    res.json({error: ""})
 }
 
 export const adsUser = async (req: Request, res: Response) => {

@@ -13,7 +13,7 @@ import { PageContainer } from "../../components/TemplateComponents"
 import { AdItem } from "../../components/partials/AdItem"
 
 // Types
-import { List, Category, Item } from "../../types/MainTypes"
+import { StateList, CategoryList, ItemsList } from "../../types/MainTypes"
 
 // Timer for search Request (created out component for disable loop )
 let timer: any
@@ -27,15 +27,15 @@ export const ListAds = () => {
         const useQueryString = () => {
             return new URLSearchParams( useLocation().search )
         }
-
+        
         //Hook queryString
         const query = useQueryString()
-        
+       
         // Separate queryStrings
         const [q, setQ] = useState(query.get("q") != null ? query.get("q"): "" as any)
         const [cat, setCat] = useState(query.get("cat") != null ? query.get("cat"): "" as any)
         const [state, setState] = useState(query.get("state") != null ? query.get("state"): "" as any)
-
+        
     // Pagination states     
     const [adsTotal, setAdsTotal] = useState(0)
     const [pageCount, setPageCount] = useState(0)
@@ -48,6 +48,7 @@ export const ListAds = () => {
 
     // Loading state controller
     const [loading, setLoading] = useState(true)
+    const [opacity, setOpacity] = useState(1)
 
     // Ads List Request 
     const getAdsList = async () => {
@@ -61,10 +62,14 @@ export const ListAds = () => {
             state,
             offset
         })
-        setAdList(json.descryptItens) // Get items
+        setAdList(json.ads) // Get items
         setAdsTotal(json.total) // Get total pages 
         setLoading(false)
+        setOpacity(1)
     }
+
+    //Monitoring query Update
+    useEffect
 
     // Monitoring total pages, variable with search
     useEffect(()=> {
@@ -82,26 +87,24 @@ export const ListAds = () => {
 
     // Monitoring search items 
     useEffect(()=> {
+        setOpacity(0.5)
+        clearTimeout(timer)
         let queryString = []
-        if(q){
-            queryString.push(`q=${q}`)
-        }
-        if(cat){
-            queryString.push(`cat=${cat}`)
-        }
-        if(state){
-            queryString.push(`state=${state}`)
-        }
-        navigate(`?${queryString.join("&")}`)
-
-        // Verify typing stop to make the request
-        if(timer){
-            clearTimeout(timer)
-        }
-        timer = setTimeout(getAdsList, 2000)
-
-        // Reset current Page
-        setCurrentPage(1)
+            if(q){
+                queryString.push(`q=${q}`)
+            }
+            if(cat){
+                queryString.push(`cat=${cat}`)
+            }
+            if(state){
+                queryString.push(`state=${state}`)
+            }
+            navigate(`?${queryString.join("&")}`, { replace: true })
+        
+        timer = setTimeout(()=> {
+            getAdsList()
+            setCurrentPage(1)
+        },2000)
     }, [q, cat, state])
 
     // Request States webSite
@@ -145,14 +148,14 @@ export const ListAds = () => {
                     <div className="filterName">Estado:</div>
                     <select name="state" id="" value={state} onChange={e=>setState(e.target.value)}>
                         <option value=""></option>
-                        {stateList.map((i: List, k)=> 
+                        {stateList.map((i: StateList, k)=> 
                             <option key={k} value={i.name}>{i.name}</option>
                         )}
                     </select>
 
                     <div className="filterName">Categoria:</div>
                     <ul>
-                        {categories.map((i: Category, k)=> 
+                        {categories.map((i: CategoryList, k)=> 
                             <li 
                             key={k} 
                             className={cat == i.slug?"categoryItem active": "categoryItem"}
@@ -175,12 +178,12 @@ export const ListAds = () => {
                 }
 
                 {!loading && adList.length ===0 &&
-                <div className="listWarning">Nenhum resultado correspondente</div>
+                <div className="listWarning" style={{opacity}}>Nenhum resultado correspondente</div>
                 }
 
-                <div className="list">
+                <div className="list" style={{opacity}}>
                     {adList.map((i, k)=> 
-                        <AdItem key={k} data={i} />
+                        <AdItem key={k} data={i}/>
                     )}
                 </div>
 

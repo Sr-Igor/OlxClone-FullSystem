@@ -2,20 +2,20 @@
 import * as C from './styled'
 
 // Hooks React
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
 // Types
-import { Item } from "../../../types/MainTypes"
+import { ItemsList } from "../../../types/MainTypes"
 
 type Data = {
-    data: Item
+    data: ItemsList
 }
 
 export const AdItem = ({data}: Data) => {
 
     // Verify price content
     let price = "";
-    if(data.priceNegociable){
+    if(data.priceNegotiable){
         price = "Preço Negociável"
     }else{
         price = `R$ ${data.price}`
@@ -23,9 +23,9 @@ export const AdItem = ({data}: Data) => {
 
     return(
         <C.Item className="AdItem">
-           <Link to={`/ad/${data._id}`}>
+           <Link to={`/ad/${data.id}`}>
                <div className="itemImg">
-                   <img src={data.images[1]} alt="" />
+                   <img src={data.image} alt="" />
                </div>
                <div className="itemName">{data.title}</div>
                <div className="itemPrice">{price}</div>

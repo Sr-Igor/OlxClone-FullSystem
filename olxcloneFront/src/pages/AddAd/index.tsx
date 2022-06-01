@@ -16,7 +16,7 @@ import MaskedInput from 'react-text-mask'
 import { createNumberMask } from 'text-mask-addons'
 
 //Types
-import { Category, List } from '../../types/MainTypes'
+import { CategoryList, StateList } from '../../types/MainTypes'
 
 export const AddAd = () => {
 
@@ -82,17 +82,10 @@ export const AddAd = () => {
             formData.append("state", statePd)
             formData.append("category", category)
             formData.append("title", title)
-            formData.append("priceNegociable", priceNegotiable.toString())
+            formData.append("priceNegotiable", priceNegotiable.toString())
             formData.append("description", desc)
-
-            // Format price and append in formData
-            if(price){ 
-                let BR_Price: string = price.slice(2).replace(".", "").replace(",", ".")
-                formData.append("price", BR_Price)
-            }else{
-                formData.append("price", "0")
-            }
-
+            formData.append("price", price)
+            
             // Verify Images, format and append in formData
             if(fileField.current.files.length > 0){
                 for(let i in fileField.current.files){
@@ -158,7 +151,7 @@ export const AddAd = () => {
                             onChange={e=>setCategory(e.target.value)}
                             required>
                                <option value=""></option>
-                               {categories && categories.map((i: Category, key)=>
+                               {categories && categories.map((i: CategoryList, key)=>
                                 <option key={key} value={i._id}>{i.name}</option>
                                )}
                            </select>
@@ -173,7 +166,7 @@ export const AddAd = () => {
                             onChange={e=>setStatePd(e.target.value)}
                             required>
                                <option value=""></option>
-                               {statesLoc && statesLoc.map((i: List, key)=>
+                               {statesLoc && statesLoc.map((i: StateList, key)=>
                                 <option key={key} value={i._id}>{i.name}</option>
                                )}
                            </select>

@@ -14,7 +14,7 @@ import { doLogin } from '../../helpers/AuthHandler'
 import { PageContainer, PageTitle, ErrorMessage } from '../../components/TemplateComponents'
 
 // Types
-import { List } from '../../types/MainTypes'
+import { StateList } from '../../types/MainTypes'
 
 export const SignUp = () => {
     
@@ -88,7 +88,7 @@ export const SignUp = () => {
                         <div className='area--input'>
                            <select required value={stateLoc} onChange={e=>setStateLoc(e.target.value)}>
                                 <option value=""></option>
-                                {stateList.map((item: List, index)=>
+                                {stateList.map((item: StateList, index)=>
                                     <option value={item._id} key={index}>{item.name}</option>
                                 )}
                            </select>

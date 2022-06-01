@@ -31,9 +31,9 @@ router.post('/user/signup', AuthValidator.singUp ,AuthController.singUp)
 router.get('/user/ads', privateRoute, AdsController.adsUser)
 
 router.get('/categories', AdsController.getCategories)
-router.post('/ad/add', privateRoute, upload.array("images", 5),AdsValidator.addItem, AdsController.addAction) 
+router.post('/ad/add', privateRoute, upload.array("images", 5),/*AdsValidator.addItem,*/ AdsController.addAction) 
 router.get('/ad/list', AdsController.getList) 
 router.get('/ad/item', AdsController.getItem) 
-router.post('/ad/:id', privateRoute,upload.array("images", 5),AdsValidator.editItem,AdsController.editAction) 
+router.post('/ad/:id', privateRoute,upload.array("images", 5),/*AdsValidator.editItem,*/AdsController.editAction) 
 
 export default router

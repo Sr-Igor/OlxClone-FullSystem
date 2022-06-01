@@ -8,7 +8,7 @@ type AdsType = {
     dateCreated: Date,
     title: string,
     price: number,
-    priceNegociable: boolean,
+    priceNegotiable: boolean,
     description: String,
     views: number,
     status: string
@@ -22,7 +22,7 @@ const modelSchema = new Schema<AdsType>({
     dateCreated: Date,
     title: String,
     price: Number,
-    priceNegociable: Boolean,
+    priceNegotiable: Boolean,
     description: String,
     views: Number,
     status: String

@@ -1,17 +1,17 @@
-export type List = {
+export type StateList = {
     _id: string,
     name: string
 }
 
-export type Category = {
+export type CategoryList = {
     _id: string
     img: string,
     name: string,
     slug: string
 }
 
-export type Item = {
-    _id: string
+export type SingleItem = {
+    id: string
     title: string,
     category: string,
     price: number,
@@ -21,4 +21,12 @@ export type Item = {
     state: string,
     images: string[],
     views: number
+}
+
+export type ItemsList = {
+    id: string
+    title: string
+    price: number
+    priceNegotiable: boolean
+    image: string
 }
