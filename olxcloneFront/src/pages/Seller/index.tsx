@@ -1,22 +1,40 @@
+// Created Styled-Components
+import * as C from "./styled"
+
+// Hooks React
 import { useEffect, useState } from "react"
+
+// Api Requests
+import { Api } from "../../helpers/api"
+
+// Components folders 
 import { AdItem } from "../../components/partials/AdItem"
 import { PageContainer } from "../../components/TemplateComponents"
-import { Api } from "../../helpers/api"
+
+// Types
 import { ItemsList, SingleItem } from "../../types/MainTypes"
-import * as C from "./styled"
+
 
 export const SellerPage = () => {
     
+    // Set current open section
     const [handleAds, setHandleAds] = useState(true)
+
+    // Ads On and Off
     const [onAds, setOnAds] = useState([])
     const [offAds, setOffAds] = useState([])
+
+    // Verify empty option (Ads-On/Ads-Off)
     const [exiOn, setExiOn] = useState(false)
     const [exiOff, setExiOff] = useState(false)
 
+    // Get Ads w/ idUser
     useEffect(()=> {
         const getUserAds = async () => {
             const json = await Api.getUserAds()
             let ads = json.ads
+
+            // Separete Ads for status
             const adsOn: any = []
             const adsOff: any = []
             for (let i in ads){
@@ -33,7 +51,6 @@ export const SellerPage = () => {
         }
         getUserAds()
     }, [])
-
 
     return (
         <PageContainer>
@@ -59,7 +76,6 @@ export const SellerPage = () => {
                         }
                     </>
                     }
-
                     {!handleAds && offAds &&
                     <>
                         <div className="list">

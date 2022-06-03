@@ -1,71 +1,41 @@
+// Created Styled-Components
 import * as C from "./style"
-import {PageContainer} from "../../components/TemplateComponents"
-import { useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
+
+// Hooks React
+import { useParams, useNavigate, Link } from "react-router-dom"
+import { useEffect, useState, useRef } from "react"
+
+// Api Requests
 import { Api } from "../../helpers/api"
+
+// Components folders 
+import {PageContainer} from "../../components/TemplateComponents"
+
+// Types
 import { CategoryList, ItemsList, StateList } from "../../types/MainTypes"
-import { ImagesSelector } from "../../components/partials/ImagesSelector"
-import { useNavigate } from "react-router-dom"
 
 //Mask price field (libs)
 import MaskedInput from 'react-text-mask'
 import { createNumberMask } from 'text-mask-addons'
-import { Link } from "react-router-dom"
 
-import { useRef } from "react"
-
-
+// Controller Delete Images (created out component)
 let delImages: any = []
 
 export const EditP = () => {
 
-    const navigate = useNavigate()
-
-    // Controler send field (FormData)
-    const fileField0: any = useRef()
-    const fileField1: any = useRef()
-    const fileField2: any = useRef()
-    const fileField3: any = useRef()
-    const fileField4: any = useRef()
-    const fileFields =[fileField0, fileField1, fileField2, fileField3, fileField4]
-
-    const [currentImages, setCurrentImages] = useState<any>([])
-
-     const delImage = async (index: number) => {
-        delImages.push(currentImages[index].url)
-        let updateImages = [...currentImages]
-        updateImages[index].url = "/public/images/no-pictures.png"
-        updateImages[index].empty = true
-        setCurrentImages(updateImages)
-
-        const formData = new FormData()
-
-        formData.append("delImages", delImages)
-
-        // Send Request
-        const json = await Api.editAds(formData, id)
-
-        if(json.error == ""){
-            // navigate(`/ad/${id}`)
-        }else {
-            setError(json.error)
-            }
-
-        delImages = []
-     }
-
-
-    // let imagesConstruct: string[] = []
+    // Url Param
     let params = useParams()
     let {id} = params
 
-    const [pdInfo, setPdInfo] = useState<any>([])
-    const [loading, setLoading] = useState(true)
-    // const [images, setImages] = useState([])
-
+    // Navigate instance
+    const navigate = useNavigate()
+    
+    // Request states (webService)
     const [stateList, setStateList] = useState([])
     const [catList, setCatList] = useState([])
+    const [pdInfo, setPdInfo] = useState<any>([])
 
+    // Form fields
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [price, setPrice] = useState("")
@@ -73,12 +43,70 @@ export const EditP = () => {
     const [cat, setCat] = useState("")
     const [state, setState] = useState("")
     const [status, setStatus] = useState(true)
+    const [currentImages, setCurrentImages] = useState<any>([])
 
+    // Loading states controller
     const [disabled, setDisabled] = useState(false)
     const [error, setError] = useState("")
     const [warning, setWarning] = useState(true)
     const [displayModal, setDisplayModal] = useState("none")
+    const [loading, setLoading] = useState(true)
 
+    // Controler files fields (FormData)
+    const fileField0: any = useRef()
+    const fileField1: any = useRef()
+    const fileField2: any = useRef()
+    const fileField3: any = useRef()
+    const fileField4: any = useRef()
+    const fileFields =[
+        fileField0, 
+        fileField1, 
+        fileField2, 
+        fileField3, 
+        fileField4
+    ];
+
+    // Request States webSite
+    useEffect(()=> {
+        const  getStates = async () => {
+             const json = await Api.getStates()
+             setStateList(json)
+         }
+         getStates()
+     }, [])
+ 
+     // Request Categories webSite
+     useEffect(()=> {
+         const getCategories = async () => {
+             const json = await Api.getCategories()
+             setCatList(json)
+         }
+         getCategories()
+     }, [])
+
+    // Request Item (Ads)
+    useEffect(()=> {
+        const getItem = async (id: any) => {
+            const json = await Api.getItem(id, false)
+            setPdInfo(json.productInfo)
+            setLoading(false)
+            return
+        }
+        getItem(id)
+    }, [id])
+
+    // Set fields w/ current infos
+    useEffect(()=> {
+        setTitle(pdInfo.title)
+        setDescription(pdInfo.description)
+        setPrice(pdInfo.price)
+        setPriceNeg((pdInfo.priceNegotiable == "true") ? true : false)
+        setCat(pdInfo.category)
+        setState(pdInfo.state)
+        setStatus(pdInfo.status)
+    }, [pdInfo])
+    
+    // Format images 
     useEffect(()=> {
         let arrayInfoImages: any = []
         if(pdInfo.images){
@@ -97,43 +125,6 @@ export const EditP = () => {
         }
     },[pdInfo])
     
-    useEffect(()=> {
-        const getItem = async (id: any) => {
-            const json = await Api.getItem(id, false)
-            setPdInfo(json.productInfo)
-            setLoading(false)
-            return
-        }
-        getItem(id)
-    }, [id])
-
-    useEffect(()=> {
-        setTitle(pdInfo.title)
-        setDescription(pdInfo.description)
-        setPrice(pdInfo.price)
-        setPriceNeg((pdInfo.priceNegotiable == "true") ? true : false)
-        setCat(pdInfo.category)
-        setState(pdInfo.state)
-        setStatus(pdInfo.status)
-    }, [pdInfo])
-
-    useEffect(()=> {
-       const  getStates = async () => {
-            const json = await Api.getStates()
-            setStateList(json)
-        }
-        getStates()
-    }, [])
-
-    useEffect(()=> {
-        const getCategories = async () => {
-            const json = await Api.getCategories()
-            setCatList(json)
-        }
-        getCategories()
-    }, [])
-
-
     // Mask config in price field
     const priceMask = createNumberMask({
         prefix: "R$",
@@ -143,6 +134,7 @@ export const EditP = () => {
         decimalSymbol: ",",
     })
 
+    // Edit fields
     const sendEdits = async (e: any) => {
         e.preventDefault()
         setDisabled(true) // Disable buttons
@@ -185,29 +177,10 @@ export const EditP = () => {
         setDisabled(false) 
     }
 
-    const setCondition = async (order: boolean) => {
-
-        setStatus(order)
-        const formData = new FormData() 
-        formData.append("status", order.toString())
-
-        // Send Request
-        const json = await Api.editAds(formData, id)
-
-        if(json.error == ""){
-            // navigate(`/ad/${id}`)
-        }else {
-            setError(json.error)
-        }
-    }
-
-    const deleteAds = async () => {
-        await Api.deleteAds(id)
-        navigate("/")
-    }
-
+    // Request Edit Images (ADD)
     const addImage = async (index: number)=> {
         
+        // Visual config
         let image = fileFields[index].current.files[0]
         let url = URL.createObjectURL(image)
         let updateImages = [...currentImages]
@@ -215,7 +188,8 @@ export const EditP = () => {
         updateImages[index].empty = false
         setCurrentImages(updateImages)
 
-        const formData = new FormData()
+        // Request
+        const formData = new FormData() // Create FormData
 
         for(let j in fileFields){
             console.log(fileFields[j])
@@ -232,7 +206,54 @@ export const EditP = () => {
             //  navigate(`/ad/${id}`)
          }else {
              setError(json.error)
-             }
+        }
+    }
+
+    //  Request Edit Images (DELETE)
+    const delImage = async (index: number) => {
+        // Visual config 
+        delImages.push(currentImages[index].url)
+        let updateImages = [...currentImages]
+        updateImages[index].url = "/public/images/no-pictures.png"
+        updateImages[index].empty = true
+        setCurrentImages(updateImages)
+
+        // Request
+        const formData = new FormData() // Create FormData
+        formData.append("delImages", delImages)
+
+        // Send Request
+        const json = await Api.editAds(formData, id)
+
+        if(json.error == ""){
+            // navigate(`/ad/${id}`)
+        }else {
+            setError(json.error)
+        }
+
+        delImages = []
+     }
+
+    // Set available or unavailable
+    const setCondition = async (order: boolean) => {
+        setStatus(order)
+        const formData = new FormData() 
+        formData.append("status", order.toString())
+
+        // Send Request
+        const json = await Api.editAds(formData, id)
+
+        if(json.error == ""){
+            // navigate(`/ad/${id}`)
+        }else {
+            setError(json.error)
+        }
+    }
+
+    // Delete Ads
+    const deleteAds = async () => {
+        await Api.deleteAds(id)
+        navigate("/")
     }
 
     return(
@@ -263,9 +284,9 @@ export const EditP = () => {
                                         <img src={i.url} alt="" />
                                     </C.Item>
                                     {!i.empty &&
-                                            <div className='del' onClick={()=>delImage(k)}>
-                                                <img src="/public/icons/trash.png" alt="del" />
-                                            </div>
+                                        <div className='del' onClick={()=>delImage(k)}>
+                                            <img src="/public/icons/trash.png" alt="del" />
+                                        </div>
                                         }
                                     {i.empty && 
                                         <label className='add'>
@@ -290,7 +311,6 @@ export const EditP = () => {
                                 {!status &&
                                     <div className="available" onClick={()=> setCondition(true)}>Marcar como Disponível</div>
                                 }
-                                
                             </div>
 
                             <div className="input--area">
@@ -306,7 +326,8 @@ export const EditP = () => {
                                         type="text" 
                                         value={title} 
                                         onChange={e=>setTitle(e.target.value)}
-                                        disabled={disabled}/>
+                                        disabled={disabled}
+                                    />
                                 </div>
 
                                 <div className="input--area">
@@ -314,8 +335,8 @@ export const EditP = () => {
                                     <textarea 
                                         value={description} 
                                         onChange={e=>setDescription(e.target.value)}
-                                        disabled={disabled}
-                                        ></textarea>
+                                        disabled={disabled}>
+                                    </textarea>
                                 </div>
                             </div>
 
@@ -323,12 +344,12 @@ export const EditP = () => {
                                 <div className="input--area">
                                     <label htmlFor="">Preço:</label>
                                     <MaskedInput 
-                                    mask={priceMask}
-                                    placeholder="R$ "
-                                    disabled={disabled || priceNeg}
-                                    value={price}
-                                    onChange={e=>setPrice(e.target.value)}
-                                />
+                                        mask={priceMask}
+                                        placeholder="R$ "
+                                        disabled={disabled || priceNeg}
+                                        value={price}
+                                        onChange={e=>setPrice(e.target.value)}
+                                    />
                                 </div>
 
                                 <div className="input--area">
@@ -336,7 +357,8 @@ export const EditP = () => {
                                     <input type="checkbox" 
                                         checked={priceNeg} 
                                         onChange={e=>setPriceNeg(!priceNeg)}
-                                        disabled={disabled}/>
+                                        disabled={disabled}
+                                    />
                                 </div>
                             </div>
 
