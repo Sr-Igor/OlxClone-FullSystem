@@ -137,6 +137,28 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
             text-decoration: none;
             margin-top: 20px;
         }
+
+        a {
+            text-decoration: none;
+
+            .editAdButton{
+                color: #FFF;
+                background-color: #6e0ad7;
+                height: 30px;
+                border-radius: 5px;
+                box-shadow: 0px 0px 4px #999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-decoration: none;
+                margin-top: 20px;
+
+                &:hover {
+                    box-shadow: 1px 1px 5px #444;
+                }
+            }
+        }
+
         .createdBy {
             margin-top: 20px;
         }

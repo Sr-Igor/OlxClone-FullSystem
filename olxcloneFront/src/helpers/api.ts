@@ -69,6 +69,24 @@ const apiFecthFile = async (endpoint: string, body: any) => {
     return json
 }
 
+const apiFecthAdsUser = async (endpoint: string) => {
+    let token = Cookie.get("token")
+    const res = await fetch(BASEAPI+endpoint, {
+        method: "GET",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    })
+    const json = await res.json()
+
+    if(json.notallowed){
+        window.location.href = '/signin'
+        return
+    }
+
+    return json
+}
+
 export const Api = {
     login: async (email: string, password: string) => {
         const json = await apiFetchPost(
@@ -119,4 +137,19 @@ export const Api = {
         )
         return json
     },
+    getUserAds: async () => {
+        const json = await apiFecthAdsUser("/user/ads")
+        return json
+    },
+    editAds: async (formData: FormData, id: any) => {
+        const json = await apiFecthFile(`/ad/${id}`, formData)
+        return json
+    },
+    deleteAds: async (id: any) => {
+        const json = await apiFecthFile(
+            `/del/${id}`,
+            {}
+        )
+        return json
+    }
 }

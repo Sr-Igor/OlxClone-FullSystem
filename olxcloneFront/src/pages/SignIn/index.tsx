@@ -33,7 +33,7 @@ export const SignIn = () => {
             if(json.error){
                 setError(json.error)
             }else{
-                doLogin(json.token, rememberPassword)
+                doLogin(json.token, rememberPassword, email)
                 window.location.href = '/'
             }
         }

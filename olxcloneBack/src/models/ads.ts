@@ -11,7 +11,7 @@ type AdsType = {
     priceNegotiable: boolean,
     description: String,
     views: number,
-    status: string
+    status: boolean
 }
 
 const modelSchema = new Schema<AdsType>({
@@ -25,7 +25,7 @@ const modelSchema = new Schema<AdsType>({
     priceNegotiable: Boolean,
     description: String,
     views: Number,
-    status: String
+    status: Boolean
 })
 
 const modelName = "Ads"

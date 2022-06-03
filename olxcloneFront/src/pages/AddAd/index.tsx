@@ -76,6 +76,10 @@ export const AddAd = () => {
             errors.push("Sem Categoria")
         }
 
+        if(!price && !priceNegotiable){
+            errors.push("Sem preço ou negociação")
+        }
+
         // If not found errors
         if(errors.length === 0){
             const formData = new FormData() // Create FormData

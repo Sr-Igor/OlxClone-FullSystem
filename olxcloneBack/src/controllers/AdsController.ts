@@ -36,7 +36,6 @@ export const addAction = async (req: Request, res: Response) => {
         return
     }
 
-    console.log(price)
     if(price){
         price = parseFloat(price.replace(".", "").replace(",", ".").replace("R$",""))
     }else {
@@ -158,7 +157,6 @@ export const getList = async (req: Request, res: Response) => {
 
 export const getItem = async (req: Request, res: Response) => {
     let {id, other = null} = req.query
-    console.log(other)
     if(!id){
         res.status(400)
         res.json({error: "Item Not Found"})
@@ -216,13 +214,14 @@ export const getItem = async (req: Request, res: Response) => {
         id: item._id,
         title: item.title,
         price: item.price,
-        priceNegotiable: item.priceNegociable,
+        priceNegotiable: item.priceNegotiable,
         description: item.description,
         dateCreated: item.dateCreated,
         views: item.views,
         images,
         category: category.slug,
         state: stateProduct.name,
+        status: item.status,
         userInfo: {
             name: userInfo.name,
             email: userInfo.email,
@@ -230,7 +229,6 @@ export const getItem = async (req: Request, res: Response) => {
         },
         others
     }
-    console.log(productInfo)
     res.json({productInfo})   
 }
 
@@ -238,7 +236,7 @@ export const editAction = async (req: Request, res: Response) => {
     let { id } = req.params
     let {title, status, price, priceNegotiable, description, cat, delImages, state} = req.body
     let token = req.headers.authorization?.slice(7)
-
+    console.log(status)
     if(id.length < 12){
         res.status(400)
         res.json({error: "Invalid ID"})
@@ -269,10 +267,10 @@ export const editAction = async (req: Request, res: Response) => {
         updates.price = price
     }
     if(priceNegotiable){
-        updates.priceNegotiable = priceNegotiable
+        updates.priceNegotiable = (priceNegotiable  == "true") ? true : false
     }
     if(status){
-        updates.status = status
+        updates.status = (status == "true") ? true : false
     }
 
     if(cat){
@@ -299,7 +297,7 @@ export const editAction = async (req: Request, res: Response) => {
         updates.description = description
     }
 
-     // Images 
+     //Images 
      //(new Images)
      let Newimages: any = []
      if(req.files){
@@ -326,6 +324,7 @@ export const editAction = async (req: Request, res: Response) => {
     //(delete Images)
     let editImages: any = []
     if(delImages){
+        delImages = delImages.split(",")
         let adsItem = await Ads.findById(id)
         let itemImages = adsItem.images
 
@@ -345,8 +344,6 @@ export const editAction = async (req: Request, res: Response) => {
         updates.images = [...editImages, ...Newimages]
     }
 
-
-
     await Ads.findByIdAndUpdate(id, {$set: updates})
     res.status(201)
     res.json({error: ""})
@@ -355,7 +352,34 @@ export const editAction = async (req: Request, res: Response) => {
 export const adsUser = async (req: Request, res: Response) => {
     let token = req.headers.authorization?.slice(7)
     let user = await User.findOne({token})
-    let adsUser = await Ads.find({idUser: user._id})
+    let adsData = await Ads.find({idUser: user._id})
+    
+    let ads = []
+    for (let i in adsData){
+
+        let image = ""
+        if(adsData[i].images[0]){
+            image = `${process.env.BASE}/media/${adsData[i].images[0]}.jpg`
+        }else {
+            image = `${process.env.BASE}/media/default-img.jpg`
+        }
+
+        ads.push({
+            id: adsData[i]._id,
+            title: adsData[i].title,
+            price: adsData[i].price,
+            priceNegotiable: adsData[i].priceNegotiable,
+            status: adsData[i].status,
+            image
+        })
+    }
     res.status(200)
-    res.json({adsUser})
+    res.json({ads})
+}
+
+export const deleteAds = async (req: Request, res: Response) => {
+    let {id} = req.params
+    console.log(id)
+    await Ads.findByIdAndDelete(id)
+    res.json({error: ""})
 }

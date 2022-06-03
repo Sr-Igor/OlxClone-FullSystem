@@ -8,6 +8,7 @@ import {Link} from "react-router-dom"
 
 // Api Requests
 import { Api } from '../../helpers/api'
+import { isLogged } from '../../helpers/AuthHandler'
 
 // Components folders 
 import { PageContainer } from '../../components/TemplateComponents'
@@ -30,6 +31,19 @@ export const ProductPage = () => {
     // Slide Controllers
     const [slideWidth, setSlideWidth] = useState(0)
     const [currentImage, setCurrentImage] = useState(0)
+
+    // User Logged
+    const [loggedOn, setLoggedOn] = useState(false)
+
+    // Verify Logged 
+    useEffect(()=> {
+        const{logged, email} = isLogged()
+        if(pdInfo.userInfo){
+            if(logged && pdInfo.userInfo.email === email){
+                setLoggedOn(true)
+            }
+        }
+    }, [pdInfo])
 
     // Request to get the product
     useEffect(()=> {
@@ -82,7 +96,7 @@ export const ProductPage = () => {
             setCurrentImage(margin)
         }
     }
-
+    console.log(pdInfo.priceNegotiable)
     return(
         <PageContainer>
 
@@ -137,15 +151,15 @@ export const ProductPage = () => {
                 <div className='rightSide'>
                     <div className='box box--padding'>
                         {loading && <C.Fake height={20}/>}
-                        {pdInfo.priceNegociable && 
+                        {pdInfo.priceNegotiable && 
                             "Preço Negociável"
                         }
-                        {!pdInfo.priceNegociable && pdInfo.price && 
+                        {!pdInfo.priceNegotiable && pdInfo.price && 
                             <div className='price'>Preço: <span>R$ {`${pdInfo.price}`}</span></div>
                         }
                     </div>
                     {loading && <C.Fake height={50}/>}
-                    {pdInfo. userInfo && 
+                    {!loggedOn && pdInfo.userInfo && 
                       <>
                         <a href={`mailto:${pdInfo.userInfo.email}`} target='_blank' className='contactSelletLink'>Fale com o vendedor</a>
                         <div className='createdBy box box--padding'>
@@ -154,6 +168,11 @@ export const ProductPage = () => {
                             <small>Estado: {pdInfo.userInfo.state}</small>
                         </div>
                       </>
+                    }
+                    {loggedOn && 
+                        <Link to={`/user/edit/ads/${pdInfo.id}`}>
+                             <div className='editAdButton'>Editar Anúncio</div>
+                        </Link>
                     }
                 </div>
             </C.PageArea>

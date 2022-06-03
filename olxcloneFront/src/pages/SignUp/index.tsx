@@ -56,7 +56,7 @@ export const SignUp = () => {
         if(json.error){
             setError(json.error)
         }else{
-            doLogin(json.token, false)
+            doLogin(json.token, false, email)
             window.location.href = '/'
         }
 

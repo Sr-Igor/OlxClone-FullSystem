@@ -110,3 +110,14 @@ export const editActions = async (req: Request, res: Response) => {
     res.status(201)
     res.json({})
 }
+
+export const findUser = async (req: Request, res: Response) => {
+    let token = req.headers.authorization?.slice(7)
+    let user = await User.findOne({token})
+    if(!user){
+        res.status(400)
+        res.json({error: "Invalid Token"})
+    }
+    res.status(200)
+    res.json({email: user.email})
+}

@@ -25,6 +25,7 @@ router.get("/ping", ApiController.ping)
 router.get('/states', UserController.getStates)
 router.get('/user/me', privateRoute, UserController.info)
 router.put('/user/me', privateRoute,UserValidator.editUser, UserController.editActions)
+router.get('/findUser', privateRoute, UserController.findUser)
 
 router.post('/user/signin', AuthValidator.signIn,AuthController.singIn)
 router.post('/user/signup', AuthValidator.singUp ,AuthController.singUp)
@@ -34,6 +35,8 @@ router.get('/categories', AdsController.getCategories)
 router.post('/ad/add', privateRoute, upload.array("images", 5),/*AdsValidator.addItem,*/ AdsController.addAction) 
 router.get('/ad/list', AdsController.getList) 
 router.get('/ad/item', AdsController.getItem) 
-router.post('/ad/:id', privateRoute,upload.array("images", 5),/*AdsValidator.editItem,*/AdsController.editAction) 
+router.post('/ad/:id', privateRoute, upload.array("images", 5),/*AdsValidator.editItem,*/AdsController.editAction)
+router.post('/del/:id', privateRoute, AdsController.deleteAds)
+
 
 export default router

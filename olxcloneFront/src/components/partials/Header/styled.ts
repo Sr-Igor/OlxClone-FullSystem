@@ -52,11 +52,21 @@ export const HeaderArea = styled.header`
                     background: none;
                     cursor: pointer;
                     outline: 0;
-                    color: #000;
+                    color: #4a4a4a;
                     font-size: 14px;
+                    display:flex;
+                    align-items: center;
+
+                    svg {
+                        margin-right: 2px;
+                    }
 
                     &:hover {
-                        color: #999;
+                        color: #6e0ad7;
+
+                        svg path {
+                            fill: #6e0ad7;
+                        }
                     }
                 }
 
