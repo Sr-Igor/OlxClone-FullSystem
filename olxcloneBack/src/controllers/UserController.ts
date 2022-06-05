@@ -48,6 +48,8 @@ export const info = async (req: Request, res: Response) => {
 }
 
 export const editActions = async (req: Request, res: Response) => {
+    console.log(req.body)
+
     // Verify Errors
     const errors = validationResult(req)
     if(!errors.isEmpty()){
@@ -65,7 +67,7 @@ export const editActions = async (req: Request, res: Response) => {
 
     if(data.email){
         
-        const existentEmail = await User.findOne({token})
+        const existentEmail = await User.findOne({email: data.email})
         if(existentEmail){
             res.status(400)
             res.json({error: "E-mail already registered"})
@@ -95,7 +97,6 @@ export const editActions = async (req: Request, res: Response) => {
     if(data.newPassword && data.password){
         const userToken = await User.findOne({token})
         const match = await bcrypt.compare(data.password, userToken.passwordHash)
-        console.log(match)
         if(match){
             let passwordHash = await bcrypt.hash(data.newPassword, 10)
             updates.passwordHash = passwordHash
@@ -108,16 +109,16 @@ export const editActions = async (req: Request, res: Response) => {
 
     await User.findOneAndUpdate({token}, {$set: updates})
     res.status(201)
-    res.json({})
+    res.json({error: ""})
 }
 
-export const findUser = async (req: Request, res: Response) => {
-    let token = req.headers.authorization?.slice(7)
-    let user = await User.findOne({token})
-    if(!user){
-        res.status(400)
-        res.json({error: "Invalid Token"})
-    }
-    res.status(200)
-    res.json({email: user.email})
-}
+// export const findUser = async (req: Request, res: Response) => {
+//     let token = req.headers.authorization?.slice(7)
+//     let user = await User.findOne({token})
+//     if(!user){
+//         res.status(400)
+//         res.json({error: "Invalid Token"})
+//     }
+//     res.status(200)
+//     res.json({email: user.email})
+// }

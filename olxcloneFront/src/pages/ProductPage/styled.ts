@@ -17,12 +17,12 @@ export const Fake = styled.div<{height: number}>`
 
 export const PageArea = styled.div<{width: number, currentImage: number}>`
     display: flex;
-    margin-top: 20px;
+    // margin-top: 20px;
 
     .box {
-        background-color: #FFF;
+        // background-color: #FFF;
         border-radius: 5px;
-        box-shadow: 0px 0px 4px #999;
+        // box-shadow: 0px 0px 4px #999;
         margin-bottom: 20px;
     }
 
@@ -35,81 +35,124 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
         margin-right: 20px;
 
         .box {
-            display: flex;
+            // display: flex;
+            padding: 2px;
         }
 
-        .productImage {
-            width: 320px;
-            height: 320px;
-            overflow: hidden;
-            position: relative;
+        .area--image {
             display: flex;
-            align-items: center;
-            z-index: 1;
 
-            .arrow {
-                position: absolute;
-                font-size: 30px;
-                background-color: #DDD;
-                opacity: 0.5;
-                padding: 3px 12px;;
-                border-radius: 50%;
-                margin: 10px;
-                cursor: pointer;
-
-                &:hover {
-                    opacity: 0.7;
-                }
-            }
-
-            .left {
-                left: 0;
-                z-index: 2;
-            }
-
-            .right {
-                right:0;
-                z-index: 2;
-            }
-
-            .slide--Area{
-                display: flex;
+            .productImage {
+                width: 500px;
+                height: 500px;
+                overflow: hidden;
                 position: relative;
-                width: ${props => props.width}px;
-                margin-left: ${props => props.currentImage}px;
-                height: 320px;
-                transition: all ease 0.5s;
-            }
-
-            .slide--Item{
-                
-                img {
-                    width:320px;
-                    height: 100%;
+                display: flex;
+                align-items: center;
+                z-index: 1;
+    
+                .arrow {
+                    position: absolute;
+                    font-size: 30px;
+                    background-color: #DDD;
+                    opacity: 0.5;
+                    padding: 3px 12px;;
+                    border-radius: 50%;
+                    margin: 10px;
+                    cursor: pointer;
+    
+                    &:hover {
+                        opacity: 0.7;
+                    }
+                }
+    
+                .left {
+                    left: 0;
+                    z-index: 2;
+                }
+    
+                .right {
+                    right:0;
+                    z-index: 2;
+                }
+    
+                .slide--Area{
+                    display: flex;
+                    position: relative;
+                    width: ${props => props.width}px;
+                    margin-left: ${props => props.currentImage}px;
+                    height: 500px;
+                    // transition: all ease 0.5s;
+                }
+    
+                .slide--Item{
+                    
+                    img {
+                        width: 500px;
+                        height: 500px;
+                        border-radius: 5px;
+                    }
                 }
             }
+
+            .mini--images {
+                width: 50px;
+                margin-left: 10px;
+
+                .mini--item {
+                    width: 50px;
+                    height: 50px;
+                    margin-bottom: 10px;
+                    background-color: #fff;
+
+                    img {
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
+                }
+
+                .active {
+                    border: 2px solid #999;
+                    opacity: 0.5;
+                }
+            }
+
         }
+
+     
 
         .pdInfo {
             flex: 1;
-            padding: 10px;
+            padding: 15px 2px;
+
+            .descTitle {
+                font-size: 25px;
+            }
+
+            .pdDescription {
+                margin-top: 10px;
+                width: 500px;
+            }
             
             .pdName {
                 margin-bottom: 20px;
 
                 h2 {
                     margin: 0;
-                    margin-top: 20px;
+                    // margin-top: 20px;
                 }
                 small {
                     color: #999;
                     font-size: 13px;
                 }
-            }
 
-            .pdDescription {
-                small {
-                    color: #999;
+                .sub-infos {
+
+                    small {
+                        margin-right: 20px;
+                    }
                 }
             }
         }
@@ -118,11 +161,27 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
     .rightSide {
         width: 250px;
 
+        .box--padding{
+            background-color: #6e0ad6;
+            border-top-left-radius: 50px;
+            border-bottom-left-radius: 50px;
+
+            &:hover {
+
+                .price span {
+                    font-size: 24px;
+                    
+                }
+            }
+        }
+
         .price span {
-            color: #0000FF;
+            text-align: end;
+            padding: 5px 10px;
+            color: #FFF;
             display: block;
             font-size: 27px;
-            font-weight: bold;
+            transition: all ease 0.2s;
         }
 
         .contactSelletLink {
@@ -141,9 +200,7 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
         a {
             text-decoration: none;
 
-            .editAdButton{
-                color: #FFF;
-                background-color: #6e0ad7;
+            div {
                 height: 30px;
                 border-radius: 5px;
                 box-shadow: 0px 0px 4px #999;
@@ -152,10 +209,23 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
                 align-items: center;
                 text-decoration: none;
                 margin-top: 20px;
+                color: #FFF;
 
                 &:hover {
-                    box-shadow: 1px 1px 5px #444;
+                    box-shadow: 0px 0px 5px #444;
                 }
+            }
+
+            .editAdButton{
+                background-color: #53576b;
+            }
+
+            .statusAdButton{
+                background-color: #faad14;
+            }
+
+            .deleteAdButton{
+                background-color: #c9242e;
             }
         }
 
@@ -183,7 +253,7 @@ export const OthersArea = styled.div`
 `
 
 export const BreadChumb = styled.div`
-    font-size:13px;
+    font-size: 15px;
     margin-top: 20px;
 
     a {
@@ -191,5 +261,12 @@ export const BreadChumb = styled.div`
         margin: 0px 5px;
         text-decoration: underline;
         color: #000;
+    }
+    
+    div {
+        color: blue;
+        display: inline-block;
+        margin: 0px 5px;
+        cursor: default;
     }
 `

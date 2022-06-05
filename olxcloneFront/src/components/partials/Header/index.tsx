@@ -43,7 +43,7 @@ export const Header = () => {
                     Meus Anuncios
                   </Link>
                 </li>
-                <li><Link to="/myaccount">Minha Conta</Link></li>
+                <li><Link to="/user/profile">Minha Conta</Link></li>
                 <li><button onClick={handleLogout}>Sair</button></li>
                 <li><Link to="post-on-ad" className='button'>Anunciar</Link></li>
                 </>

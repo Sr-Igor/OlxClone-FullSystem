@@ -10,6 +10,7 @@ import { PrivateRoute } from "../helpers/PrivateRoute";
 import { ListAds } from "../pages/ListAds";
 import { SellerPage} from "../pages/Seller";
 import { EditP } from '../pages/EditP'
+import { Profile } from "../pages/Profile";
 
 export const MainRoutes = () => {
     return(
@@ -23,6 +24,7 @@ export const MainRoutes = () => {
             <Route path="/ads" element={<ListAds/>}/>
             <Route path="/user/ads" element={<PrivateRoute><SellerPage/></PrivateRoute>}/>
             <Route path="/user/edit/ads/:id" element={<PrivateRoute><EditP/></PrivateRoute>}/>
+            <Route path="/user/profile" element={<PrivateRoute><Profile/></PrivateRoute>}/>
             <Route path="*" element={<NotFound />}/>
         </Routes>
     )

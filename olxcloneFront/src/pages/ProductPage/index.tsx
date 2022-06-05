@@ -28,6 +28,9 @@ export const ProductPage = () => {
     //Product Content
     const [pdInfo, setPdInfo] = useState<any>({})
 
+    //Format Price 
+    const [FormatedPrice, setFormatPrice] = useState("")
+
     // Slide Controllers
     const [slideWidth, setSlideWidth] = useState(0)
     const [currentImage, setCurrentImage] = useState(0)
@@ -53,6 +56,7 @@ export const ProductPage = () => {
             setLoading(false)
             return
         }
+        
         getItem(id)
     }, [id])
 
@@ -60,8 +64,12 @@ export const ProductPage = () => {
     useEffect(()=> {
         if(pdInfo.images){
             let qtImages = pdInfo.images.length
-            setSlideWidth(320 * qtImages)
+            setSlideWidth(500 * qtImages)
         }
+        if(pdInfo.price){
+            setFormatPrice(pdInfo.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
+        }
+       
     }, [pdInfo])
 
     // Format Date 
@@ -76,10 +84,10 @@ export const ProductPage = () => {
 
     // Left button controller
     const handleSlidePrev = () => {
-        let maxMargin = slideWidth - 320
-        let margin = currentImage -320
-        if((-margin) > maxMargin) {
-            margin = 0
+        let maxMargin = slideWidth - 500
+        let margin = currentImage + 500
+        if(margin > 0){
+            margin = -1000
             setCurrentImage(margin)
         }else{
             setCurrentImage(margin)
@@ -87,16 +95,16 @@ export const ProductPage = () => {
     }
     // Right button controller
     const handleSlideNext = () => {
-        let maxMargin = slideWidth - 320
-        let margin = currentImage + 320
-        if(margin > 0){
-            margin = -640
+        let maxMargin = slideWidth - 500
+        let margin = currentImage -500
+        if((-margin) > maxMargin) {
+            margin = 0
             setCurrentImage(margin)
         }else{
             setCurrentImage(margin)
         }
     }
-    console.log(pdInfo.priceNegotiable)
+
     return(
         <PageContainer>
 
@@ -105,12 +113,28 @@ export const ProductPage = () => {
                 <Link to="/">Home</Link>/
                 <Link to={`/ads?state=${pdInfo.state}`}>{pdInfo.state}</Link>/
                 <Link to={`/ads?state=${pdInfo.state}&cat=${pdInfo.category}`}>{pdInfo.category}</Link>/
-                <Link to="">{pdInfo.title}</Link>
+                <div>{pdInfo.title}</div>
             </C.BreadChumb>
 
             <C.PageArea width={slideWidth} currentImage={currentImage}>
                 <div className='leftSide'>
                     <div className='box'>
+                    <div className='pdInfo'>
+                            <div className='pdName'>
+                                {loading && <C.Fake height={20}/>}
+                                {pdInfo.title && 
+                                <div className='sub-infos'>
+                                    <h2>{pdInfo.title}</h2>                              
+                                    <small>Criado em {formatDate(pdInfo.dateCreated)}</small> 
+                                    {pdInfo.title && 
+                                    <small>Visualizações: {pdInfo.views}</small>
+                                    }
+                                </div>
+                                }
+                            </div>
+                    </div>
+
+                    <div className='area--image'>
                         <div className='productImage'>
                             <div className='arrow left' onClick={handleSlidePrev}>{"<"}</div>
                             {loading && <C.Fake height={300}/>}
@@ -125,24 +149,29 @@ export const ProductPage = () => {
                             } 
                             <div className='arrow right' onClick={handleSlideNext}>{">"}</div>
                         </div>
+                        <div className='mini--images'>
+                        {pdInfo.images && 
+                                <div className='mini--images--area'>
+                                    {pdInfo.images.map((img: string, k: number)=>
+                                        <div key={k} className="mini--item">
+                                            <img 
+                                            src={img} 
+                                            alt="image" 
+                                            onClick={()=>setCurrentImage(-k*500)}
+                                            className={(currentImage == (-k*500)? "active": '')}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            } 
+                        </div>
+                    </div>
 
                         <div className='pdInfo'>
-                            <div className='pdName'>
-                                {loading && <C.Fake height={20}/>}
-                                {pdInfo.title && 
-                                <>
-                                    <h2>{pdInfo.title}</h2>                              
-                                    <small>Criado em {formatDate(pdInfo.dateCreated)}</small> 
-                                </>
-                                }
-                            </div>
+                            <span className='descTitle'>Descrição</span>
                             <div className='pdDescription'>
                                 {loading && <C.Fake height={100}/>}
                                 {pdInfo.description}
-                                <hr />
-                                {pdInfo.title && 
-                                    <small>Visualizações: {pdInfo.views}</small>
-                                }
                             </div>
                         </div>
                     </div>
@@ -155,7 +184,7 @@ export const ProductPage = () => {
                             "Preço Negociável"
                         }
                         {!pdInfo.priceNegotiable && pdInfo.price && 
-                            <div className='price'>Preço: <span>R$ {`${pdInfo.price}`}</span></div>
+                            <div className='price'><span>{FormatedPrice}</span></div>
                         }
                     </div>
                     {loading && <C.Fake height={50}/>}
@@ -172,6 +201,14 @@ export const ProductPage = () => {
                     {loggedOn && 
                         <Link to={`/user/edit/ads/${pdInfo.id}`}>
                              <div className='editAdButton'>Editar Anúncio</div>
+                             {pdInfo.status &&
+                                <div className='statusAdButton'>Marcar como Indisponível</div>
+                             }
+                            {!pdInfo.status &&
+                                <div className='statusAdButton'>Marcar como Disponível</div>
+                             }
+                             
+                             <div className='deleteAdButton'>Excluir Anúncio</div>
                         </Link>
                     }
                 </div>

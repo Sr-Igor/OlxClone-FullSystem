@@ -61,12 +61,14 @@ export const PageArea = styled.div`
         background-color: #c9242e;
         padding: 10px;
         border-radius: 5px;
+        margin-bottom: 20px;
     }
 
     .ads--area {
 
         .images--area {
             display: flex;
+            justify-content: center;
         }
 
         .row-1 {
@@ -209,7 +211,7 @@ export const ImgArea = styled.div`
     align-items center;
     padding: 10px;
 
-    .del, label {
+    .del {
         width: 90px;
         border: none;
         padding: 3px 7px;
@@ -219,10 +221,6 @@ export const ImgArea = styled.div`
         align-items: center;
         justify-content: center;
 
-        input {
-            display: none;
-        }
-        
        img {
            width: 20px;
            height: 20px;
@@ -240,23 +238,56 @@ export const ImgArea = styled.div`
     .del {
         background-color: #cf1500;
     }
-
-    .add {
-        background-color: #e57706;
-    }
-
 `
 
 export const Item = styled.div`
     margin: 10px;
-    background-color: #FFF;
-    padding: 15px;
     border-radius: 10px;
-    box-shadow: 3px 2px 3px #777;
-    cursor: pointer;
+    background-color: #FFF;
 
     img {
-        width:130px;
-        height: 130px;
+        max-width:140px;
+        height: 140px;
+        border-radius: 5px;
+        box-shadow: 3px 2px 3px #777;
+    }
+`
+
+export const InputFile = styled.div`
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-right: 20px;
+
+    label {
+        margin-right: 10px;
+    }
+    .add {
+
+        display: flex;
+        align-items: center;
+        color: #FFF;
+        background-color: #e57706;
+        padding: 3px 7px;
+        border-radius: 3px;
+        cursor: pointer;
+
+
+        input {
+            display: none;
+        }
+
+        img {
+            width: 20px;
+            margin-right: 5px;
+            transform: scale(0.8);
+            transition: all ease 0.2s;
+        }
+
+        &:hover {
+            img {
+                transform: scale(1);
+            }
+       }
     }
 `

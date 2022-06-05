@@ -51,20 +51,10 @@ export const EditP = () => {
     const [warning, setWarning] = useState(true)
     const [displayModal, setDisplayModal] = useState("none")
     const [loading, setLoading] = useState(true)
+    const [recharge, setRecharge] = useState(false)
 
     // Controler files fields (FormData)
-    const fileField0: any = useRef()
-    const fileField1: any = useRef()
-    const fileField2: any = useRef()
-    const fileField3: any = useRef()
-    const fileField4: any = useRef()
-    const fileFields =[
-        fileField0, 
-        fileField1, 
-        fileField2, 
-        fileField3, 
-        fileField4
-    ];
+    const fileField: any = useRef()
 
     // Request States webSite
     useEffect(()=> {
@@ -93,7 +83,7 @@ export const EditP = () => {
             return
         }
         getItem(id)
-    }, [id])
+    }, [id, recharge])
 
     // Set fields w/ current infos
     useEffect(()=> {
@@ -108,6 +98,7 @@ export const EditP = () => {
     
     // Format images 
     useEffect(()=> {
+        setRecharge(false)
         let arrayInfoImages: any = []
         if(pdInfo.images){
             for (let i=0; i<5; i++){
@@ -178,37 +169,26 @@ export const EditP = () => {
     }
 
     // Request Edit Images (ADD)
-    const addImage = async (index: number)=> {
-        
-        // Visual config
-        let image = fileFields[index].current.files[0]
-        let url = URL.createObjectURL(image)
-        let updateImages = [...currentImages]
-        updateImages[index].url = url
-        updateImages[index].empty = false
-        setCurrentImages(updateImages)
-
+    const addImage = async ()=> {
         // Request
         const formData = new FormData() // Create FormData
 
-        for(let j in fileFields){
-            console.log(fileFields[j])
-            if(fileFields[j].current && fileFields[j].current.files.length > 0){
-                for(let i in fileFields[j].current.files){
-                    formData.append("images", fileFields[j].current.files[i])
-                }
+        if(fileField.current.files.length > 0){
+            for(let i in fileField.current.files){
+                formData.append("images", fileField.current.files[i])
             }
         }
-         // Send Request
-         const json = await Api.editAds(formData, id)
+        
+        //  Send Request
+        const json = await Api.editAds(formData, id)
 
          if(json.error == ""){
-            //  navigate(`/ad/${id}`)
+            setRecharge(true)
          }else {
              setError(json.error)
         }
     }
-
+    
     //  Request Edit Images (DELETE)
     const delImage = async (index: number) => {
         // Visual config 
@@ -277,6 +257,20 @@ export const EditP = () => {
                 }
                 <div className="ads--area">
                     <form action="">
+                            <C.InputFile>
+                                <label className='add'>
+                                        <input 
+                                            type="file"
+                                            ref={fileField}
+                                            disabled={disabled}
+                                            multiple
+                                            onChange={()=>addImage()}
+                                        />
+                                        <img src="/public/icons/plus.png" alt="add" />
+                                        Adiconar Imagens
+                                </label>
+                                <div>Max: 5</div>
+                            </C.InputFile>
                         <div className="images--area">
                             {currentImages.map((i: any, k: number)=> 
                                 <C.ImgArea key={k}>
@@ -287,20 +281,9 @@ export const EditP = () => {
                                         <div className='del' onClick={()=>delImage(k)}>
                                             <img src="/public/icons/trash.png" alt="del" />
                                         </div>
-                                        }
-                                    {i.empty && 
-                                        <label className='add'>
-                                            <input 
-                                                type="file"
-                                                ref={fileFields[k]}
-                                                disabled={disabled}
-                                                onChange={()=>addImage(k)}
-                                            />
-                                            <img src="/public/icons/plus.png" alt="add" />
-                                        </label>
                                     }
                                 </C.ImgArea>
-                            )}
+                            )}  
                         </div>
                         <hr />
                         <div className="row-1">

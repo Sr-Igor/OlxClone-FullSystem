@@ -30,37 +30,36 @@ const apiFetchPost = async (endpoint: string, body: any) => {
     return json
 }
 
-const apiFetchGet = async (endpoint: string, body: any ) => {
-
-    if(!body.token) {
-        let token = Cookie.get("token")
-        if(token) {
-            body.token = token
-        }
-    }
-
-    const res = await fetch(`${BASEAPI+endpoint}?${qs.stringify(body)}`)
+const apiFetchGet = async (endpoint: string, body?: any ) => {
+    let token = Cookie.get("token")
+    
+    const res = await fetch(`${BASEAPI+endpoint}?${qs.stringify(body)}`, {
+        method: "GET",
+        headers: {
+            'Authorization': `Bearer ${(token ? token : '')}`
+        },
+    })
     const json = await res.json()
-
+   
     if(json.notallowed){
         window.location.href = '/signin'
         return
     }
-
     return json
 }
 
 const apiFecthFile = async (endpoint: string, body: any) => {
     let token = Cookie.get("token")
+    console.log(body)
     const res = await fetch(BASEAPI+endpoint, {
         method: "POST",
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${(token ? token : '')}`
         },
         body
     })
     const json = await res.json()
-
+    console.log(json)
     if(json.notallowed){
         window.location.href = '/signin'
         return
@@ -78,7 +77,7 @@ const apiFecthAdsUser = async (endpoint: string) => {
         },
     })
     const json = await res.json()
-
+    console.log(json)
     if(json.notallowed){
         window.location.href = '/signin'
         return
@@ -151,5 +150,15 @@ export const Api = {
             {}
         )
         return json
-    }
+    },
+    getUserInfo: async () => {
+        const json = await apiFetchGet("/user/me")
+        return json
+    },
+    editUser: async (formData: any) => {
+        const json = await apiFecthFile('/user/edit', formData)
+        return json
+    },
 }
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imlnb3JkaXNvdXNhc0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IjEyMzQiLCJpYXQiOjE2NTQzMDAwMjh9.vxDEHPnbfOefg2SjZTBA8asZBWgTHx_0L0S5E63ONFA

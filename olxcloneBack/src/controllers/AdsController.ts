@@ -233,10 +233,10 @@ export const getItem = async (req: Request, res: Response) => {
 }
 
 export const editAction = async (req: Request, res: Response) => {
+    console.log(req.body)
     let { id } = req.params
     let {title, status, price, priceNegotiable, description, cat, delImages, state} = req.body
     let token = req.headers.authorization?.slice(7)
-    console.log(status)
     if(id.length < 12){
         res.status(400)
         res.json({error: "Invalid ID"})
@@ -379,7 +379,6 @@ export const adsUser = async (req: Request, res: Response) => {
 
 export const deleteAds = async (req: Request, res: Response) => {
     let {id} = req.params
-    console.log(id)
     await Ads.findByIdAndDelete(id)
     res.json({error: ""})
 }
