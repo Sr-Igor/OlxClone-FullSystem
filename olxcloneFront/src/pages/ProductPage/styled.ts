@@ -12,17 +12,91 @@ export const Fake = styled.div<{height: number}>`
     background: #BBB;
     transition: all ease 0.5s;
     animation: ${gradient} 2s ease infinite;
-    
+    border-radius: 5px;
+    width: 100%;
+`
+export const Warning = styled.div<{display: string}>`
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    top: 0;
+    left:0;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
+    display: ${props => props.display};
+    justify-content: center;
+    align-items: center;
+
+    .box--warn {
+        width: 600px;
+        height:250px;
+        background-color: #FFF;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        border-radius: 5px;
+        box-shadow: 0 0  5px #000;
+        padding: 20px;
+
+        .warning {
+            background-color: #faad14;
+            color: #fff;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 19px;
+
+            img{
+                width: 30px;
+                margin-right: 10px;
+            }
+        }
+
+        .message-box {
+            display: flex;
+            flex-direction: column;
+
+            span {
+                text-align: center;
+                margin: 5px;
+                font-weight: bold;
+            }
+        }
+
+        .box--buttons {
+
+            button {
+                border: none;
+                font-size: 15px;
+                cursor: pointer;
+            }
+
+            .confirm{
+                background-color: #c9242e;
+                border-radius: 5px;
+                color: #FFF;
+                padding: 5px 10px;
+                margin-right: 10px;
+                width 150px;
+            }
+
+            .cancel {
+                background-color: transparent;
+                font-size: 15px;
+            }
+        }
+
+    }
 `
 
 export const PageArea = styled.div<{width: number, currentImage: number}>`
     display: flex;
-    // margin-top: 20px;
 
     .box {
-        // background-color: #FFF;
         border-radius: 5px;
-        // box-shadow: 0px 0px 4px #999;
         margin-bottom: 20px;
     }
 
@@ -53,13 +127,13 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
     
                 .arrow {
                     position: absolute;
-                    font-size: 30px;
-                    background-color: #DDD;
-                    opacity: 0.5;
-                    padding: 3px 12px;;
-                    border-radius: 50%;
                     margin: 10px;
+                    opacity: 0.2;
                     cursor: pointer;
+
+                    img {
+                        width: 40px;
+                    }
     
                     &:hover {
                         opacity: 0.7;
@@ -121,8 +195,6 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
 
         }
 
-     
-
         .pdInfo {
             flex: 1;
             padding: 15px 2px;
@@ -161,7 +233,7 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
     .rightSide {
         width: 250px;
 
-        .box--padding{
+        .box-price{
             background-color: #6e0ad6;
             border-top-left-radius: 50px;
             border-bottom-left-radius: 50px;
@@ -185,11 +257,11 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
         }
 
         .contactSelletLink {
-            background-color: #0000FF;
+            background-color: #63997a;
             color: #FFF;
             height: 30px;
             border-radius: 5px;
-            box-shadow: 0px 0px 4px #999;
+            // box-shadow: 0px 0px 4px #999;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -197,40 +269,55 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
             margin-top: 20px;
         }
 
-        a {
-            text-decoration: none;
-
-            div {
-                height: 30px;
-                border-radius: 5px;
-                box-shadow: 0px 0px 4px #999;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+        .action-buttons {
+            
+            a {
                 text-decoration: none;
-                margin-top: 20px;
-                color: #FFF;
-
-                &:hover {
-                    box-shadow: 0px 0px 5px #444;
+            }
+                
+                div {
+                    height: 30px;
+                    border-radius: 5px;
+                    // box-shadow: 0px 0px 4px #999;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    text-decoration: none;
+                    margin-top: 20px;
+                    color: #FFF;
+                    cursor: pointer;
+    
+                    &:hover {
+                        opacity: 0.8;
+                    }
+    
+                    img {
+                        width: 20px;
+                        margin-right: 5px;
+                    }
+                }
+    
+                .editAdButton{
+                    background-color: #53576b;
+                }
+    
+                .statusAdButton{
+                    background-color: #faad14;
+                }
+    
+                .deleteAdButton{
+                    background-color: #c9242e;
                 }
             }
-
-            .editAdButton{
-                background-color: #53576b;
-            }
-
-            .statusAdButton{
-                background-color: #faad14;
-            }
-
-            .deleteAdButton{
-                background-color: #c9242e;
-            }
+    
         }
 
+       
         .createdBy {
             margin-top: 20px;
+            background-color: #FFF;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #000;
         }
 
         .createdBy small{
@@ -238,7 +325,6 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
             color: #999;
             margin-top: 10px;
         }
-    }
 `
 
 export const OthersArea = styled.div`

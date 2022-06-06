@@ -26,7 +26,7 @@ export const Profile = () => {
     const [messagePassword, setMessagePassword] = useState("")
     const [messageColor, setMessageColor] = useState("#000")
     const [displayModal, setDisplayModal] = useState(["none", "0"])
-    const [warning, setWarning] = useState(true)
+    // const [warning, setWarning] = useState(true)
 
     useEffect(()=> {
         const getUserInfo = async () => {
@@ -137,7 +137,7 @@ export const Profile = () => {
 
     return(
         <PageContainer>
-            {warning && 
+    
                 <C.Warning display={displayModal[0]}>
                     <div className="box--warn">
                         <div className='warning'>
@@ -155,7 +155,7 @@ export const Profile = () => {
                         </div>
                     </div>
                 </C.Warning>
-            }
+
             <C.PageArea color={messageColor}>
                 <div className='title--area'>
                     <h2>Meu Cadastro</h2>

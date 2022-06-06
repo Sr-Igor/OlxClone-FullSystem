@@ -2,13 +2,13 @@ import styled from "styled-components";
 
 export const HeaderArea = styled.header`
     background-color: #FFF;
-    height: 60px;
+    height: 65px;
     border-bottom: 1px solid #CCC;
 
     .container {
         max-width: 1000px;
         margin: auto;
-        display: flex;
+        display: flex
     }
 
     a{
@@ -73,8 +73,8 @@ export const HeaderArea = styled.header`
                 .button {
                     background-color: #FF8100;
                     color: #FFF;
-                    border-radius: 4px;
-                    padding: 5px 10px;
+                    border-radius: 25px;
+                    padding: 10px 15px;
 
                     &:hover {
                         background-color: #E57706;

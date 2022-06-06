@@ -29,7 +29,7 @@ router.post('/user/edit', privateRoute, upload.array("images", 5), UserValidator
 
 router.post('/user/signin', AuthValidator.signIn,AuthController.singIn)
 router.post('/user/signup', AuthValidator.singUp ,AuthController.singUp)
-router.get('/user/ads', privateRoute, AdsController.adsUser)
+router.get('/user/anun', privateRoute, AdsController.adsUser)
 
 router.get('/categories', AdsController.getCategories)
 router.post('/ad/add', privateRoute, upload.array("images", 5),/*AdsValidator.addItem,*/ AdsController.addAction) 

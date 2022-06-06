@@ -31,6 +31,11 @@ export const PageArea = styled.div`
         
         .list {
             display: flex;
+            flex-wrap: wrap;
+
+            .AdItem {
+                width: 20%;
+            }
         }
 
         .emptyMessage {
@@ -49,6 +54,27 @@ export const PageArea = styled.div`
                 color: #347bfa;
                 margin-top: 10px;
             }
+        }
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 10px;
+
+        .pageItem {
+            background-color: #FF8100;
+            color: #FFF;
+            margin: 1px;
+            padding: 5px 10px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .active {
+            background-color: #6e0ad6;
+            opacity: 0.5;
         }
     }
 `

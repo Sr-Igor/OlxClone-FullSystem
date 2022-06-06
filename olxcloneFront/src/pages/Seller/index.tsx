@@ -28,37 +28,78 @@ export const SellerPage = () => {
     const [exiOn, setExiOn] = useState(false)
     const [exiOff, setExiOff] = useState(false)
 
-    // Get Ads w/ idUser
-    useEffect(()=> {
-        const getUserAds = async () => {
-            const json = await Api.getUserAds()
-            let ads = json.ads
+    // Verify Total on/off
+    const [totalOn, setTotalOn] = useState(0)
+    const [totalOff, setTotalOff] = useState(0)
 
-            // Separete Ads for status
-            const adsOn: any = []
-            const adsOff: any = []
-            for (let i in ads){
-                if(ads[i].status === true){
-                    adsOn.push(ads[i])
-                    setOnAds(adsOn)
-                    setExiOn(true)
-                }else {
-                    adsOff.push(ads[i])
-                    setOffAds(adsOff)
-                    setExiOff(true)
-                }
+    // Pagination states  
+    const [adList ,setAdList] = useState([])   
+    const [adsTotal, setAdsTotal] = useState(0)
+    const [pageCount, setPageCount] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1)
+
+    const getUserAds = async () => {
+        let offset = (currentPage -1) * 10 // Calc current page 
+        let options = {
+            sort: "desc",
+            limit: 10,
+            offset
+        }
+        const json = await Api.getUserAds(options)
+        let ads = json.ads
+        setAdsTotal(json.total)
+        setTotalOn(json.totalOn)
+        setTotalOff(json.totalOff)
+        setAdList(json.ads)
+
+        // Separete Ads for status
+        const adsOn: any = []
+        const adsOff: any = []
+        for (let i in ads){
+            if(ads[i].status === true){
+                adsOn.push(ads[i])
+                setOnAds(adsOn)
+                setExiOn(true)
+            }else {
+                adsOff.push(ads[i])
+                setOffAds(adsOff)
+                setExiOff(true)
             }
         }
+    }
+
+    // Get Ads w/ idUser
+    useEffect(()=> {
         getUserAds()
     }, [])
+
+    // Monitoring total pages, variable with search
+    useEffect(()=> {
+        if(adList.length > 0){
+            setPageCount( Math.ceil(adsTotal/ adList.length) )
+        }else{
+            setPageCount(0)
+        }
+    },[adsTotal])
+
+    // Monitoring current page 
+    useEffect(()=> {
+        getUserAds() 
+    }, [currentPage])
+
+    // Calc total pages 
+    let pagination = []
+    for(let i=1; i <=pageCount; i++){
+        pagination.push(i)
+    }
 
     return (
         <PageContainer>
             <C.PageArea>
                 <h2>Meus Anúncios</h2>
                 <div className="box-filter">
-                    <span onClick={()=>setHandleAds(true)} className={handleAds == true ? "active":""}>Ativos ( {onAds.length} )</span>
-                    <span onClick={()=>setHandleAds(false)} className={handleAds == false ? "active":""}>Inativos ( {offAds.length} )</span>
+                    <span onClick={()=>setHandleAds(true)} className={handleAds == true ? "active":""}>Ativos ( {totalOn} )</span>
+                    <span onClick={()=>setHandleAds(false)} className={handleAds == false ? "active":""}>Inativos ( {totalOff} )</span>
                 </div>
                 <div className="container">
                     {handleAds && onAds &&
@@ -91,6 +132,15 @@ export const SellerPage = () => {
                         }
                     </> 
                     }
+                </div>
+
+                <div className="pagination">
+                    {pagination.map((i,k)=> 
+                        <div 
+                        key={k} 
+                        onClick={()=>setCurrentPage(i)}
+                        className={i === currentPage ? "pageItem active": "pageItem"}>{i}</div>
+                    )}
                 </div>
             </C.PageArea>
         </PageContainer>

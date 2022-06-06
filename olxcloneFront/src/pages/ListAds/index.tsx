@@ -69,7 +69,7 @@ export const ListAds = () => {
     }
 
     //Monitoring query Update
-    useEffect
+    // useEffect
 
     // Monitoring total pages, variable with search
     useEffect(()=> {

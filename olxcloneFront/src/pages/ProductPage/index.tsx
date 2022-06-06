@@ -3,7 +3,7 @@ import * as C from './styled'
 
 // Hooks React
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import {Link} from "react-router-dom"
 
 // Api Requests
@@ -22,11 +22,16 @@ export const ProductPage = () => {
     // Url Params 
     const { id } = useParams()
 
+    //Navigate Instance
+    let navigate = useNavigate()
+
     // Loading Controller
     const [loading, setLoading] = useState(true)
+    const [displayModal, setDisplayModal] = useState("none")
 
     //Product Content
     const [pdInfo, setPdInfo] = useState<any>({})
+    const [changeProduct, setChangeProduct] = useState(false)
 
     //Format Price 
     const [FormatedPrice, setFormatPrice] = useState("")
@@ -58,7 +63,7 @@ export const ProductPage = () => {
         }
         
         getItem(id)
-    }, [id])
+    }, [id, changeProduct])
 
     // Width slide controller
     useEffect(()=> {
@@ -84,10 +89,10 @@ export const ProductPage = () => {
 
     // Left button controller
     const handleSlidePrev = () => {
-        let maxMargin = slideWidth - 500
+        let maxMargin = slideWidth -500
         let margin = currentImage + 500
         if(margin > 0){
-            margin = -1000
+            margin = -maxMargin
             setCurrentImage(margin)
         }else{
             setCurrentImage(margin)
@@ -105,8 +110,41 @@ export const ProductPage = () => {
         }
     }
 
+    // Resquest for Status Product
+    const statusProduct = async (status: boolean) => {
+        const formData = new FormData()
+        formData.append("status", status.toString())
+        const json = await Api.editAds(formData, id)
+        if(!json.error) {
+            setChangeProduct(!changeProduct)
+        }
+    }
+
+    // Request for Delete Product
+    const deleteProduct = async () => {
+        await Api.deleteAds(id)
+        navigate("/")
+    }
+
     return(
         <PageContainer>
+
+            <C.Warning display={displayModal}>
+                <div className="box--warn">
+                    <div className='warning'>
+                        <img src="/public/icons/alert.png" alt="" />
+                        <div className='warn'>Aviso</div>
+                    </div>
+                    <div className='message-box'>
+                        <span>Ao excluir esse anúncio ele será apagado permanentemente</span>
+                        <span>Tem certeza que deseja excluir? </span>
+                        </div>
+                    <div className="box--buttons">
+                        <button className="confirm" onClick={()=>deleteProduct()}>Excluir</button>
+                        <button className="cancel" onClick={e => setDisplayModal("none")}>Cancelar</button>
+                    </div>
+                </div>
+            </C.Warning>
 
             <C.BreadChumb>
                 Você está aqui: 
@@ -121,7 +159,7 @@ export const ProductPage = () => {
                     <div className='box'>
                     <div className='pdInfo'>
                             <div className='pdName'>
-                                {loading && <C.Fake height={20}/>}
+                                {loading && <C.Fake height={60}/>}
                                 {pdInfo.title && 
                                 <div className='sub-infos'>
                                     <h2>{pdInfo.title}</h2>                              
@@ -133,13 +171,15 @@ export const ProductPage = () => {
                                 }
                             </div>
                     </div>
-
                     <div className='area--image'>
                         <div className='productImage'>
-                            <div className='arrow left' onClick={handleSlidePrev}>{"<"}</div>
-                            {loading && <C.Fake height={300}/>}
+                            <div className='arrow left' onClick={handleSlidePrev}>
+                                <img src="/public/icons/arrow-left.png" alt="left" />
+                            </div>
+                            {loading && <C.Fake height={300} />}
                             {pdInfo.images && 
                                 <div className='slide--Area'>
+                                     {loading && <C.Fake height={20}/>}
                                     {pdInfo.images.map((img: string, k: number)=>
                                         <div key={k} className='slide--Item'>
                                             <img src={img} alt="" />
@@ -147,7 +187,9 @@ export const ProductPage = () => {
                                     )}
                                 </div>
                             } 
-                            <div className='arrow right' onClick={handleSlideNext}>{">"}</div>
+                            <div className='arrow right' onClick={handleSlideNext}>
+                                <img src="/public/icons/arrow-right.png" alt="right" />    
+                            </div>
                         </div>
                         <div className='mini--images'>
                         {pdInfo.images && 
@@ -166,7 +208,6 @@ export const ProductPage = () => {
                             } 
                         </div>
                     </div>
-
                         <div className='pdInfo'>
                             <span className='descTitle'>Descrição</span>
                             <div className='pdDescription'>
@@ -178,7 +219,7 @@ export const ProductPage = () => {
                 </div>
                 
                 <div className='rightSide'>
-                    <div className='box box--padding'>
+                    <div className='box box--padding box-price'>
                         {loading && <C.Fake height={20}/>}
                         {pdInfo.priceNegotiable && 
                             "Preço Negociável"
@@ -187,7 +228,13 @@ export const ProductPage = () => {
                             <div className='price'><span>{FormatedPrice}</span></div>
                         }
                     </div>
-                    {loading && <C.Fake height={50}/>}
+                    {loading && !loggedOn &&
+                        <>
+                            <C.Fake height={30}/>
+                            <br />
+                            <C.Fake height={100}/>
+                        </>
+                    }
                     {!loggedOn && pdInfo.userInfo && 
                       <>
                         <a href={`mailto:${pdInfo.userInfo.email}`} target='_blank' className='contactSelletLink'>Fale com o vendedor</a>
@@ -198,18 +245,41 @@ export const ProductPage = () => {
                         </div>
                       </>
                     }
+                    {loading && loggedOn &&
+                    <>
+                    <br />
+                    <C.Fake height={30}/>
+                    <br />
+                    <C.Fake height={30}/>
+                    <br />
+                    <C.Fake height={30}/>
+                    </>
+                    }
+                  
                     {loggedOn && 
-                        <Link to={`/user/edit/ads/${pdInfo.id}`}>
-                             <div className='editAdButton'>Editar Anúncio</div>
-                             {pdInfo.status &&
-                                <div className='statusAdButton'>Marcar como Indisponível</div>
-                             }
-                            {!pdInfo.status &&
-                                <div className='statusAdButton'>Marcar como Disponível</div>
-                             }
-                             
-                             <div className='deleteAdButton'>Excluir Anúncio</div>
-                        </Link>
+                        <div className='action-buttons'>
+                            <Link to={`/user/edit/ads/${pdInfo.id}`}>
+                                <div className='editAdButton'>
+                                    <img src="/public/icons/edit.png" alt="Edit--Icon" />
+                                    Editar Anúncio</div>
+                            </Link>
+                                {pdInfo.status &&
+                                    <div className='statusAdButton' onClick={()=> statusProduct(false)}>
+                                        <img src="/public/icons/error.png" alt="Unavailable--Icon" />
+                                        Marcar como Indisponível
+                                    </div>
+                                }
+                                {!pdInfo.status &&
+                                    <div className='statusAdButton'  onClick={()=> statusProduct(true)}>
+                                        <img src="/public/icons/check.png" alt="Available--Icon" />
+                                        Marcar como Disponível
+                                    </div>
+                                }
+                                <div className='deleteAdButton' onClick={()=> setDisplayModal("flex")}>
+                                    <img src="/public/icons/trash.png" alt="Delete--Icons" />
+                                    Excluir Anúncio
+                                </div>
+                        </div>
                     }
                 </div>
             </C.PageArea>

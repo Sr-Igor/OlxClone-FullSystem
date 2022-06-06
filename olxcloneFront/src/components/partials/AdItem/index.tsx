@@ -18,7 +18,7 @@ export const AdItem = ({data}: Data) => {
     if(data.priceNegotiable){
         price = "Preço Negociável"
     }else{
-        price = `R$ ${data.price}`
+        price = data.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
     }
 
     return(

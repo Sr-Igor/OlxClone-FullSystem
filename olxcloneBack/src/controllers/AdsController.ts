@@ -189,7 +189,7 @@ export const getItem = async (req: Request, res: Response) => {
 
     let others: any = []
     if(other === "true") {
-        const otherProducts = await Ads.find({status: true, idUser: item.idUser})
+        const otherProducts = await Ads.find({status: true, idUser: item.idUser}).limit(4)
         for(let i in otherProducts){
             if(otherProducts[i]._id.toString() !== item._id.toString()){
                 let image = ""
@@ -351,8 +351,21 @@ export const editAction = async (req: Request, res: Response) => {
 
 export const adsUser = async (req: Request, res: Response) => {
     let token = req.headers.authorization?.slice(7)
-    let user = await User.findOne({token})
-    let adsData = await Ads.find({idUser: user._id})
+    let {sort = "asc", offset= 0, limit = 8 } = req.query
+    let total = 0
+    console.log(sort, offset, limit)
+
+    const user = await User.findOne({token})
+    const adsTotalOn = await Ads.find({idUser: user._id, status: true})
+    const adsTotalOff = await Ads.find({idUser: user._id, status: false})
+    const totalOn = adsTotalOn.length
+    const totalOff = adsTotalOff.length
+    total = totalOn + totalOff
+
+    const adsData = await Ads.find({idUser: user._id})
+    .sort({dateCreated: (sort == "desc"? -1: 1)})
+    .skip(Number(offset))
+    .limit(Number(limit))
     
     let ads = []
     for (let i in adsData){
@@ -374,7 +387,7 @@ export const adsUser = async (req: Request, res: Response) => {
         })
     }
     res.status(200)
-    res.json({ads})
+    res.json({ads, total, totalOn, totalOff})
 }
 
 export const deleteAds = async (req: Request, res: Response) => {

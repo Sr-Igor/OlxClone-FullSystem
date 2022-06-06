@@ -75,7 +75,7 @@ export const AddAd = () => {
         if(!category){ // Verify empty category
             errors.push("Sem Categoria")
         }
-
+        console.log(price)
         if(!price && !priceNegotiable){
             errors.push("Sem preço ou negociação")
         }
@@ -142,7 +142,6 @@ export const AddAd = () => {
                             disabled={disabled}
                             value={title}
                             onChange={e=>setTitle(e.target.value)}
-                            required
                             />
                         </div>
                     </label>
@@ -153,7 +152,7 @@ export const AddAd = () => {
                            <select 
                             disabled={disabled}
                             onChange={e=>setCategory(e.target.value)}
-                            required>
+                            >
                                <option value=""></option>
                                {categories && categories.map((i: CategoryList, key)=>
                                 <option key={key} value={i._id}>{i.name}</option>
@@ -168,7 +167,7 @@ export const AddAd = () => {
                            <select 
                             disabled={disabled}
                             onChange={e=>setStatePd(e.target.value)}
-                            required>
+                            >
                                <option value=""></option>
                                {statesLoc && statesLoc.map((i: StateList, key)=>
                                 <option key={key} value={i._id}>{i.name}</option>

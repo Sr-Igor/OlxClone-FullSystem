@@ -71,7 +71,6 @@ export const Header = () => {
                   Login
                 </Link>
                 </li>
-                <li><Link to="/signup">Cadastrar</Link></li>
                 <li><Link to="/signin" className='button'>Anunciar</Link></li>
                 </>
               }

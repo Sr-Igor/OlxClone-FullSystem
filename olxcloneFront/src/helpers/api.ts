@@ -50,7 +50,6 @@ const apiFetchGet = async (endpoint: string, body?: any ) => {
 
 const apiFecthFile = async (endpoint: string, body: any) => {
     let token = Cookie.get("token")
-    console.log(body)
     const res = await fetch(BASEAPI+endpoint, {
         method: "POST",
         headers: {
@@ -59,7 +58,6 @@ const apiFecthFile = async (endpoint: string, body: any) => {
         body
     })
     const json = await res.json()
-    console.log(json)
     if(json.notallowed){
         window.location.href = '/signin'
         return
@@ -77,7 +75,6 @@ const apiFecthAdsUser = async (endpoint: string) => {
         },
     })
     const json = await res.json()
-    console.log(json)
     if(json.notallowed){
         window.location.href = '/signin'
         return
@@ -136,8 +133,8 @@ export const Api = {
         )
         return json
     },
-    getUserAds: async () => {
-        const json = await apiFecthAdsUser("/user/ads")
+    getUserAds: async (options: any) => {
+        const json = await apiFetchGet("/user/anun", options)
         return json
     },
     editAds: async (formData: FormData, id: any) => {
