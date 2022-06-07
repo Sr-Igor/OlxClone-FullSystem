@@ -37,13 +37,15 @@ export const SellerPage = () => {
     const [adsTotal, setAdsTotal] = useState(0)
     const [pageCount, setPageCount] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
+    const [pagination, setPagination] = useState([])
 
-    const getUserAds = async () => {
+    const getUserAds = async (status : boolean) => {
         let offset = (currentPage -1) * 10 // Calc current page 
         let options = {
             sort: "desc",
             limit: 10,
-            offset
+            offset,
+            status
         }
         const json = await Api.getUserAds(options)
         let ads = json.ads
@@ -70,7 +72,7 @@ export const SellerPage = () => {
 
     // Get Ads w/ idUser
     useEffect(()=> {
-        getUserAds()
+        getUserAds(true)
     }, [])
 
     // Monitoring total pages, variable with search
@@ -84,20 +86,24 @@ export const SellerPage = () => {
 
     // Monitoring current page 
     useEffect(()=> {
-        getUserAds() 
-    }, [currentPage])
+        getUserAds(handleAds) 
+    }, [currentPage, handleAds])
 
-    // Calc total pages 
-    let pagination = []
-    for(let i=1; i <=pageCount; i++){
-        pagination.push(i)
-    }
+    useEffect(()=> {
+        let pags: any = []
+        for(let i=1; i <=pageCount; i++){
+            pags.push(i)
+        }
+        setPagination(pags)
+    }, [pageCount])
 
     return (
         <PageContainer>
             <C.PageArea>
                 <h2>Meus Anúncios</h2>
                 <div className="box-filter">
+                    {/* <span onClick={()=>getUserAds(true)} className={handleAds == true ? "active":""}>Ativos ( {totalOn} )</span>
+                    <span onClick={()=>getUserAds(false)} className={handleAds == false ? "active":""}>Inativos ( {totalOff} )</span> */}
                     <span onClick={()=>setHandleAds(true)} className={handleAds == true ? "active":""}>Ativos ( {totalOn} )</span>
                     <span onClick={()=>setHandleAds(false)} className={handleAds == false ? "active":""}>Inativos ( {totalOff} )</span>
                 </div>

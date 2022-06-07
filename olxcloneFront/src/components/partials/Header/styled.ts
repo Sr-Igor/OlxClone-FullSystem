@@ -68,6 +68,12 @@ export const HeaderArea = styled.header`
                             fill: #6e0ad7;
                         }
                     }
+                    
+                    img {
+                        width: 25px;
+                        border-radius: 20px;
+                        margin-right: 2px;
+                    }
                 }
 
                 .button {

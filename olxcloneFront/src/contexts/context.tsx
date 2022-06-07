@@ -2,7 +2,7 @@ import { useContext, ReactNode, createContext, useReducer } from "react";
 
 // Types 
 type State = {
-    email: string
+    userImage: string
 }
 
 type Action = {
@@ -20,7 +20,7 @@ type PropsChildren = {
 }
 
 const initialData: State = {
-    email: ''
+    userImage: "/public/images/default-profile.jpg"
 }
 
 // Context 
@@ -29,8 +29,8 @@ const StateContext = createContext<ContextType | undefined>(undefined)
 // Reducer
 const userInfoReducer = (state: State, action: Action) => {
     switch(action.type){
-        case "SET_EMAIL": 
-            return {...state, email: action.payload}
+        case "SET_IMAGE": 
+            return {...state, userImage: action.payload}
         default:
             return state
     }

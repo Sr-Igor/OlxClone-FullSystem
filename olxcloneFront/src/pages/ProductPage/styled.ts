@@ -318,6 +318,17 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
             background-color: #FFF;
             border-radius: 5px;
             box-shadow: 0 0 5px #000;
+
+            .img-name {
+                display: flex;
+                align-items: center;
+
+                img{
+                    width: 50px;
+                    border-radius: 25px;
+                    margin-right: 20px;
+                }
+            }
         }
 
         .createdBy small{

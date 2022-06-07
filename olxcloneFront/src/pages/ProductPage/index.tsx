@@ -239,7 +239,13 @@ export const ProductPage = () => {
                       <>
                         <a href={`mailto:${pdInfo.userInfo.email}`} target='_blank' className='contactSelletLink'>Fale com o vendedor</a>
                         <div className='createdBy box box--padding'>
-                            <strong>{pdInfo.userInfo.name}</strong>
+                            <div className='img-name'>
+                                {pdInfo.userInfo.image &&
+                                    <img src={pdInfo.userInfo.image} alt="" />
+                                }
+                                <strong>{pdInfo.userInfo.name}</strong>
+                            </div>
+                            
                             <small> E-mail: {pdInfo.userInfo.email}</small>
                             <small>Estado: {pdInfo.userInfo.state}</small>
                         </div>

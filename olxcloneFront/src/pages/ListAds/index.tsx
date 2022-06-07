@@ -14,6 +14,7 @@ import { AdItem } from "../../components/partials/AdItem"
 
 // Types
 import { StateList, CategoryList, ItemsList } from "../../types/MainTypes"
+import { useInfoReducer } from '../../contexts/context'
 
 // Timer for search Request (created out component for disable loop )
 let timer: any
@@ -34,7 +35,7 @@ export const ListAds = () => {
         // Separate queryStrings
         const [q, setQ] = useState(query.get("q") != null ? query.get("q"): "" as any)
         const [cat, setCat] = useState(query.get("cat") != null ? query.get("cat"): "" as any)
-        const [state, setState] = useState(query.get("state") != null ? query.get("state"): "" as any)
+        const [stateUser, setState] = useState(query.get("state") != null ? query.get("state"): "" as any)
         
     // Pagination states     
     const [adsTotal, setAdsTotal] = useState(0)
@@ -59,7 +60,7 @@ export const ListAds = () => {
             limit: 9,
             q,
             cat,
-            state,
+            state: stateUser,
             offset
         })
         setAdList(json.ads) // Get items
@@ -96,8 +97,8 @@ export const ListAds = () => {
             if(cat){
                 queryString.push(`cat=${cat}`)
             }
-            if(state){
-                queryString.push(`state=${state}`)
+            if(stateUser){
+                queryString.push(`state=${stateUser}`)
             }
             navigate(`?${queryString.join("&")}`, { replace: true })
         
@@ -105,7 +106,7 @@ export const ListAds = () => {
             getAdsList()
             setCurrentPage(1)
         },2000)
-    }, [q, cat, state])
+    }, [q, cat, stateUser])
 
     // Request States webSite
     useEffect(()=> {
@@ -131,6 +132,10 @@ export const ListAds = () => {
         pagination.push(i)
     }
 
+    //________________________________________
+    const {state} = useInfoReducer()
+    console.log(state.userImage)
+
     return(
     <PageContainer>
         <C.PageArea>
@@ -146,8 +151,8 @@ export const ListAds = () => {
                     />
 
                     <div className="filterName">Estado:</div>
-                    <select name="state" id="" value={state} onChange={e=>setState(e.target.value)}>
-                        <option value=""></option>
+                    <select name="state" id="" value={stateUser} onChange={e=>setState(e.target.value)}>
+                        <option value="">Selecione um Estado</option>
                         {stateList.map((i: StateList, k)=> 
                             <option key={k} value={i.name}>{i.name}</option>
                         )}
@@ -155,6 +160,10 @@ export const ListAds = () => {
 
                     <div className="filterName">Categoria:</div>
                     <ul>
+                    <li  className={"categoryItem"} onClick={()=> setCat("")}>
+                        <img src="/public/icons/category.png" alt="" />
+                        <span>Todas as Categorias</span>
+                    </li>
                         {categories.map((i: CategoryList, k)=> 
                             <li 
                             key={k} 

@@ -2,6 +2,8 @@ import {Request, Response} from 'express'
 import { validationResult, matchedData } from 'express-validator'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
+import sharp from 'sharp'
+import { unlink } from 'fs'
 const State = require('../models/state')
 const User = require("../models/user")
 const Category = require("../models/category")
@@ -39,10 +41,18 @@ export const info = async (req: Request, res: Response) => {
         adList.push({ ...ads[i], category: category.slug })
     }
 
+    let image
+    if(user.image || user.image !== ""){
+        image = `${process.env.BASE}/media/${user.image}.jpg`
+    }else{
+        image = ""
+    }
+
     res.json({
         name: user.name,
         email: user.email,
         state: state.name,
+        image,
         ads: adList
     })
 }
@@ -106,10 +116,29 @@ export const editActions = async (req: Request, res: Response) => {
             return
         }
     }
-
+    let image;
+    console.log(req.file)
+    if(req.file){
+        let file: any = req.file
+            image = file.filename
+            updates.image = image
+            await sharp(file.path)
+            .resize(500, 500)
+            .toFormat("jpeg")
+            .toFile(`./public/media/${file.filename}.jpg`)
+            await unlink(file.path, (err) => {
+                if (err) throw err;
+                console.log('path/file.txt was deleted');
+              })
+    }else {
+        image = ""
+        updates.image = image
+    }
+    
+    let userImageProfile = (image) ? `${process.env.BASE}/media/${image}.jpg`: null
     await User.findOneAndUpdate({token}, {$set: updates})
     res.status(201)
-    res.json({error: ""})
+    res.json({error: "", image: userImageProfile})
 }
 
 // export const findUser = async (req: Request, res: Response) => {

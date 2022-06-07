@@ -42,6 +42,11 @@ export const AddAd = () => {
     const [disabled, setDisabled] = useState(false)
     const [error, setError] = useState("")
 
+    //Prev Images 
+    const [pImages, setPImages] = useState([])
+
+    const formData = new FormData() // Create FormData
+
     // Request Categories webSite
     useEffect(()=> {
         const getCategories = async () => {
@@ -82,7 +87,6 @@ export const AddAd = () => {
 
         // If not found errors
         if(errors.length === 0){
-            const formData = new FormData() // Create FormData
             formData.append("state", statePd)
             formData.append("category", category)
             formData.append("title", title)
@@ -91,7 +95,7 @@ export const AddAd = () => {
             formData.append("price", price)
             
             // Verify Images, format and append in formData
-            if(fileField.current.files.length > 0){
+            if(fileField.current.files.length > 0 && pImages.length !== 0){
                 for(let i in fileField.current.files){
                     formData.append("images", fileField.current.files[i])
                 }
@@ -114,6 +118,26 @@ export const AddAd = () => {
         setDisabled(false) 
     }
 
+    const prevImages = () => {
+        
+         // Verify Images, format and append in formData
+         if(fileField.current.files.length > 0){
+            let blobImages: any = []
+            for(let i in fileField.current.files){
+                if(typeof(fileField.current.files[i]) == "object"){
+                    let imageUrl = URL.createObjectURL(fileField.current.files[i])
+                    blobImages.push(imageUrl)
+                }
+            }
+            setPImages(blobImages)
+        }
+    }
+
+    const cleanInputFile = () => {
+        formData.delete("images")
+        setPImages([])
+    }
+
     // Mask config in price field
     const priceMask = createNumberMask({
         prefix: "R$",
@@ -133,105 +157,134 @@ export const AddAd = () => {
                 }
 
                 <form action="" onSubmit={handleSubmit}>
+                    <div className='col-1'>
+                        <label htmlFor="" className='area'>
+                            <div className='area--title'>Titulo</div>
+                            <div className='area--input'>
+                                <input 
+                                type="text" 
+                                disabled={disabled}
+                                value={title}
+                                onChange={e=>setTitle(e.target.value)}
+                                />
+                            </div>
+                        </label>
 
-                    <label htmlFor="" className='area'>
-                        <div className='area--title'>Titulo</div>
-                        <div className='area--input'>
-                            <input 
-                            type="text" 
-                            disabled={disabled}
-                            value={title}
-                            onChange={e=>setTitle(e.target.value)}
-                            />
-                        </div>
-                    </label>
+                        <label htmlFor="" className='area'>
+                            <div className='area--title'>Categoria</div>
+                            <div className='area--input'>
+                            <select 
+                                disabled={disabled}
+                                onChange={e=>setCategory(e.target.value)}
+                                >
+                                <option value=""></option>
+                                {categories && categories.map((i: CategoryList, key)=>
+                                    <option key={key} value={i._id}>{i.name}</option>
+                                )}
+                            </select>
+                            </div>
+                        </label>
 
-                    <label htmlFor="" className='area'>
-                        <div className='area--title'>Categoria</div>
-                        <div className='area--input'>
-                           <select 
-                            disabled={disabled}
-                            onChange={e=>setCategory(e.target.value)}
-                            >
-                               <option value=""></option>
-                               {categories && categories.map((i: CategoryList, key)=>
-                                <option key={key} value={i._id}>{i.name}</option>
-                               )}
-                           </select>
-                        </div>
-                    </label>
+                        <label htmlFor="" className='area'>
+                            <div className='area--title'>Estado</div>
+                            <div className='area--input'>
+                            <select 
+                                disabled={disabled}
+                                onChange={e=>setStatePd(e.target.value)}
+                                >
+                                <option value=""></option>
+                                {statesLoc && statesLoc.map((i: StateList, key)=>
+                                    <option key={key} value={i._id}>{i.name}</option>
+                                )}
+                            </select>
+                            </div>
+                        </label>
 
-                    <label htmlFor="" className='area'>
-                        <div className='area--title'>Estado</div>
-                        <div className='area--input'>
-                           <select 
-                            disabled={disabled}
-                            onChange={e=>setStatePd(e.target.value)}
-                            >
-                               <option value=""></option>
-                               {statesLoc && statesLoc.map((i: StateList, key)=>
-                                <option key={key} value={i._id}>{i.name}</option>
-                               )}
-                           </select>
-                        </div>
-                    </label>
+                        <label htmlFor="" className='area'>
+                            <div className='area--title'>Preço</div>
+                            <div className='area--input'>
+                                <MaskedInput 
+                                    mask={priceMask}
+                                    placeholder="R$ "
+                                    disabled={disabled || priceNegotiable}
+                                    value={price}
+                                    onChange={e=>setPrice(e.target.value)}
+                                />
+                            </div>
+                        </label>
 
-                    <label htmlFor="" className='area'>
-                        <div className='area--title'>Preço</div>
-                        <div className='area--input'>
-                            <MaskedInput 
-                                mask={priceMask}
-                                placeholder="R$ "
-                                disabled={disabled || priceNegotiable}
-                                value={price}
-                                onChange={e=>setPrice(e.target.value)}
-                            />
-                        </div>
-                    </label>
+                        <label htmlFor="" className='area'>
+                            <div className='area--title'>Preço Negociável</div>
+                            <div className='area--input'>
+                                <input 
+                                className='check-input'
+                                type="checkbox" 
+                                disabled={disabled}
+                                checked={priceNegotiable}
+                                onChange={e=>setPriceNegotiable(!priceNegotiable)}
+                                />
+                            </div>
+                        </label>
 
-                    <label htmlFor="" className='area'>
-                        <div className='area--title'>Preço Negociável</div>
-                        <div className='area--input'>
-                            <input 
-                            className='check-input'
-                            type="checkbox" 
-                            disabled={disabled}
-                            checked={priceNegotiable}
-                            onChange={e=>setPriceNegotiable(!priceNegotiable)}
-                            />
-                        </div>
-                    </label>
+                        <label htmlFor="" className='area'>
+                            <div className='area--title'>Descrição</div>
+                            <div className='area--input'>
+                            <textarea
+                                disabled={disabled}
+                                value={desc}
+                                onChange={e=>setDesc(e.target.value)}
+                            ></textarea>
+                            </div>
+                        </label>
 
-                    <label htmlFor="" className='area'>
-                        <div className='area--title'>Descrição</div>
-                        <div className='area--input'>
-                           <textarea
-                            disabled={disabled}
-                            value={desc}
-                            onChange={e=>setDesc(e.target.value)}
-                           ></textarea>
-                        </div>
-                    </label>
-
-                    <label htmlFor="" className='area'>
-                        <div className='area--title'>Imagens(max: 5)</div>
-                        <div className='area--input'>
-                            <input 
-                            type="file"
-                            disabled={disabled}
-                            ref={fileField}
-                            multiple
-                            />
-                        </div>
-                    </label>
-
-                    <label htmlFor="" className='area'>
-                        <div className='area--title'></div>
-                        <div className='area--input'>
-                            <button disabled={disabled}>Adicionar Anúncio</button>
-                        </div>
-                    </label>
+                        <label htmlFor="" className='area'>
+                            <div className='area--title'></div>
+                            <div className='area--input'>
+                                <button disabled={disabled}>Adicionar Anúncio</button>
+                            </div>
+                        </label>
+                    </div>
                     
+                    <div className='col-2'>
+                        <label htmlFor="file" className='area'>
+                            <div className='area--title'>Adicionar Imagens</div>
+                            <div className='area--input'>
+                                <input 
+                                type="file"
+                                disabled={disabled}
+                                ref={fileField}
+                                id="file"
+                                multiple
+                                onChange={prevImages}
+                                />
+                            </div>
+                        </label>
+
+                        <div className='box-images'>
+                            {pImages.length > 0 &&
+                            <>
+                             <div className='images'>
+                                {pImages.map((i,k)=>
+                                    <img key={k} src={i} alt="" />     
+                                )}
+                            </div>
+                            <div className='button'>
+                                <button onClick={cleanInputFile}>Limpar Seleção</button>
+                            </div>
+                            </>   
+                            }
+                            {pImages.length <= 0 &&
+                            <>
+                                <img src="/public/images/no-pictures.png" alt="" />
+                                <img src="/public/images/no-pictures.png" alt="" />
+                                <img src="/public/images/no-pictures.png" alt="" />
+                                <img src="/public/images/no-pictures.png" alt="" />
+                                <img src="/public/images/no-pictures.png" alt="" />
+                            </>
+                            }
+                           
+                        </div>
+                    </div>                    
                 </form>
             </C.PageArea>
         </PageContainer>

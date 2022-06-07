@@ -6,17 +6,37 @@ import { Link } from 'react-router-dom'
 
 // Helpers 
 import { isLogged, doLogout } from '../../../helpers/AuthHandler'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Api } from '../../../helpers/api'
+import { useInfoReducer } from '../../../contexts/context'
 
 export const Header = () => {
 
   const {logged, email} = isLogged()
+
+  // User Image 
+  // const [image, setImage] = useState("")
+
+  //Context UserInfo
+  const {state, dispatch} = useInfoReducer()
 
   // Logout
   const handleLogout = () => {
     doLogout()
     window.location.href = '/'
   }
+
+  useEffect(()=> {
+    if(logged){
+      const getUser = async () => {
+        const json = await Api.getUserInfo()
+        // if(json.image){
+        //   dispatch({type: "SET_IMAGE", payload: json.image})
+        // }
+      }
+      getUser()
+    }
+  }, [logged])
 
   return(
     <C.HeaderArea>
@@ -43,7 +63,12 @@ export const Header = () => {
                     Meus Anuncios
                   </Link>
                 </li>
-                <li><Link to="/user/profile">Minha Conta</Link></li>
+                <li>
+                  <Link to="/user/profile">
+                    <img src={state.userImage} alt="i" />
+                    Minha Conta
+                  </Link>
+                </li>
                 <li><button onClick={handleLogout}>Sair</button></li>
                 <li><Link to="post-on-ad" className='button'>Anunciar</Link></li>
                 </>

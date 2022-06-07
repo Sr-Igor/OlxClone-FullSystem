@@ -14,26 +14,49 @@ export const Warning = styled.div<{display: string}>`
     align-items: center;
 
     .box--warn {
-        width: 500px;
+        width: 600px;
         height:250px;
         background-color: #FFF;
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         flex-direction: column;
         border-radius: 5px;
         box-shadow: 0 0  5px #000;
+        padding: 20px;
 
-        span {
-            font-size: 20px;
-            margin-bottom: 60px;
+        .warning {
+            background-color: #faad14;
+            color: #fff;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 19px;
+
+            img{
+                width: 30px;
+                margin-right: 10px;
+            }
+        }
+
+        .message-box {
+            display: flex;
+            flex-direction: column;
+
+            span {
+                text-align: center;
+                margin: 5px;
+                font-weight: bold;
+            }
         }
 
         .box--buttons {
 
             button {
                 border: none;
-                font-size: 20px;
+                font-size: 15px;
                 cursor: pointer;
             }
 
@@ -43,14 +66,15 @@ export const Warning = styled.div<{display: string}>`
                 color: #FFF;
                 padding: 5px 10px;
                 margin-right: 10px;
-                width 100px;
+                width 150px;
             }
 
             .cancel {
                 background-color: transparent;
-                font-size: 18px;
+                font-size: 15px;
             }
         }
+
     }
 `
 
@@ -79,6 +103,11 @@ export const PageArea = styled.div`
             .input--area {
                 margin: 0px 10px;
 
+                img {
+                    width: 20px;
+                    margin-right: 5px;
+                }
+
                 .unavailable {
                     border: none;
                     background-color: #413b6b;
@@ -89,11 +118,14 @@ export const PageArea = styled.div`
                     box-shadow: 0 0 5px #ccc;
                     transition: all ease .1s;
                     cursor: pointer;
+                    display: flex;
+
 
                     &:hover {
                         box-shadow: 0 0 1px #000;
                         background-color: #5c65c0;
                     }
+
                 }
 
                 .available {
@@ -106,6 +138,7 @@ export const PageArea = styled.div`
                     box-shadow: 0 0 5px #ccc;
                     transition: all ease .1s;
                     cursor: pointer;
+                    display: flex;
 
                     &:hover {
                         box-shadow: 0 0 1px #000;
@@ -121,6 +154,7 @@ export const PageArea = styled.div`
                     padding: 5px 10px;
                     color: #fff;
                     cursor: pointer;
+                    display: flex;
 
                     &:hover {
                         opacity: 0.7;
@@ -133,12 +167,15 @@ export const PageArea = styled.div`
             display: flex;
             min-height: 200px;
             justify-content: space-around;
-            align-items: center;
+            align-items: start;
+            margin-top: 50px;
 
             .col {
                 display: flex;
                 flex-direction: column;
                 align-items: end;
+                flex: 1;
+                padding: 10px;
 
                 .input--area {
                     margin: 10px 0;
@@ -148,20 +185,26 @@ export const PageArea = styled.div`
 
                 label {
                     margin-right: 10px;
+                    font-size: 15px;
+                    color: #555;
+                    font-weight: bold;
                 }
 
                 input, textarea, select {
                     border: none;
                     border-radius: 5px;
-                    border: 2px solid #ccc;
+                    border: 1px solid #ccc;
                     outline: none;
+                    font-size: 15px;
+                    padding: 5px;
+                    color: #555;
 
                     &:focus {
-                        border: 2px solid #6e0ad7;
+                        border: 1px solid #6e0ad7;
                     }
                 }
 
-                input[type="text"] {
+                input, select{
                     height: 35px;
                     width: 250px;
                 }
@@ -170,6 +213,11 @@ export const PageArea = styled.div`
                     resize: none;
                     height: 80px;
                     width: 250px;
+                }
+
+                input[type="checkbox"] {
+                    height: 15px;
+                    width: 15px;
                 }
             }
         }

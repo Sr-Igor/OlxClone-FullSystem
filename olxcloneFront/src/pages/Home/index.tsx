@@ -14,6 +14,7 @@ import { AdItem } from "../../components/partials/AdItem"
 
 // Types
 import { StateList, CategoryList, ItemsList } from "../../types/MainTypes"
+import { useInfoReducer } from '../../contexts/context'
 
 
 export const Home = () => {
@@ -53,15 +54,19 @@ export const Home = () => {
         getRecentAds()
     }, [])
 
+    //_________________________________________
+    const {state} = useInfoReducer()
+    console.log(state.userImage)
+
     return(
         <>
             <C.SearchArea>
                 <PageContainer>
 
                     <div className="searchBox">
-                        <form action="/ads" method="GET">
+                        <form action="/ads" method="">
                             <input type="text" name="q" placeholder="O que procura?"/>
-                            <select name="state" id="state">
+                            <select>
                                 <option></option>
                                 {stateList.map((item: StateList, index)=> 
                                     <option key={index} value={item.name}>{item.name}</option>
@@ -74,7 +79,9 @@ export const Home = () => {
                     <div className="categoryList">
                         {categories.map((item: CategoryList, index) =>
                             <Link key={index} to={`/ads?cat=${item.slug}`} className="categoryItem">
-                                <img src={item.img} alt="" />
+                                <div className='box-image'>
+                                    <img src={item.img} alt="" />
+                                </div>
                                 <span>{item.name}</span>
                             </Link>
                         )}

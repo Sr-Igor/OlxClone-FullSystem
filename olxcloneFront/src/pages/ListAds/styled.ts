@@ -19,7 +19,7 @@ export const PageArea = styled.div`
             border: 2px solid #9BB83C;
             border-radius: 5px;
             font-size: 15px;
-            color: #000;
+            color: #777;
             padding: 10px;
         }
 
@@ -61,7 +61,8 @@ export const PageArea = styled.div`
 
         h2 {
             margin: 0;
-            font-size: 18px;
+            margin-left: 15px;
+            font-size: 25px;
         }
 
         .listWarning {
@@ -80,28 +81,22 @@ export const PageArea = styled.div`
 
         .pagination {
             display: flex;
-            align-items: center;
             justify-content: center;
-            margin: 10px 0;
-
+            margin: 10px;
+    
             .pageItem {
-                width: 30px;
-                height: 30px;
-                border: 1px solid #000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 14px;
-                margin-right: 5px;
+                background-color: #FF8100;
+                color: #FFF;
+                margin: 2px;
+                padding: 5px 10px;
+                border-radius: 50%;
+                font-size: 12px;
                 cursor: pointer;
-
-                &:hover {
-                    border: 1px solid #CCC;
-                }
-
-                &.active {
-                    background-color: #CCC;
-                }
+            }
+    
+            .active {
+                background-color: #6e0ad6;
+                opacity: 0.5;
             }
         }
     }

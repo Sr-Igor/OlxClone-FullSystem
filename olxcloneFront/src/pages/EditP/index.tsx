@@ -170,6 +170,7 @@ export const EditP = () => {
 
     // Request Edit Images (ADD)
     const addImage = async ()=> {
+        setError("") // Clean error
         // Request
         const formData = new FormData() // Create FormData
 
@@ -191,6 +192,7 @@ export const EditP = () => {
     
     //  Request Edit Images (DELETE)
     const delImage = async (index: number) => {
+        setError("") // Clean error
         // Visual config 
         delImages.push(currentImages[index].url)
         let updateImages = [...currentImages]
@@ -216,6 +218,7 @@ export const EditP = () => {
 
     // Set available or unavailable
     const setCondition = async (order: boolean) => {
+        setError("") // Clean error
         setStatus(order)
         const formData = new FormData() 
         formData.append("status", order.toString())
@@ -232,23 +235,31 @@ export const EditP = () => {
 
     // Delete Ads
     const deleteAds = async () => {
+        setError("") // Clean error
         await Api.deleteAds(id)
         navigate("/")
     }
 
     return(
         <PageContainer>
-            {warning && 
-                <C.Warning display={displayModal}>
-                    <div className="box--warn">
-                        <span>Tem certeza que deseja excluir esse anúncio ?</span>
-                        <div className="box--buttons">
-                            <button className="confirm" onClick={()=>deleteAds()}>Sim</button>
-                            <button className="cancel" onClick={e => setDisplayModal("none")}>Cancelar</button>
-                        </div>
-                    </div>
-                </C.Warning>
-            }
+            {/* {warning &&  */}
+              <C.Warning display={displayModal}>
+              <div className="box--warn">
+                  <div className='warning'>
+                      <img src="/public/icons/alert.png" alt="" />
+                      <div className='warn'>Aviso</div>
+                  </div>
+                  <div className='message-box'>
+                      <span>Ao excluir esse anúncio ele será apagado permanentemente</span>
+                      <span>Tem certeza que deseja excluir? </span>
+                      </div>
+                  <div className="box--buttons">
+                      <button className="confirm" onClick={()=>deleteAds()}>Excluir</button>
+                      <button className="cancel" onClick={e => setDisplayModal("none")}>Cancelar</button>
+                  </div>
+              </div>
+          </C.Warning>
+            {/* } */}
             <C.PageArea>
                 <h2>Editar Anúncio</h2>
                 <hr />
@@ -289,15 +300,24 @@ export const EditP = () => {
                         <div className="row-1">
                             <div className="input--area">
                                 {status &&
-                                    <div className="unavailable" onClick={()=> setCondition(false)}>Marcar como Indisponível</div>
+                                    <div className="unavailable" onClick={()=> setCondition(false)}>
+                                        <img src="/public/icons/error.png" alt="inds" />
+                                        Marcar como Indisponível
+                                    </div>
                                 }
                                 {!status &&
-                                    <div className="available" onClick={()=> setCondition(true)}>Marcar como Disponível</div>
+                                    <div className="available" onClick={()=> setCondition(true)}>
+                                        <img src="/public/icons/check.png" alt="dis" />
+                                        Marcar como Disponível
+                                    </div>
                                 }
                             </div>
 
                             <div className="input--area">
-                                <div className="del" onClick={()=>setDisplayModal("flex")}>Excluir Anúncio</div>
+                                <div className="del" onClick={()=>setDisplayModal("flex")}>
+                                    <img src="/public/icons/trash.png" alt="trash" />
+                                    Excluir Anúncio
+                                </div>
                             </div>
                         </div>
                        

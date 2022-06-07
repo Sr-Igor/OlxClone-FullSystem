@@ -49,6 +49,7 @@ const apiFetchGet = async (endpoint: string, body?: any ) => {
 }
 
 const apiFecthFile = async (endpoint: string, body: any) => {
+    console.log(body)
     let token = Cookie.get("token")
     const res = await fetch(BASEAPI+endpoint, {
         method: "POST",
@@ -58,10 +59,11 @@ const apiFecthFile = async (endpoint: string, body: any) => {
         body
     })
     const json = await res.json()
-    if(json.notallowed){
-        window.location.href = '/signin'
-        return
-    }
+    console.log(json)
+    // if(json.notallowed){
+    //     window.location.href = '/signin'
+    //     return
+    // }
 
     return json
 }

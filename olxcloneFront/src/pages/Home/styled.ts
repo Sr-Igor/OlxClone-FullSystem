@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
 export const SearchArea = styled.div`
-    background-color: #DDD;
+    background-color: #6e0ad6;
     border-bottom: #CCC;
     padding: 20px 0;
 
     .searchBox {
-        background-color: #9bb83c;
+        background-color: #4444;
         padding: 20px 15px;
         border-radius: 5px;
         box-shadow: 1px 1px 0.3px rgba(0,0,0,0.2);
@@ -50,26 +50,44 @@ export const SearchArea = styled.div`
 
     .categoryList {
         display: flex;
-        flex-wrap: wrap;
+        // flex-wrap: wrap;
         margin-top: 20px;
+        margin-bottom: 20px;
 
         .categoryItem{
-            width: 20%;
+            width: calc(100% / 12);
             display: flex;
+            flex-direction: column;
             align-items: center;
-            color: #000;
+            font-size: 11px;
+            color: #FFF;
             text-decoration: none;
+            text-align: center;
             height: 50px;
-            margin-bottom: 10px;
+            margin: 10px;
+            
+            transition: all ease 0.2s;
 
             &:hover {
-                color: #999;
+                opacity: 0.5;
             }
 
-            img {
+            .box-image {
+                background-color: #FFF;
+                padding: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 width: 45px;
                 height: 45px;
-                margin-right: 10px;
+                border-radius: 30px;
+
+                img {
+                    width: 32px;
+                    height: 32px;
+                }
+
+               
             }
         }
     }
@@ -91,7 +109,8 @@ export const PageArea = styled.div`
         text-decoration: none;
         font-weight: bold;
         display: inline-block;
-        margin-top: 10px;
+        margin: 10px 0;
+        font-size: 20px;
 
         &:hover {
             color: #9d9d9d;

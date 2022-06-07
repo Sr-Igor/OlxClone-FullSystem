@@ -24,7 +24,7 @@ router.get("/ping", ApiController.ping)
 
 router.get('/states', UserController.getStates)
 router.get('/user/me', privateRoute, UserController.info)
-router.post('/user/edit', privateRoute, upload.array("images", 5), UserValidator.editUser, UserController.editActions)
+router.post('/user/edit', privateRoute, upload.single("image"), UserValidator.editUser, UserController.editActions)
 // router.get('/findUser', privateRoute, UserController.findUser)
 
 router.post('/user/signin', AuthValidator.signIn,AuthController.singIn)

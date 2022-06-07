@@ -3,6 +3,7 @@ import { Schema, model, connection } from 'mongoose';
 type UserType = {
     name: string,
     email: string,
+    image: string
     state: string,
     passwordHash: string,
     token: string
@@ -12,6 +13,7 @@ const modelSchema = new Schema<UserType>({
     name: String,
     email: String,
     state: String,
+    image: String,
     passwordHash: String,
     token: String
 })

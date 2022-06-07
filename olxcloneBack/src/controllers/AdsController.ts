@@ -186,6 +186,13 @@ export const getItem = async (req: Request, res: Response) => {
     let stateUser = await State.findById(userInfo.state)
     let stateProduct = await State.findById(item.state)
 
+    let imageUser
+    if(userInfo.image !== ""){
+        imageUser = `${process.env.BASE}/media/${userInfo.image}.jpg`
+    }else{
+        imageUser = ""
+    }
+
 
     let others: any = []
     if(other === "true") {
@@ -225,7 +232,8 @@ export const getItem = async (req: Request, res: Response) => {
         userInfo: {
             name: userInfo.name,
             email: userInfo.email,
-            state: stateUser.name
+            state: stateUser.name,
+            image: imageUser
         },
         others
     }
@@ -351,22 +359,22 @@ export const editAction = async (req: Request, res: Response) => {
 
 export const adsUser = async (req: Request, res: Response) => {
     let token = req.headers.authorization?.slice(7)
-    let {sort = "asc", offset= 0, limit = 8 } = req.query
-    let total = 0
-    console.log(sort, offset, limit)
+    let {sort = "asc", offset= 0, limit = 8, status } = req.query
+    // let total = 0
+    let statusBoo = status == "true"?true:false
 
     const user = await User.findOne({token})
     const adsTotalOn = await Ads.find({idUser: user._id, status: true})
     const adsTotalOff = await Ads.find({idUser: user._id, status: false})
     const totalOn = adsTotalOn.length
     const totalOff = adsTotalOff.length
-    total = totalOn + totalOff
+    // total = totalOn + totalOff
 
-    const adsData = await Ads.find({idUser: user._id})
+    const adsData = await Ads.find({idUser: user._id, status: statusBoo})
     .sort({dateCreated: (sort == "desc"? -1: 1)})
     .skip(Number(offset))
     .limit(Number(limit))
-    
+
     let ads = []
     for (let i in adsData){
 
@@ -387,7 +395,12 @@ export const adsUser = async (req: Request, res: Response) => {
         })
     }
     res.status(200)
-    res.json({ads, total, totalOn, totalOff})
+
+    res.json({
+        ads, 
+        total: (statusBoo)?totalOn:totalOff, 
+        totalOn, totalOff
+    })
 }
 
 export const deleteAds = async (req: Request, res: Response) => {

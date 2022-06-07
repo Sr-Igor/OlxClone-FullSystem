@@ -76,11 +76,35 @@ export const Warning = styled.div<{display: string}>`
 
     }
 `
-
 export const PageArea = styled.div<{color: string}>`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .options{
+        display: flex;
+        justify-content: end;
+        position relative;
+        heigth: 60px;
+        background-color: #40453f;
+
+        div {
+            cursor: pointer;
+            transition: width 0.5s 0s ease;
+            width: 30%;
+            text-align: center;
+            color: #ccc;
+            padding: 5px 10px;
+            font-size: 13px;
+        }
+
+        .active {
+            text-align: center;
+            width: 95%;
+            background-color: #198754;
+            color: #fff;
+        }
+    }
 
     .title--area { 
         width: 100%;
@@ -110,11 +134,71 @@ export const PageArea = styled.div<{color: string}>`
         box-shadow: 0 0 5px #BBB;
         padding: 35px;
 
+        
+        .currentImage {
+            display: flex;
+            justify-content: center;
+
+            img {
+                width: 200px;
+                height: 200px;
+                border-radius: 100px;
+            }
+        }
+
+        .input--area {
+            display: flex;
+            justify-content: center;
+
+            label {
+                background-color: #e57706;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: row;
+                width: 35px;
+                height: 35px;
+                border-radius: 30px;
+                margin-top: -15px;
+                cursor: pointer;
+
+                img {
+                    width: 20px;
+                }
+            }
+
+            input[type="file"] {
+                display: none;
+            }
+
+            .delete-label {
+                margin-top: 10px;
+                width: 150px;
+                font-size: 15px;
+                height: 40px;
+                cursor: pointer;
+                background-color: #cf1500;
+
+                .del {
+                    display: flex;
+                    align-items: center;
+                
+                    img {
+                        width: 20px;
+                    }
+
+                    span {
+                        color: #fff;
+                        margin: 0;
+                        margin-left: 5px;
+                    }
+                }
+            }
+        }
+
         .message {
             color: #FFF;
             background-color: ${props => props.color};
-            // background-color: #c9242e; //error
-            //background-color: #408140; // sucess
             margin-top: 15px;
             padding: 5px 10px;
             border-radius: 5px;
