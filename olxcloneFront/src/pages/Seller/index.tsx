@@ -117,7 +117,7 @@ export const SellerPage = () => {
                         </div>
                         {!exiOn &&
                             <div className="emptyMessage">
-                                <img src="../public/images/empty-folder.png" alt="" />
+                                <img src="/images/empty-folder.png" alt="" />
                                 <div>Você não possui anúncios ativos publicados no momento</div>
                             </div>
                         }
@@ -132,7 +132,7 @@ export const SellerPage = () => {
                         </div>
                         {!exiOff &&
                             <div className="emptyMessage">
-                                <img src="../public/images/empty-folder.png" alt="" />
+                                <img src="/images/empty-folder.png" alt="" />
                                 <div>Você não possui anúncios inativos publicados no momento</div>
                             </div>
                         }

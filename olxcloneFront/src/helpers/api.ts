@@ -22,7 +22,7 @@ const apiFetchPost = async (endpoint: string, body: any) => {
     })
     const json = await res.json()
 
-    if(json.notallowed){
+    if(json.error == "Not Authorized JWT"){
         window.location.href = '/signin'
         return
     }
@@ -41,7 +41,7 @@ const apiFetchGet = async (endpoint: string, body?: any ) => {
     })
     const json = await res.json()
    
-    if(json.notallowed){
+    if(json.error == "Not Authorized JWT"){
         window.location.href = '/signin'
         return
     }
@@ -60,10 +60,10 @@ const apiFecthFile = async (endpoint: string, body: any) => {
     })
     const json = await res.json()
     console.log(json)
-    // if(json.notallowed){
-    //     window.location.href = '/signin'
-    //     return
-    // }
+    if(json.error == "Not Authorized JWT"){
+        window.location.href = '/signin'
+        return
+    }
 
     return json
 }
@@ -77,7 +77,7 @@ const apiFecthAdsUser = async (endpoint: string) => {
         },
     })
     const json = await res.json()
-    if(json.notallowed){
+    if(json.error == "Not Authorized JWT"){
         window.location.href = '/signin'
         return
     }

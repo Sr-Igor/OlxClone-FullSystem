@@ -2,6 +2,14 @@ import styled from "styled-components";
 
 export const PageArea = styled.div`
 
+    .box-error {
+        margin: 10px 0;
+        background-color: #c9242e;
+        border-radius: 5px;
+        color: #FFF;
+        padding: 10px;
+    }
+
     form {
         background-color: #FFF;
         border-radius: 3px;
@@ -86,11 +94,28 @@ export const PageArea = styled.div`
             }
 
             .box-images {
+
+                .images{
+                    display: flex;
+                    justify-content: start;
+                    flex-wrap: wrap;
+
+                    .image {
+                        background-color: #000;
+                        display:flex;
+                        margin: 3px;
+                        height: 150px;
+                        
+                    }
+                }
                 img {
                     width: 150px;
-                    height: 150px;
+                    max-height: 150px;
+                    object-fit: cover;
+                    object-position: center;
+                    margin: auto;
                 }
-
+               
                 .button {
 
                     button {

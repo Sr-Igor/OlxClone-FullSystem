@@ -119,8 +119,8 @@ export const Profile = () => {
             return
         }
 
-        if(newPassword == ""){
-            setMessagePassword("Preencha a nova senha")
+        if(newPassword == "" || newPassword.length < 8){
+            setMessagePassword("Preencha a nova senha corretamente")
             setMessageColor("#c9242e")
             return
         }
@@ -131,6 +131,12 @@ export const Profile = () => {
 
         // Send Request
         const json = await Api.editUser(formData)
+
+        if(json.error.newPassword){
+            setMessagePassword(json.error.newPassword.msg)
+            setMessageColor("#c9242e") 
+            return
+        }
 
         if(!json.error){
             setMessagePassword("Senha alterada com sucesso")
@@ -184,13 +190,14 @@ export const Profile = () => {
     }
 
     const deleteImage = async () => {
-        dispatch({type: "SET_IMAGE", payload: "/public/images/default-profile.jpg"})
+        dispatch({type: "SET_IMAGE", payload: "/images/default-profile.jpg"})
         setMessagePassword("")
         setMessageColor("")
+        fileField.current.value = ""
         console.log(image)
         if(image || userInfo.image){
             const formData = new FormData()
-            formData.append("image", "")
+            formData.append("delProfileImage", "delete")
            
              // Send Request
              const json = await Api.editUser(formData)
@@ -204,7 +211,6 @@ export const Profile = () => {
                  setMessageColor("#c9242e") 
              }
         }
-      
     }
 
     return(
@@ -213,7 +219,7 @@ export const Profile = () => {
                 <C.Warning display={displayModal[0]}>
                     <div className="box--warn">
                         <div className='warning'>
-                            <img src="/public/icons/alert.png" alt="" />
+                            <img src="/icons/alert.png" alt="" />
                             <div className='warn'>Aviso</div>
                         </div>
                         <div className='message-box'>
@@ -282,7 +288,7 @@ export const Profile = () => {
                           </div>
                         <div className='input--area'>
                             <label htmlFor="file">
-                                <img src="/public/icons/plus.png" alt="adicionar" />
+                                <img src="/icons/plus.png" alt="adicionar" />
                                 <input type="file" name='file' id='file' ref={fileField} onChange={prevImage}/>
                             </label>
                         </div>
@@ -290,7 +296,7 @@ export const Profile = () => {
                         <div className='input--area'>
                             <label  className='delete-label'>
                                 <div className='del' onClick={deleteImage}>
-                                    <img src="/public/icons/trash.png" alt="delete" />
+                                    <img src="/icons/trash.png" alt="delete" />
                                     <span>Excluir Imagem</span>
                                 </div>
                             </label>
@@ -314,18 +320,18 @@ export const Profile = () => {
                                 <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} disabled={disable}/>
                             </label>
                             <label>
-                                <span>Nova Senha</span>
+                                <span>Nova Senha <small>Mínimo 8 caracteres</small></span>
                                 <div className='vs-password'>
                                     {!visiblePassword && 
                                     <>
                                         <input type="password" value={newPassword} onChange={(e)=>setNewPassword(e.target.value)} disabled={disable}/>
-                                        <img src="/public/icons/show.png" alt="show"  onClick={()=> setVisiblePassword(true)}/>
+                                        <img src="/icons/show.png" alt="show"  onClick={()=> setVisiblePassword(true)}/>
                                     </>
                                     }
                                     {visiblePassword &&
                                     <>
                                         <input type="text" value={newPassword} onChange={(e)=>setNewPassword(e.target.value)} disabled={disable}/>
-                                        <img src="/public/icons/hide.png" alt="hide" onClick={()=> setVisiblePassword(false)}/>
+                                        <img src="/icons/hide.png" alt="hide" onClick={()=> setVisiblePassword(false)}/>
                                     </>
                                     }
                                 </div>

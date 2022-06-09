@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { Api } from '../../helpers/api'
 
 //Components folders
-import { PageContainer, PageTitle, ErrorMessage } from '../../components/TemplateComponents'
+import { PageContainer, PageTitle } from '../../components/TemplateComponents'
 
 //Mask price field (libs)
 import MaskedInput from 'react-text-mask'
@@ -71,56 +71,64 @@ export const AddAd = () => {
         setDisabled(true) // Disable buttons
         setError("") // Clean error
 
-        let errors = []
-
+        
         if(!title.trim()){  // Verify empty title
-            errors.push("Sem Titúlo")
+           setError("Preencha um titúlo para o anúncio")
+           setDisabled(false)
+           return
         }
 
         if(!category){ // Verify empty category
-            errors.push("Sem Categoria")
+            setError("Selecione uma Categoria")
+            setDisabled(false)
+            return
         }
-        console.log(price)
+
+        if(!statePd){ // Verify empty state
+            setError("Selecione um Estado")
+            setDisabled(false)
+            return
+        }
+        
         if(!price && !priceNegotiable){
-            errors.push("Sem preço ou negociação")
+            setError("Preencha o preço ou aceite negociações")
+            setDisabled(false)
+            return
         }
 
         // If not found errors
-        if(errors.length === 0){
-            formData.append("state", statePd)
-            formData.append("category", category)
-            formData.append("title", title)
-            formData.append("priceNegotiable", priceNegotiable.toString())
-            formData.append("description", desc)
-            formData.append("price", price)
-            
-            // Verify Images, format and append in formData
-            if(fileField.current.files.length > 0 && pImages.length !== 0){
-                for(let i in fileField.current.files){
-                    formData.append("images", fileField.current.files[i])
-                }
+        formData.append("state", statePd)
+        formData.append("category", category)
+        formData.append("title", title)
+        formData.append("priceNegotiable", priceNegotiable.toString())
+        formData.append("description", desc)
+        formData.append("price", price)
+        
+        // Verify Images, format and append in formData
+        if(fileField.current.files.length > 0 && pImages.length !== 0){
+            for(let i in fileField.current.files){
+                formData.append("images", fileField.current.files[i])
             }
-
-            // Send Request
-            const json = await Api.addAd(formData)
-
-            // Verify errors 
-            if(!json.error) {
-                navigate(`/ad/${json.id}`) // Redirect to product page
-                return
-            }else {
-                setError(json.error)
-            }
-        }else{
-            setError(errors.join("\n"))
         }
 
+        // Send Request
+        const json = await Api.addAd(formData)
+
+        // Verify errors 
+        if(!json.error) {
+            navigate(`/ad/${json.id}`) // Redirect to product page
+            return
+        }else {
+            setError(json.error)
+        }
+      
         setDisabled(false) 
     }
 
     const prevImages = () => {
         
          // Verify Images, format and append in formData
+         console.log(fileField.current.value)
          if(fileField.current.files.length > 0){
             let blobImages: any = []
             for(let i in fileField.current.files){
@@ -135,6 +143,7 @@ export const AddAd = () => {
 
     const cleanInputFile = () => {
         formData.delete("images")
+        fileField.current.value = ""
         setPImages([])
     }
 
@@ -153,7 +162,7 @@ export const AddAd = () => {
             <C.PageArea>
 
                 {error && 
-                    <ErrorMessage>{error}</ErrorMessage>
+                    <div className='box-error'>{error}</div>
                 }
 
                 <form action="" onSubmit={handleSubmit}>
@@ -265,7 +274,9 @@ export const AddAd = () => {
                             <>
                              <div className='images'>
                                 {pImages.map((i,k)=>
-                                    <img key={k} src={i} alt="" />     
+                                    <div className='image' key={k}>
+                                        <img src={i} alt="" />
+                                    </div>     
                                 )}
                             </div>
                             <div className='button'>
@@ -275,11 +286,11 @@ export const AddAd = () => {
                             }
                             {pImages.length <= 0 &&
                             <>
-                                <img src="/public/images/no-pictures.png" alt="" />
-                                <img src="/public/images/no-pictures.png" alt="" />
-                                <img src="/public/images/no-pictures.png" alt="" />
-                                <img src="/public/images/no-pictures.png" alt="" />
-                                <img src="/public/images/no-pictures.png" alt="" />
+                                <img src="/images/no-pictures.png" alt="" />
+                                <img src="/images/no-pictures.png" alt="" />
+                                <img src="/images/no-pictures.png" alt="" />
+                                <img src="/images/no-pictures.png" alt="" />
+                                <img src="/images/no-pictures.png" alt="" />
                             </>
                             }
                            

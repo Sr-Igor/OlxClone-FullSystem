@@ -152,36 +152,44 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
     
                 .slide--Area{
                     display: flex;
+                    align-items: center;
                     position: relative;
                     width: ${props => props.width}px;
                     margin-left: ${props => props.currentImage}px;
                     height: 500px;
-                    // transition: all ease 0.5s;
+                    background-color: #fff;
+                    
                 }
     
                 .slide--Item{
-                    
+                   width: 500px;
+                   display: flex;
                     img {
-                        width: 500px;
-                        height: 500px;
-                        border-radius: 5px;
+                        max-width: 100%;
+                        max-height: 500px;
+                        margin: auto;
+
                     }
                 }
             }
 
             .mini--images {
-                width: 50px;
+                width: 54px;
                 margin-left: 10px;
 
                 .mini--item {
-                    width: 50px;
+                    width: 54px;
                     height: 50px;
+                    display:flex;
                     margin-bottom: 10px;
                     background-color: #fff;
+                    border-radius: 5px;
 
                     img {
                         width: 50px;
                         height: 50px;
+                        object-fit: cover;
+                        object-position: center;
                         border-radius: 5px;
                         cursor: pointer;
                     }
@@ -237,6 +245,8 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
             background-color: #6e0ad6;
             border-top-left-radius: 50px;
             border-bottom-left-radius: 50px;
+            color: #fff;
+            text-align: end;
 
             &:hover {
 

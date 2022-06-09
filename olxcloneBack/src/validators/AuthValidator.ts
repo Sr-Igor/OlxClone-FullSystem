@@ -16,7 +16,7 @@ export const AuthValidator = {
         }, 
         password: {
             isLength: {
-                options: { min: 2 }
+                options: { min: 8 }
             },
             errorMessage: "Invalid Passowrd"
         },

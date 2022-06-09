@@ -30,9 +30,10 @@ export const Header = () => {
     if(logged){
       const getUser = async () => {
         const json = await Api.getUserInfo()
-        // if(json.image){
-        //   dispatch({type: "SET_IMAGE", payload: json.image})
-        // }
+        console.log(json.image)
+        if(json.image){
+          dispatch({type: "SET_IMAGE", payload: json.image})
+        }
       }
       getUser()
     }

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const PageArea = styled.div`
+export const PageArea = styled.div<{opacity: number}>`
 
     display: flex;
     justify-content: center;
@@ -16,6 +16,7 @@ export const PageArea = styled.div`
         flex-direction: column;
         justify-content: start;
         align-items: center;
+        opacity: ${props => props.opacity};
 
         .logo {
             display: flex;

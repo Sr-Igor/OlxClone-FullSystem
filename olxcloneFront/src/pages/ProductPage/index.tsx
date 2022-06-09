@@ -37,7 +37,7 @@ export const ProductPage = () => {
     const [FormatedPrice, setFormatPrice] = useState("")
 
     // Slide Controllers
-    const [slideWidth, setSlideWidth] = useState(0)
+    const [slideWidth, setSlideWidth] = useState(1000)
     const [currentImage, setCurrentImage] = useState(0)
 
     // User Logged
@@ -132,7 +132,7 @@ export const ProductPage = () => {
             <C.Warning display={displayModal}>
                 <div className="box--warn">
                     <div className='warning'>
-                        <img src="/public/icons/alert.png" alt="" />
+                        <img src="/icons/alert.png" alt="" />
                         <div className='warn'>Aviso</div>
                     </div>
                     <div className='message-box'>
@@ -174,7 +174,7 @@ export const ProductPage = () => {
                     <div className='area--image'>
                         <div className='productImage'>
                             <div className='arrow left' onClick={handleSlidePrev}>
-                                <img src="/public/icons/arrow-left.png" alt="left" />
+                                <img src="/icons/arrow-left.png" alt="left" />
                             </div>
                             {loading && <C.Fake height={300} />}
                             {pdInfo.images && 
@@ -188,14 +188,15 @@ export const ProductPage = () => {
                                 </div>
                             } 
                             <div className='arrow right' onClick={handleSlideNext}>
-                                <img src="/public/icons/arrow-right.png" alt="right" />    
+                                <img src="/icons/arrow-right.png" alt="right" />    
                             </div>
                         </div>
                         <div className='mini--images'>
                         {pdInfo.images && 
                                 <div className='mini--images--area'>
                                     {pdInfo.images.map((img: string, k: number)=>
-                                        <div key={k} className="mini--item">
+                                        <div key={k} 
+                                        className="mini--item">
                                             <img 
                                             src={img} 
                                             alt="image" 
@@ -266,23 +267,23 @@ export const ProductPage = () => {
                         <div className='action-buttons'>
                             <Link to={`/user/edit/ads/${pdInfo.id}`}>
                                 <div className='editAdButton'>
-                                    <img src="/public/icons/edit.png" alt="Edit--Icon" />
+                                    <img src="/icons/edit.png" alt="Edit--Icon" />
                                     Editar Anúncio</div>
                             </Link>
                                 {pdInfo.status &&
                                     <div className='statusAdButton' onClick={()=> statusProduct(false)}>
-                                        <img src="/public/icons/error.png" alt="Unavailable--Icon" />
+                                        <img src="/icons/error.png" alt="Unavailable--Icon" />
                                         Marcar como Indisponível
                                     </div>
                                 }
                                 {!pdInfo.status &&
                                     <div className='statusAdButton'  onClick={()=> statusProduct(true)}>
-                                        <img src="/public/icons/check.png" alt="Available--Icon" />
+                                        <img src="/icons/check.png" alt="Available--Icon" />
                                         Marcar como Disponível
                                     </div>
                                 }
                                 <div className='deleteAdButton' onClick={()=> setDisplayModal("flex")}>
-                                    <img src="/public/icons/trash.png" alt="Delete--Icons" />
+                                    <img src="/icons/trash.png" alt="Delete--Icons" />
                                     Excluir Anúncio
                                 </div>
                         </div>

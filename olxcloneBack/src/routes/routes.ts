@@ -11,9 +11,12 @@ import multer from 'multer'
 
 const upload = multer({
     dest: "./tmp",
-    fileFilter: (req, file, cd) => {
+    fileFilter: (req, file, cb) => {
         const allowed: string[] = ['image/jpg', 'image/jpeg', 'image/png']
-        cd(null, allowed.includes(file.mimetype))
+        if(!allowed.includes(file.mimetype)){
+            cb(new Error('Envie somente imagens'))
+        }
+        cb(null, allowed.includes(file.mimetype))
     },
     limits: {fieldSize: 2000000}
 })

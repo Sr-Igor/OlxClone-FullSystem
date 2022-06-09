@@ -69,9 +69,6 @@ export const ListAds = () => {
         setOpacity(1)
     }
 
-    //Monitoring query Update
-    // useEffect
-
     // Monitoring total pages, variable with search
     useEffect(()=> {
         if(adList.length > 0){
@@ -79,6 +76,7 @@ export const ListAds = () => {
         }else{
             setPageCount(0)
         }
+        setCurrentPage(1)
     },[adsTotal])
 
     // Monitoring current page 
@@ -104,9 +102,8 @@ export const ListAds = () => {
         
         timer = setTimeout(()=> {
             getAdsList()
-            setCurrentPage(1)
         },2000)
-    }, [q, cat, stateUser])
+    }, [q, cat, stateUser, currentPage])
 
     // Request States webSite
     useEffect(()=> {
@@ -161,7 +158,7 @@ export const ListAds = () => {
                     <div className="filterName">Categoria:</div>
                     <ul>
                     <li  className={"categoryItem"} onClick={()=> setCat("")}>
-                        <img src="/public/icons/category.png" alt="" />
+                        <img src="/icons/category.png" alt="" />
                         <span>Todas as Categorias</span>
                     </li>
                         {categories.map((i: CategoryList, k)=> 

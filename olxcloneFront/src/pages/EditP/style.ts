@@ -290,14 +290,19 @@ export const ImgArea = styled.div`
 
 export const Item = styled.div`
     margin: 10px;
-    border-radius: 10px;
+    border-radius: 5px;
     background-color: #FFF;
+    height: 140px;
+    width: 140px;
+    display: flex;
+    box-shadow: 3px 2px 3px #777;
 
     img {
-        max-width:140px;
-        height: 140px;
-        border-radius: 5px;
-        box-shadow: 3px 2px 3px #777;
+        max-width: 140px;
+        max-height: 140px;
+        object-fit: cover;
+        object-position: center;
+        margin: auto;
     }
 `
 

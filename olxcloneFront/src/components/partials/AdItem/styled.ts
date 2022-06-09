@@ -18,9 +18,19 @@ export const Item = styled.div`
             border: 1px solid #CCC;
         }
 
-        .itemImg img {
+        .itemImg {
+            display: flex;
+            margin-bottom: 10px;
             width: 100%;
+        }
+
+        .itemImg img {
+            margin: auto;
+            width: 200px;
+            height: 200px;
             border-radius: 5px;
+            object-fit: cover;
+            object-position: center;
         }
 
         .itemName {

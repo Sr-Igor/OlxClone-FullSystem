@@ -24,7 +24,7 @@ export const UserValidator = {
         newPassword: {
             optional: true,
             isLength: {
-                options: { min: 2 }
+                options: { min: 8 }
             },
             errorMessage: "Invalid Passowrd"
         },
@@ -32,6 +32,9 @@ export const UserValidator = {
             optional: true,
             notEmpty: true,
             errorMessage: "Invalid State"
-        }
+        },
+        delProfileImage: {
+            optional: true,
+        }, 
     }),
 }

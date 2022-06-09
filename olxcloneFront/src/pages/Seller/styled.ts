@@ -35,6 +35,11 @@ export const PageArea = styled.div`
 
             .AdItem {
                 width: 20%;
+
+                img {
+                    width: 150px;
+                    height: 150px;
+                }
             }
         }
 

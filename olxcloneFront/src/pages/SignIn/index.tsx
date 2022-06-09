@@ -11,7 +11,7 @@ import { Api } from '../../helpers/api'
 import { doLogin } from '../../helpers/AuthHandler'
 
 // Components folders
-import { PageContainer, PageTitle, ErrorMessage } from '../../components/TemplateComponents'
+import { PageContainer, PageTitle} from '../../components/TemplateComponents'
 import { Link } from 'react-router-dom'
 
 export const SignIn = () => {
@@ -24,31 +24,58 @@ export const SignIn = () => {
     // Request Controllers
     const [disabled, setDisabled] = useState(false)
     const [error, setError] = useState("")
+    const [opacity, setOpacity] = useState(1)
 
     //Visibility Password 
     const [visiblePassword, setVisiblePassword] = useState(false)
 
     const handleSubmit = async (e: any) => {
-        console.log("entrou")
         e.preventDefault()
         setDisabled(true)
+        setOpacity(0.5)
         setError("")
+        
+
+        let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ 
+        let match = regex.test(email)
+
+        if(!match && password){
+            setError("Email Inválido")
+            setOpacity(1)
+            setDisabled(false)
+            return
+        }
+
         if(email && password) {
             const json = await Api.login(email, password)
             if(json.error){
-                console.log(json.error)
-                // setError(json.error)
+                if(json.error.email){
+                    setError(json.error.email.msg)
+                    setOpacity(1)
+                    setDisabled(false)
+                    return
+                }
+                if(json.error.password){
+                    setError(json.error.password.msg)
+                    setOpacity(1)
+                    setDisabled(false)
+                    return
+                }
+                setError(json.error)
+                setOpacity(1)
+                setDisabled(false)
             }else{
                 doLogin(json.token, rememberPassword, email)
                 window.location.href = '/'
             }
         }
         setDisabled(false)
+        setOpacity(1)
     }
 
     return(
         <PageContainer>
-            <C.PageArea>
+            <C.PageArea opacity={opacity}>
                 <div className='signin--area'>
                     <div className='logo'>
                         <span className='logo-1'>O</span>
@@ -59,17 +86,17 @@ export const SignIn = () => {
                         Acesse a sua conta
                     </div>
                     <div className='OAuth facebook-login'>
-                        <img src="/public/icons/facebook.png" alt="facebook-icon" />
+                        <img src="/icons/facebook.png" alt="facebook-icon" />
                         Entrar com o Facebook
                     </div>
                     <div className='OAuth google-login'>
-                        <img src="/public/icons/google.png" alt="google-icon" />
+                        <img src="/icons/google.png" alt="google-icon" />
                         Entrar com o Google
                     </div>
                     <span className='or'>ou</span>
                     {error &&
                         <div className='box-error'>
-                            <img src="/public/icons/alert.png" alt="alert-icon" />
+                            <img src="/icons/alert.png" alt="alert-icon" />
                             <span className='text-messge'>{error}</span>
                         </div>
                     }
@@ -99,7 +126,7 @@ export const SignIn = () => {
                                             onChange={e=>setPassword(e.target.value)}
                                             required
                                         />
-                                        <img src="/public/icons/show.png" alt="show" onClick={()=> setVisiblePassword(true)}/>
+                                        <img src="/icons/show.png" alt="show" onClick={()=> setVisiblePassword(true)}/>
                                     </div>
                                 }
                                 {visiblePassword && 
@@ -111,7 +138,7 @@ export const SignIn = () => {
                                             onChange={e=>setPassword(e.target.value)}
                                             required
                                         />
-                                        <img src="/public/icons/hide.png" alt="hide" onClick={()=> setVisiblePassword(false)}/>
+                                        <img src="/icons/hide.png" alt="hide" onClick={()=> setVisiblePassword(false)}/>
                                     </div>
                                 }
                             </div>

@@ -4,12 +4,16 @@ import sharp from 'sharp'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import { unlink } from 'fs/promises'
+import fs from "fs"
+import multer from 'multer'
 const Category = require('../models/category')
 const State = require("../models/state")
 const Ads = require("../models/ads")
 const User = require("../models/user")
 
 dotenv.config()
+
+const upload = multer().array("images", 5)
 
 export const getCategories = async (req: Request, res: Response) => {
     const cats = await Category.find()
@@ -26,7 +30,7 @@ export const getCategories = async (req: Request, res: Response) => {
     return res.json({categories})
 }
 
-export const addAction = async (req: Request, res: Response) => {
+export const addAction = async (req: Request, res: Response, ) => {
     let {title, price, priceNegotiable, description, category, state} = req.body
     let token = req.headers.authorization?.slice(7)
     let user = await User.findOne({token}).exec()
@@ -81,7 +85,7 @@ export const addAction = async (req: Request, res: Response) => {
         files.forEach( async (item: any) => {
             images.push(item.filename)
             await sharp(item.path)
-            .resize(500, 500)
+            // .resize()
             .toFormat("jpeg")
             .toFile(`./public/media/${item.filename}.jpg`)
             await unlink (item.path)
@@ -298,6 +302,7 @@ export const editAction = async (req: Request, res: Response) => {
             res.json({error: "Invalid State"})
             return
         }
+        console.log(stateLoc)
         updates.state = stateLoc._id
     }
 
@@ -322,7 +327,7 @@ export const editAction = async (req: Request, res: Response) => {
             Newimages.push(item.filename)
             updates.images = [...adsItem.images, ...Newimages]
             await sharp(item.path)
-            .resize(500, 500)
+            .resize(500)
             .toFormat("jpeg")
             .toFile(`./public/media/${item.filename}.jpg`)
             await unlink (item.path) 
@@ -346,8 +351,13 @@ export const editAction = async (req: Request, res: Response) => {
         for (let i in itemImages) {
             if(!formatLink.includes(itemImages[i])){
                 editImages.push(itemImages[i])
+            }else{
+                fs.unlink(`./public/media/${itemImages[i]}.jpg`, (err) => {
+                    if (err) throw err;
+                    console.log(`media/${itemImages[i]}.jpg was deleted`);
+                  });
             }
-        }
+        } 
 
         updates.images = [...editImages, ...Newimages]
     }

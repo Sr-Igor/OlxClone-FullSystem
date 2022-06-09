@@ -142,6 +142,8 @@ export const PageArea = styled.div<{color: string}>`
             img {
                 width: 200px;
                 height: 200px;
+                object-fit: cover;
+                object-position: center;
                 border-radius: 100px;
             }
         }
@@ -224,6 +226,16 @@ export const PageArea = styled.div<{color: string}>`
                 span {
                     margin-bottom: 10px;
                     color: #4a4a4a;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+
+                    small {
+                        font-size: 10px;
+                        font-weight: bold;
+                        position: absolute;
+                        right: 0;
+                    }
                 }
 
                 input, select {

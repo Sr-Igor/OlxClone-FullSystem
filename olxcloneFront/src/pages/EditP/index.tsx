@@ -41,7 +41,7 @@ export const EditP = () => {
     const [price, setPrice] = useState("")
     const [priceNeg, setPriceNeg] = useState(false)
     const [cat, setCat] = useState("")
-    const [state, setState] = useState("")
+    const [statePd, setStatePd] = useState("")
     const [status, setStatus] = useState(true)
     const [currentImages, setCurrentImages] = useState<any>([])
 
@@ -90,9 +90,9 @@ export const EditP = () => {
         setTitle(pdInfo.title)
         setDescription(pdInfo.description)
         setPrice(pdInfo.price)
-        setPriceNeg((pdInfo.priceNegotiable == "true") ? true : false)
+        setPriceNeg(pdInfo.priceNegotiable)
         setCat(pdInfo.category)
-        setState(pdInfo.state)
+        setStatePd(pdInfo.state)
         setStatus(pdInfo.status)
     }, [pdInfo])
     
@@ -108,7 +108,7 @@ export const EditP = () => {
                     )
                 }else{
                     arrayInfoImages.push(
-                        {url: "/public/images/no-pictures.png", empty: true}
+                        {url: "/images/no-pictures.png", empty: true}
                     )
                 }
             }
@@ -147,7 +147,7 @@ export const EditP = () => {
 
         if(errors.length === 0){
             const formData = new FormData() // Create FormData
-            formData.append("state", state)
+            formData.append("state", statePd)
             formData.append("cat", cat)
             formData.append("title", title)
             formData.append("priceNegotiable", priceNeg.toString())
@@ -185,9 +185,14 @@ export const EditP = () => {
 
          if(json.error == ""){
             setRecharge(true)
-         }else {
+            return
+         }
+
+         if(json.error == 'Unexpected field'){
+             setError("Limite de imagens exedido")
+         }else{
              setError(json.error)
-        }
+         }
     }
     
     //  Request Edit Images (DELETE)
@@ -196,7 +201,7 @@ export const EditP = () => {
         // Visual config 
         delImages.push(currentImages[index].url)
         let updateImages = [...currentImages]
-        updateImages[index].url = "/public/images/no-pictures.png"
+        updateImages[index].url = "/images/no-pictures.png"
         updateImages[index].empty = true
         setCurrentImages(updateImages)
 
@@ -240,13 +245,14 @@ export const EditP = () => {
         navigate("/")
     }
 
+    console.log(pdInfo)
     return(
         <PageContainer>
-            {/* {warning &&  */}
+        
               <C.Warning display={displayModal}>
               <div className="box--warn">
                   <div className='warning'>
-                      <img src="/public/icons/alert.png" alt="" />
+                      <img src="/icons/alert.png" alt="" />
                       <div className='warn'>Aviso</div>
                   </div>
                   <div className='message-box'>
@@ -259,7 +265,7 @@ export const EditP = () => {
                   </div>
               </div>
           </C.Warning>
-            {/* } */}
+           
             <C.PageArea>
                 <h2>Editar Anúncio</h2>
                 <hr />
@@ -277,7 +283,7 @@ export const EditP = () => {
                                             multiple
                                             onChange={()=>addImage()}
                                         />
-                                        <img src="/public/icons/plus.png" alt="add" />
+                                        <img src="/icons/plus.png" alt="add" />
                                         Adiconar Imagens
                                 </label>
                                 <div>Max: 5</div>
@@ -290,7 +296,7 @@ export const EditP = () => {
                                     </C.Item>
                                     {!i.empty &&
                                         <div className='del' onClick={()=>delImage(k)}>
-                                            <img src="/public/icons/trash.png" alt="del" />
+                                            <img src="/icons/trash.png" alt="del" />
                                         </div>
                                     }
                                 </C.ImgArea>
@@ -301,13 +307,13 @@ export const EditP = () => {
                             <div className="input--area">
                                 {status &&
                                     <div className="unavailable" onClick={()=> setCondition(false)}>
-                                        <img src="/public/icons/error.png" alt="inds" />
+                                        <img src="/icons/error.png" alt="inds" />
                                         Marcar como Indisponível
                                     </div>
                                 }
                                 {!status &&
                                     <div className="available" onClick={()=> setCondition(true)}>
-                                        <img src="/public/icons/check.png" alt="dis" />
+                                        <img src="/icons/check.png" alt="dis" />
                                         Marcar como Disponível
                                     </div>
                                 }
@@ -315,7 +321,7 @@ export const EditP = () => {
 
                             <div className="input--area">
                                 <div className="del" onClick={()=>setDisplayModal("flex")}>
-                                    <img src="/public/icons/trash.png" alt="trash" />
+                                    <img src="/icons/trash.png" alt="trash" />
                                     Excluir Anúncio
                                 </div>
                             </div>
@@ -377,9 +383,9 @@ export const EditP = () => {
 
                                 <div className="input--area">
                                     <label htmlFor="">Stado</label>
-                                    <select value={state} onChange={e=>setState(e.target.value)} disabled={disabled}>
-                                        {stateList && stateList.map((i: StateList, key)=>
-                                            <option key={key} value={i._id}>{i.name}</option>
+                                    <select onChange={e=>setStatePd(e.target.value)} disabled={disabled} value={statePd}>
+                                        {stateList.map((i: StateList, key)=>
+                                            <option key={key} value={i.name}>{i.name}</option>
                                         )}
                                     </select>
                                 </div>

@@ -55,8 +55,8 @@ export const Home = () => {
     }, [])
 
     //_________________________________________
-    const {state} = useInfoReducer()
-    console.log(state.userImage)
+    // const {state} = useInfoReducer()
+    // console.log(state.userImage)
 
     return(
         <>

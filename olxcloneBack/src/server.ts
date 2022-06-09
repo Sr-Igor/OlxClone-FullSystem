@@ -27,7 +27,7 @@ server.use((req: Request, res: Response)=> {
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     err.status ? res.status(err.status) : res.status(400)
-    err.message ? res.json({notallowed: err.message}) : res.json({error: "Something is wrong"})
+    err.message ? res.json({error: err.message}) : res.json({error: "Something is wrong"})
 }
 
 server.use(errorHandler)

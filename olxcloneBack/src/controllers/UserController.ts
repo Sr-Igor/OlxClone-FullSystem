@@ -42,12 +42,11 @@ export const info = async (req: Request, res: Response) => {
     }
 
     let image
-    if(user.image || user.image !== ""){
+    if(user.image && user.image !== ""){
         image = `${process.env.BASE}/media/${user.image}.jpg`
     }else{
         image = ""
     }
-
     res.json({
         name: user.name,
         email: user.email,
@@ -116,8 +115,8 @@ export const editActions = async (req: Request, res: Response) => {
             return
         }
     }
+    
     let image;
-    console.log(req.file)
     if(req.file){
         let file: any = req.file
             image = file.filename
@@ -130,9 +129,11 @@ export const editActions = async (req: Request, res: Response) => {
                 if (err) throw err;
                 console.log('path/file.txt was deleted');
               })
-    }else {
-        image = ""
-        updates.image = image
+    }
+
+
+    if(data.delProfileImage){
+        updates.image = ""
     }
     
     let userImageProfile = (image) ? `${process.env.BASE}/media/${image}.jpg`: null
