@@ -14,15 +14,14 @@ import { PageContainer } from "../../components/TemplateComponents"
 // Types
 import { ItemsList, SingleItem } from "../../types/MainTypes"
 
-
 export const SellerPage = () => {
     
     // Set current open section
     const [handleAds, setHandleAds] = useState(true)
 
     // Ads On and Off
-    const [onAds, setOnAds] = useState([])
-    const [offAds, setOffAds] = useState([])
+    const [onAds, setOnAds] = useState<ItemsList[]>([])
+    const [offAds, setOffAds] = useState<ItemsList[]>([])
 
     // Verify empty option (Ads-On/Ads-Off)
     const [exiOn, setExiOn] = useState(false)
@@ -37,7 +36,7 @@ export const SellerPage = () => {
     const [adsTotal, setAdsTotal] = useState(0)
     const [pageCount, setPageCount] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
-    const [pagination, setPagination] = useState([])
+    const [pagination, setPagination] = useState<number[]>([])
 
     const getUserAds = async (status : boolean) => {
         let offset = (currentPage -1) * 10 // Calc current page 
@@ -55,8 +54,8 @@ export const SellerPage = () => {
         setAdList(json.ads)
 
         // Separete Ads for status
-        const adsOn: any = []
-        const adsOff: any = []
+        const adsOn = []
+        const adsOff = []
         for (let i in ads){
             if(ads[i].status === true){
                 adsOn.push(ads[i])
@@ -89,8 +88,9 @@ export const SellerPage = () => {
         getUserAds(handleAds) 
     }, [currentPage, handleAds])
 
+    // Count total pages
     useEffect(()=> {
-        let pags: any = []
+        let pags = []
         for(let i=1; i <=pageCount; i++){
             pags.push(i)
         }
@@ -102,8 +102,6 @@ export const SellerPage = () => {
             <C.PageArea>
                 <h2>Meus Anúncios</h2>
                 <div className="box-filter">
-                    {/* <span onClick={()=>getUserAds(true)} className={handleAds == true ? "active":""}>Ativos ( {totalOn} )</span>
-                    <span onClick={()=>getUserAds(false)} className={handleAds == false ? "active":""}>Inativos ( {totalOff} )</span> */}
                     <span onClick={()=>setHandleAds(true)} className={handleAds == true ? "active":""}>Ativos ( {totalOn} )</span>
                     <span onClick={()=>setHandleAds(false)} className={handleAds == false ? "active":""}>Inativos ( {totalOff} )</span>
                 </div>
@@ -143,9 +141,10 @@ export const SellerPage = () => {
                 <div className="pagination">
                     {pagination.map((i,k)=> 
                         <div 
-                        key={k} 
-                        onClick={()=>setCurrentPage(i)}
-                        className={i === currentPage ? "pageItem active": "pageItem"}>{i}</div>
+                            key={k} 
+                            onClick={()=>setCurrentPage(i)}
+                            className={i === currentPage ? "pageItem active": "pageItem"}>{i}
+                        </div>
                     )}
                 </div>
             </C.PageArea>

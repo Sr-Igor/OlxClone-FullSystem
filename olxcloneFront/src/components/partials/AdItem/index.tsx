@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 // Types
 import { ItemsList } from "../../../types/MainTypes"
 
+// Props
 type Data = {
     data: ItemsList
 }

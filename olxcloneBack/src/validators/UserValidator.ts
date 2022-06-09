@@ -8,30 +8,30 @@ export const UserValidator = {
             isLength: {
                 options: { min: 2 }
             },
-            errorMessage: "This field must be at least 2 characters long"
+            errorMessage: "Nome precisa ter pelo menos 2 caracteres"
         },
         email: {
             optional: true,
             isEmail: true,
             normalizeEmail: true,
-            errorMessage: "Invalid E-mail"
+            errorMessage: "E-mail Inválido"
         }, 
         password: {
             optional: true,
             notEmpty: true,
-            errorMessage: "Invalid Passowrd"
+            errorMessage: "Senha Inválida"
         },
         newPassword: {
             optional: true,
             isLength: {
                 options: { min: 8 }
             },
-            errorMessage: "Invalid Passowrd"
+            errorMessage: "Nova senha deve conter pelo menos 8 caracteres"
         },
         state: {
             optional: true,
             notEmpty: true,
-            errorMessage: "Invalid State"
+            errorMessage: "Estado inválido"
         },
         delProfileImage: {
             optional: true,

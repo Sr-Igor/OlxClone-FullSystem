@@ -1,17 +1,42 @@
+// Cookies
 import Cookie from 'js-cookie'
+
+// QueryString transform
 import qs from 'qs'
+
+type Options =  {
+    sort: string
+    limit: number
+    q?: string
+    cat?: string
+    state?: string
+    offset?: number
+}
+
+type FetchPost = {
+    email?: string,
+    password?: string,
+    name?: string, 
+    state?: string,
+
+}
+
+type FetchGet = {
+    id?: string
+    other?: boolean
+    sort?: string
+    limit?: number
+    q?: string
+    cat?: string
+    state?: string
+    offset?: number
+}
+
+
 
 const BASEAPI = 'http://localhost:3001'
 
-const apiFetchPost = async (endpoint: string, body: any) => {
-
-    if(!body.token) {
-        let token = Cookie.get("token")
-        if(token) {
-            body.token = token
-        }
-    }
-
+const apiFetchPost = async (endpoint: string, body: FetchPost) => {
     const res = await fetch(BASEAPI+endpoint, {
         method: "POST",
         headers: {
@@ -30,10 +55,9 @@ const apiFetchPost = async (endpoint: string, body: any) => {
     return json
 }
 
-const apiFetchGet = async (endpoint: string, body?: any ) => {
+const apiFetchGet = async (endpoint: string, query?: FetchGet ) => {
     let token = Cookie.get("token")
-    
-    const res = await fetch(`${BASEAPI+endpoint}?${qs.stringify(body)}`, {
+    const res = await fetch(`${BASEAPI+endpoint}?${qs.stringify(query)}`, {
         method: "GET",
         headers: {
             'Authorization': `Bearer ${(token ? token : '')}`
@@ -48,8 +72,7 @@ const apiFetchGet = async (endpoint: string, body?: any ) => {
     return json
 }
 
-const apiFecthFile = async (endpoint: string, body: any) => {
-    console.log(body)
+const apiFecthFile = async (endpoint: string, body?: FormData) => {
     let token = Cookie.get("token")
     const res = await fetch(BASEAPI+endpoint, {
         method: "POST",
@@ -57,24 +80,6 @@ const apiFecthFile = async (endpoint: string, body: any) => {
             'Authorization': `Bearer ${(token ? token : '')}`
         },
         body
-    })
-    const json = await res.json()
-    console.log(json)
-    if(json.error == "Not Authorized JWT"){
-        window.location.href = '/signin'
-        return
-    }
-
-    return json
-}
-
-const apiFecthAdsUser = async (endpoint: string) => {
-    let token = Cookie.get("token")
-    const res = await fetch(BASEAPI+endpoint, {
-        method: "GET",
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
     })
     const json = await res.json()
     if(json.error == "Not Authorized JWT"){
@@ -86,6 +91,7 @@ const apiFecthAdsUser = async (endpoint: string) => {
 }
 
 export const Api = {
+    //Login Register
     login: async (email: string, password: string) => {
         const json = await apiFetchPost(
             "/user/signin",
@@ -100,21 +106,19 @@ export const Api = {
         )
         return json
     },
+
+    //States and Category
     getStates: async () => {
-        const json = await apiFetchGet(
-            '/states',
-            {}
-        )
+        const json = await apiFetchGet('/states')
         return json.states
     },
     getCategories: async () => {
-        const json = await apiFetchGet(
-            '/categories',
-            {}
-        )
+        const json = await apiFetchGet('/categories',)
         return json.categories
     },
-    getAds: async (options: any) => {
+
+    // Ads Info and Actions
+    getAds: async (options: Options) => {
         const json = await apiFetchGet(
             '/ad/list',
             options
@@ -135,29 +139,26 @@ export const Api = {
         )
         return json
     },
-    getUserAds: async (options: any) => {
+    getUserAds: async (options: Options) => {
         const json = await apiFetchGet("/user/anun", options)
         return json
     },
-    editAds: async (formData: FormData, id: any) => {
+    editAds: async (formData: FormData, id: string) => {
         const json = await apiFecthFile(`/ad/${id}`, formData)
         return json
     },
-    deleteAds: async (id: any) => {
-        const json = await apiFecthFile(
-            `/del/${id}`,
-            {}
-        )
+    deleteAds: async (id: string) => {
+        const json = await apiFecthFile(`/del/${id}`)
         return json
     },
+
+    // User Info and Actions
     getUserInfo: async () => {
         const json = await apiFetchGet("/user/me")
         return json
     },
-    editUser: async (formData: any) => {
+    editUser: async (formData: FormData) => {
         const json = await apiFecthFile('/user/edit', formData)
         return json
     },
 }
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imlnb3JkaXNvdXNhc0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IjEyMzQiLCJpYXQiOjE2NTQzMDAwMjh9.vxDEHPnbfOefg2SjZTBA8asZBWgTHx_0L0S5E63ONFA

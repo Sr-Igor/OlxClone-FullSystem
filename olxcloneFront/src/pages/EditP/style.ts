@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-
 export const Warning = styled.div<{display: string}>`
     background-color: rgba(0, 0, 0, 0.6);
     position: fixed;
@@ -78,11 +77,11 @@ export const Warning = styled.div<{display: string}>`
     }
 `
 
-export const PageArea = styled.div`
+export const PageArea = styled.div<{color: string}>`
 
-    .errorMessage {
+    .message {
         color: #FFF;
-        background-color: #c9242e;
+        background-color: ${props => props.color};
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 20px;
@@ -120,7 +119,6 @@ export const PageArea = styled.div`
                     cursor: pointer;
                     display: flex;
 
-
                     &:hover {
                         box-shadow: 0 0 1px #000;
                         background-color: #5c65c0;
@@ -130,7 +128,7 @@ export const PageArea = styled.div`
 
                 .available {
                     border: none;
-                    background-color: #6da67a;
+                    background-color: #369F64;
                     color: #fff;
                     font-size: 15px;
                     border-radius: 5px;
@@ -225,14 +223,15 @@ export const PageArea = styled.div`
         .row-3 {
             display: flex;
             justify-content: end;
+            margin-top: 15px;
 
             button, a {
                 text-decoration: none;
                 border: none;
                 color: #FFF;
-                font-size: 18px;
-                padding: 5px 10px;
-                border-radius: 5px;
+                font-size: 15px;
+                padding: 10px 15px;
+                border-radius: 20px;
                 cursor: pointer;
                 transition: all ease .2s;
                 margin: 0px 10px;
@@ -269,18 +268,19 @@ export const ImgArea = styled.div`
         align-items: center;
         justify-content: center;
 
-       img {
-           width: 20px;
-           height: 20px;
-           transform: scale(0.8);
-           transition: all ease 0.2s;
-       }
+        img {
+            width: 20px;
+            height: 20px;
+            transform: scale(0.8);
+            transition: all ease 0.2s;
+        }
 
-       &:hover {
+        &:hover {
+
             img {
                 transform: scale(1);
             }
-       }
+        }
     }
 
     .del {
@@ -315,8 +315,8 @@ export const InputFile = styled.div`
     label {
         margin-right: 10px;
     }
-    .add {
 
+    .add {
         display: flex;
         align-items: center;
         color: #FFF;
@@ -324,7 +324,6 @@ export const InputFile = styled.div`
         padding: 3px 7px;
         border-radius: 3px;
         cursor: pointer;
-
 
         input {
             display: none;
@@ -338,6 +337,7 @@ export const InputFile = styled.div`
         }
 
         &:hover {
+            
             img {
                 transform: scale(1);
             }

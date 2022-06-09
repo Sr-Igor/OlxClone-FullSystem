@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const PageArea = styled.div<{opacity: number}>`
-
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -111,7 +110,6 @@ export const PageArea = styled.div<{opacity: number}>`
                     margin-bottom: 10px;
                 }
 
-
                 .area--input {
 
                     input {
@@ -153,19 +151,9 @@ export const PageArea = styled.div<{opacity: number}>`
                             opacity: 0.5;
                         }
                     }
-
-                    button {
-                        width: 100%;
-                        border: 0;
-                        font-size: 17px;
-                        background-color: #e57706;
-                        color: #FFF;
-                        padding: 16px 20px;
-                        border-radius: 25px;
-                        cursor: pointer;
-                    }
                 }
             }
+
             .area--checkbox {
                 display: flex;
                 align-items: center;
@@ -176,6 +164,21 @@ export const PageArea = styled.div<{opacity: number}>`
                     margin-left: 10px;
                 }
             } 
+        }
+
+        .button-area {
+            width: 70%;
+
+            button {
+                width: 100%;
+                border: 0;
+                font-size: 17px;
+                background-color: #e57706;
+                color: #FFF;
+                padding: 16px 20px;
+                border-radius: 25px;
+                cursor: pointer;
+            }
         }
 
         .signup--box {
@@ -197,7 +200,6 @@ export const PageArea = styled.div<{opacity: number}>`
             margin-bottom: 15px;
             cursor: pointer;
         }
-
     }
 
     .info--area {
@@ -206,7 +208,6 @@ export const PageArea = styled.div<{opacity: number}>`
         margin-top: 15px;
         max-width: 500px;
         line-height: 25px;
-        // width: 600px;
 
         .pointer {
             color: #6e0ad7;

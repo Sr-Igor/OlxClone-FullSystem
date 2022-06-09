@@ -1,3 +1,4 @@
+// Cookies
 import Cookie from 'js-cookie'
 
 export const isLogged = () => {
@@ -17,7 +18,6 @@ export const doLogin = (token: string, rememberPassword: boolean, email: string)
         Cookie.set("token", token)
     }
     localStorage.setItem("email", email)
-    console.log(localStorage.getItem("email"))
 }
 
 export const doLogout = () => {

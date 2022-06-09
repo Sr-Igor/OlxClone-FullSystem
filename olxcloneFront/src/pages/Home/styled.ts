@@ -50,7 +50,6 @@ export const SearchArea = styled.div`
 
     .categoryList {
         display: flex;
-        // flex-wrap: wrap;
         margin-top: 20px;
         margin-bottom: 20px;
 
@@ -65,7 +64,6 @@ export const SearchArea = styled.div`
             text-align: center;
             height: 50px;
             margin: 10px;
-            
             transition: all ease 0.2s;
 
             &:hover {
@@ -86,8 +84,6 @@ export const SearchArea = styled.div`
                     width: 32px;
                     height: 32px;
                 }
-
-               
             }
         }
     }

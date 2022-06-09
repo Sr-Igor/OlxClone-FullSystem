@@ -53,21 +53,6 @@ export const PageArea = styled.div`
                 .check-input{
                     width: auto;
                 }
-    
-                button {
-                    background-color: #0089FF;
-                    border: 0;
-                    outline: 0;
-                    padding: 5px 10px;
-                    border-radius: 4px;
-                    color: #FFF;
-                    font-size: 20px;
-                    cursor: pointer;
-    
-                    &:hover {
-                        background-color: #006FCE;
-                    }
-                }
             }
         }
 
@@ -105,7 +90,6 @@ export const PageArea = styled.div`
                         display:flex;
                         margin: 3px;
                         height: 150px;
-                        
                     }
                 }
                 img {
@@ -130,6 +114,29 @@ export const PageArea = styled.div`
                 }
             }
         }
+    }
+
+
+    .button-area {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+
+        button {
+            background-color: #0089FF;
+            border: 0;
+            outline: 0;
+            padding: 10px 15px;
+            border-radius: 20px;
+            color: #FFF;
+            font-size: 18px;
+            cursor: pointer;
+    
+            &:hover {
+                background-color: #006FCE;
+            }
+        }    
     }
 
     .area {

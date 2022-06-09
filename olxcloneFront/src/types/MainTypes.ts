@@ -16,11 +16,14 @@ export type SingleItem = {
     category: string,
     price: number,
     dateCreated: Date,
-    priceNegociable: boolean,
+    priceNegotiable: boolean,
     description: string,
     state: string,
+    others: ItemsList[] | [],
     images: string[],
-    views: number
+    views: number,
+    status: boolean,
+    userInfo: UserInfo
 }
 
 export type ItemsList = {
@@ -28,5 +31,12 @@ export type ItemsList = {
     title: string
     price: number
     priceNegotiable: boolean
+    image: string
+}
+
+export type UserInfo = {
+    name: string,
+    email: string,
+    state: string,
     image: string
 }

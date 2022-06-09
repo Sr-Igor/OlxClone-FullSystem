@@ -1,32 +1,60 @@
-import { useEffect, useState } from 'react'
-import { PageContainer } from '../../components/TemplateComponents'
-import { Api } from '../../helpers/api'
-import { StateList } from '../../types/MainTypes'
+// Created Styled-Components
 import * as C from './styled'
-import { doLogout } from "../../helpers/AuthHandler"
-import { useRef } from 'react'
+
+// Hooks React
+import { useEffect, useState, useRef } from 'react'
+
+// Hooks Custom
 import { useInfoReducer } from '../../contexts/context'
+
+// Api Requests
+import { Api } from '../../helpers/api'
+
+// Auth Verify
+import { doLogout } from "../../helpers/AuthHandler"
+
+// Components folders 
+import { PageContainer } from '../../components/TemplateComponents'
+
+//Types
+import { StateList, UserInfo } from '../../types/MainTypes'
+
+const initialUser = {
+    name: "",
+    state: "",
+    email: "",
+    image: ""
+}
 
 export const Profile = () => {
 
-    const fileField: any = useRef()
+    // Controler send field (FormData)
+    const fileField = useRef<HTMLInputElement>(null)
 
+    //Instance Hook (Reducer)
     const {state, dispatch} = useInfoReducer()
 
-    const [userInfo, setUserInfo] = useState<any>([])
+    // Request states (webService)
     const [states, setStates] = useState([])
 
+    // All user info
+    const [userInfo, setUserInfo] = useState<UserInfo>(initialUser)
+
+    // Initial infos
+    const [InitialEmail, setInitialEmail] = useState("")
+    const [Initialname, setInitialName] = useState("")
+
+    // Form Fields
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [stateUser, setStateUser] = useState("")
     const [image, setImage] = useState("")
 
-    const [InitialEmail, setInitialEmail] = useState("")
-    const [Initialname, setInitialName] = useState("")
-
+    // Password Fields
     const [password, setPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
 
+    // Request Controllers
     const [visiblePassword, setVisiblePassword] = useState(false)
     const [disable, setDisable] = useState(false)
     const [message, setMessage] = useState("")
@@ -34,6 +62,7 @@ export const Profile = () => {
     const [messageColor, setMessageColor] = useState("#000")
     const [displayModal, setDisplayModal] = useState(["none", "0"])
 
+    // Section infos/image/password
     const [currentSection, setCurrentSection] = useState(0)
 
     useEffect(()=> {
@@ -62,26 +91,31 @@ export const Profile = () => {
         }
     }, [userInfo])
 
-    const editUser = async (e: any) => {
+    // Edit user info
+    const editUser = async () => {
         setDisplayModal(["none", "0"])
-        e.preventDefault()
+        setDisable(true)
         setMessage("")
 
         if(name == ""){
             setMessage("Preencha o nome")
             setMessageColor("#c9242e") 
+            setDisable(false)
             return
         }
         if(email == ""){
             setMessage("Preencha o email")
             setMessageColor("#c9242e") 
+            setDisable(false)
             return
         }
         if(stateUser == ""){
             setMessage("Selecione um Estado")
             setMessageColor("#c9242e") 
+            setDisable(false)
             return
         }
+
         const formData = new FormData() // Create FormData
         formData.append("state", stateUser)
         
@@ -106,22 +140,26 @@ export const Profile = () => {
             setMessage(json.error)
             setMessageColor("#c9242e") 
         }
+        setDisable(false)
     }
 
-    const editPassword = async (e: any) => {
+    // Edit Password
+    const editPassword = async () => {
         setDisplayModal(["none", "0"])
-        e.preventDefault()
+        setDisable(true)
         setMessagePassword("")
 
         if(password == ""){
             setMessagePassword("Preencha a senha atual")
             setMessageColor("#c9242e")
+            setDisable(false)
             return
         }
 
         if(newPassword == "" || newPassword.length < 8){
             setMessagePassword("Preencha a nova senha corretamente")
             setMessageColor("#c9242e")
+            setDisable(false)
             return
         }
 
@@ -135,6 +173,7 @@ export const Profile = () => {
         if(json.error.newPassword){
             setMessagePassword(json.error.newPassword.msg)
             setMessageColor("#c9242e") 
+            setDisable(false)
             return
         }
 
@@ -149,36 +188,43 @@ export const Profile = () => {
             setMessagePassword(json.error)
             setMessageColor("#c9242e") 
         }
+        setDisable(false)
     }
 
+    // Image preview
     const prevImage = () => {
         const formData = new FormData()
         // Verify Images, format and append in formData
-        if(fileField.current.files.length > 0){
-                formData.append("images", fileField.current.files[0])
+        let fields = fileField.current as HTMLInputElement
+        let files = fields.files as FileList
+        if(files.length > 0){
+                formData.append("images", files[0])
         }else {
             return
         }
 
-        let imageUrl = URL.createObjectURL(fileField.current.files[0])
+        let imageUrl = URL.createObjectURL(files[0])
         setImage(imageUrl)
     }
 
+    // Add image
     const addImage = async () => {
         setMessagePassword("")
         setMessageColor("")
+        setDisable(true)
         
         const formData = new FormData()
         // Verify Images, format and append in formData
-        if(fileField.current.files.length > 0){
-                formData.append("image", fileField.current.files[0])
+        let fields = fileField.current as HTMLInputElement
+        let files = fields.files as FileList
+        if(files.length > 0){
+                formData.append("image", files[0])
         }else {
             return
         }
 
          // Send Request
          const json = await Api.editUser(formData)
-        console.log(json)
          if(!json.error && json.image){
             dispatch({type: "SET_IMAGE", payload: json.image})
             setMessagePassword("Imagem atualizada")
@@ -187,14 +233,19 @@ export const Profile = () => {
             setMessagePassword(json.error)
             setMessageColor("#c9242e") 
          }
+         setDisable(false)
     }
 
+    // Delete image
     const deleteImage = async () => {
-        dispatch({type: "SET_IMAGE", payload: "/images/default-profile.jpg"})
+        dispatch({type: "SET_IMAGE", payload: "/images/default-profile.jpg"}) // Reset reducer
         setMessagePassword("")
         setMessageColor("")
-        fileField.current.value = ""
-        console.log(image)
+        setDisable(true)
+
+        let fields = fileField.current as HTMLInputElement
+        fields.value = "" // Clean input
+
         if(image || userInfo.image){
             const formData = new FormData()
             formData.append("delProfileImage", "delete")
@@ -210,12 +261,12 @@ export const Profile = () => {
                  setMessagePassword(json.error)
                  setMessageColor("#c9242e") 
              }
+             setDisable(false)
         }
     }
 
     return(
         <PageContainer>
-    
                 <C.Warning display={displayModal[0]}>
                     <div className="box--warn">
                         <div className='warning'>
@@ -226,14 +277,14 @@ export const Profile = () => {
                             <span>Para sua segurança, você será desconectado após as alterações.</span>
                             <span>Certifique-se de possuir as informações de acesso.</span>
                             <span>Tem certeza que deseja salvar as alterações? </span>
-                            </div>
+                        </div>
                         <div className="box--buttons">
-                            <button className="confirm" onClick={(e)=>((displayModal[1] == "1")? editUser(e): editPassword(e))}>Salvar alterações</button>
+                            <button className="confirm" onClick={(e)=>((displayModal[1] == "1")? editUser(): editPassword())}>Salvar alterações</button>
                             <button className="cancel" onClick={e => setDisplayModal(["none", '0'])}>Cancelar</button>
                         </div>
                     </div>
                 </C.Warning>
-
+        
             <C.PageArea color={messageColor}>
                 <div className='title--area'>
                     <h2>Meu Cadastro</h2>
@@ -247,31 +298,31 @@ export const Profile = () => {
                 <hr />
                 {currentSection === 0  && 
                     <div className='box--info'>
-                    <span className='title-box'>Dados da conta</span>
-                    {message && 
-                        <div className='message'>{message}</div>
-                    }
-                    <form action="" method='PUT'>
-                        <label>
-                            <span>Nome Completo</span>
-                            <input type="text" value={name} onChange={(e)=>setName(e.target.value)} disabled={disable}/>
-                        </label>
-                        <label>
-                            <span>Email</span>
-                            <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} disabled={disable}/>
-                        </label>
-                        <label>
-                            <span>Estado</span>
-                            <select onChange={(e)=>setStateUser(e.target.value)} disabled={disable}>
-                                    <option value=""></option>
-                                {states.map((i: StateList, k)=> 
-                                    <option value={i._id} key={k}>{i.name}</option>
-                                )}
-                            </select>
-                        </label>
-                    </form>
-                    <button className='send' disabled={disable} onClick={()=> setDisplayModal(["flex", "1"])}>Salvar Alterações</button>
-                </div>
+                        <span className='title-box'>Dados da conta</span>
+                        {message && 
+                            <div className='message'>{message}</div>
+                        }
+                        <form action="" method='PUT'>
+                            <label>
+                                <span>Nome Completo</span>
+                                <input type="text" value={name} onChange={(e)=>setName(e.target.value)} disabled={disable}/>
+                            </label>
+                            <label>
+                                <span>Email</span>
+                                <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} disabled={disable}/>
+                            </label>
+                            <label>
+                                <span>Estado</span>
+                                <select onChange={(e)=>setStateUser(e.target.value)} disabled={disable}>
+                                        <option value=""></option>
+                                    {states.map((i: StateList, k)=> 
+                                        <option value={i._id} key={k}>{i.name}</option>
+                                    )}
+                                </select>
+                            </label>
+                        </form>
+                        <button className='send' disabled={disable} onClick={()=> setDisplayModal(["flex", "1"])}>Salvar Alterações</button>
+                    </div>
                 }
             </C.PageArea>
 
@@ -283,24 +334,23 @@ export const Profile = () => {
                             <div className='message'>{messagePassword}</div>
                         }
                         <form action="" method='PUT'>
-                          <div className='currentImage'>
-                              <img src={(image)? image :state.userImage} alt="default-image" />
-                          </div>
-                        <div className='input--area'>
-                            <label htmlFor="file">
-                                <img src="/icons/plus.png" alt="adicionar" />
-                                <input type="file" name='file' id='file' ref={fileField} onChange={prevImage}/>
-                            </label>
-                        </div>
-
-                        <div className='input--area'>
-                            <label  className='delete-label'>
-                                <div className='del' onClick={deleteImage}>
-                                    <img src="/icons/trash.png" alt="delete" />
-                                    <span>Excluir Imagem</span>
-                                </div>
-                            </label>
-                        </div>
+                            <div className='currentImage'>
+                                <img src={(image)? image :state.userImage} alt="default-image" />
+                            </div>
+                            <div className='input--area'>
+                                <label htmlFor="file">
+                                    <img src="/icons/plus.png" alt="adicionar" />
+                                    <input type="file" name='file' id='file' ref={fileField} onChange={prevImage}/>
+                                </label>
+                            </div>
+                            <div className='input--area'>
+                                <label  className='delete-label'>
+                                    <div className='del' onClick={deleteImage}>
+                                        <img src="/icons/trash.png" alt="delete" />
+                                        <span>Excluir Imagem</span>
+                                    </div>
+                                </label>
+                            </div>
                         </form>
                         <button className='send' disabled={disable} onClick={()=> addImage()}>Salvar Alterações</button>
                     </div>
@@ -341,7 +391,6 @@ export const Profile = () => {
                     </div>
                 </C.PageArea>
             }
-          
         </PageContainer>
     )
 }

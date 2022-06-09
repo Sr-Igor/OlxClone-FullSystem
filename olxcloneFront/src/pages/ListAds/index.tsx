@@ -5,6 +5,9 @@ import * as C from './styled'
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
+// Hooks Custom 
+import { useInfoReducer } from '../../contexts/context'
+
 // Api Requests
 import { Api } from "../../helpers/api"
 
@@ -14,10 +17,9 @@ import { AdItem } from "../../components/partials/AdItem"
 
 // Types
 import { StateList, CategoryList, ItemsList } from "../../types/MainTypes"
-import { useInfoReducer } from '../../contexts/context'
 
 // Timer for search Request (created out component for disable loop )
-let timer: any
+let timer: number
 
 export const ListAds = () => {
 
@@ -25,17 +27,17 @@ export const ListAds = () => {
     const navigate = useNavigate()
 
     // QueryString Controller
-        const useQueryString = () => {
-            return new URLSearchParams( useLocation().search )
-        }
-        
-        //Hook queryString
-        const query = useQueryString()
-       
-        // Separate queryStrings
-        const [q, setQ] = useState(query.get("q") != null ? query.get("q"): "" as any)
-        const [cat, setCat] = useState(query.get("cat") != null ? query.get("cat"): "" as any)
-        const [stateUser, setState] = useState(query.get("state") != null ? query.get("state"): "" as any)
+    const useQueryString = () => {
+        return new URLSearchParams( useLocation().search )
+    }
+    
+    //Hook queryString
+    const query = useQueryString()
+    
+    // Separate queryStrings
+    const [q, setQ] = useState(query.get("q")==null?"":query.get("q") as string)
+    const [cat, setCat] = useState(query.get("cat") == null ?"":query.get("cat") as string)
+    const [stateUser, setState] = useState(query.get("state") == null ?"":query.get("state") as string)
         
     // Pagination states     
     const [adsTotal, setAdsTotal] = useState(0)
@@ -71,11 +73,7 @@ export const ListAds = () => {
 
     // Monitoring total pages, variable with search
     useEffect(()=> {
-        if(adList.length > 0){
-            setPageCount( Math.ceil(adsTotal/ adList.length) )
-        }else{
-            setPageCount(0)
-        }
+        setPageCount((adList.length > 0)?Math.ceil(adsTotal/adList.length):0)
         setCurrentPage(1)
     },[adsTotal])
 
@@ -100,7 +98,7 @@ export const ListAds = () => {
             }
             navigate(`?${queryString.join("&")}`, { replace: true })
         
-        timer = setTimeout(()=> {
+       timer = setTimeout(()=> {
             getAdsList()
         },2000)
     }, [q, cat, stateUser, currentPage])
@@ -128,10 +126,6 @@ export const ListAds = () => {
     for(let i=1; i <=pageCount; i++){
         pagination.push(i)
     }
-
-    //________________________________________
-    const {state} = useInfoReducer()
-    console.log(state.userImage)
 
     return(
     <PageContainer>

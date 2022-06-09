@@ -1,5 +1,7 @@
-import { ReactNode } from "react"
+// Pages
 import { SignIn } from "../pages/SignIn"
+
+//Verify Login
 import { isLogged } from "./AuthHandler"
 
 type Props = {

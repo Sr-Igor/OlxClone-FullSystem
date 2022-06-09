@@ -4,18 +4,19 @@ import * as C from './styled'
 // Hooks React
 import { Link } from 'react-router-dom'
 
+// Hooks custom (Context API)
+import { useInfoReducer } from '../../../contexts/context'
+
 // Helpers 
 import { isLogged, doLogout } from '../../../helpers/AuthHandler'
 import { useEffect, useState } from 'react'
 import { Api } from '../../../helpers/api'
-import { useInfoReducer } from '../../../contexts/context'
+
 
 export const Header = () => {
 
-  const {logged, email} = isLogged()
-
-  // User Image 
-  // const [image, setImage] = useState("")
+  // Verify Logged User
+  const {logged} = isLogged()
 
   //Context UserInfo
   const {state, dispatch} = useInfoReducer()
@@ -26,11 +27,11 @@ export const Header = () => {
     window.location.href = '/'
   }
 
+  // Set Icon (User Image)
   useEffect(()=> {
     if(logged){
       const getUser = async () => {
         const json = await Api.getUserInfo()
-        console.log(json.image)
         if(json.image){
           dispatch({type: "SET_IMAGE", payload: json.image})
         }
@@ -53,51 +54,57 @@ export const Header = () => {
             <ul>
               {logged && 
                 <>
-                 <li>
-                  <Link to="/user/ads">
-                    <svg width="24px" height="24px" viewBox="0 0 24 24">
-                      <path 
-                      fill="#4a4a4a" 
-                      d="M3 2.25h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75V3A.75.75 0 0 1 3 2.25zm.75 7h5.5v-5.5h-5.5v5.5zm10.25-7h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75h-7a.75.75 0 0 1-.75-.75V3a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5zm-.75 4h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75h-7a.75.75 0 0 1-.75-.75v-7a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5zM3 13.25h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75v-7a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5z">
-                      </path>
-                    </svg>
-                    Meus Anuncios
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/user/profile">
-                    <img src={state.userImage} alt="i" />
-                    Minha Conta
-                  </Link>
-                </li>
-                <li><button onClick={handleLogout}>Sair</button></li>
-                <li><Link to="post-on-ad" className='button'>Anunciar</Link></li>
+                  <li>
+                    <Link to="/user/ads">
+                      <svg width="24px" height="24px" viewBox="0 0 24 24">
+                        <path 
+                        fill="#4a4a4a" 
+                        d="M3 2.25h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75V3A.75.75 0 0 1 3 2.25zm.75 7h5.5v-5.5h-5.5v5.5zm10.25-7h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75h-7a.75.75 0 0 1-.75-.75V3a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5zm-.75 4h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75h-7a.75.75 0 0 1-.75-.75v-7a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5zM3 13.25h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75v-7a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5z">
+                        </path>
+                      </svg>
+                      Meus Anuncios
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/user/profile">
+                      <img src={state.userImage} alt="" />
+                      Minha Conta
+                    </Link>
+                  </li>
+                  <li>
+                    <button onClick={handleLogout}>Sair</button>
+                  </li>
+                  <li>
+                    <Link to="post-on-ad" className='button'>Anunciar</Link>
+                  </li>
                 </>
               }
               {!logged && 
                 <>
-                <li>
+                  <li>
+                    <Link to="/signin">
+                      <svg width="24px" height="24px" viewBox="0 0 24 24">
+                        <path 
+                        fill="#4a4a4a" 
+                        d="M3 2.25h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75V3A.75.75 0 0 1 3 2.25zm.75 7h5.5v-5.5h-5.5v5.5zm10.25-7h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75h-7a.75.75 0 0 1-.75-.75V3a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5zm-.75 4h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75h-7a.75.75 0 0 1-.75-.75v-7a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5zM3 13.25h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75v-7a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5z">
+                        </path>
+                      </svg>
+                      Meus Anuncios
+                    </Link>
+                  </li>
+                  <li>
                   <Link to="/signin">
                     <svg width="24px" height="24px" viewBox="0 0 24 24">
                       <path 
-                      fill="#4a4a4a" 
-                      d="M3 2.25h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75V3A.75.75 0 0 1 3 2.25zm.75 7h5.5v-5.5h-5.5v5.5zm10.25-7h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75h-7a.75.75 0 0 1-.75-.75V3a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5zm-.75 4h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75h-7a.75.75 0 0 1-.75-.75v-7a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5zM3 13.25h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75v-7a.75.75 0 0 1 .75-.75zm.75 7h5.5v-5.5h-5.5v5.5z">
+                        fill="#4a4a4a" d="M20.75 21v-2A4.75 4.75 0 0 0 16 14.25H8A4.75 4.75 0 0 0 3.25 19v2a.75.75 0 1 0 1.5 0v-2A3.25 3.25 0 0 1 8 15.75h8A3.25 3.25 0 0 1 19.25 19v2a.75.75 0 1 0 1.5 0zM12 11.75a4.75 4.75 0 1 1 0-9.5 4.75 4.75 0 0 1 0 9.5zm0-1.5a3.25 3.25 0 1 0 0-6.5 3.25 3.25 0 0 0 0 6.5z">
                       </path>
                     </svg>
-                    Meus Anuncios
+                    Login
                   </Link>
-                </li>
-                <li>
-                <Link to="/signin">
-                  <svg width="24px" height="24px" viewBox="0 0 24 24">
-                    <path 
-                      fill="#4a4a4a" d="M20.75 21v-2A4.75 4.75 0 0 0 16 14.25H8A4.75 4.75 0 0 0 3.25 19v2a.75.75 0 1 0 1.5 0v-2A3.25 3.25 0 0 1 8 15.75h8A3.25 3.25 0 0 1 19.25 19v2a.75.75 0 1 0 1.5 0zM12 11.75a4.75 4.75 0 1 1 0-9.5 4.75 4.75 0 0 1 0 9.5zm0-1.5a3.25 3.25 0 1 0 0-6.5 3.25 3.25 0 0 0 0 6.5z">
-                    </path>
-                  </svg>
-                  Login
-                </Link>
-                </li>
-                <li><Link to="/signin" className='button'>Anunciar</Link></li>
+                  </li>
+                  <li>
+                    <Link to="/signin" className='button'>Anunciar</Link>
+                  </li>
                 </>
               }
             </ul>

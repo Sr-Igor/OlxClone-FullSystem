@@ -14,8 +14,6 @@ import { AdItem } from "../../components/partials/AdItem"
 
 // Types
 import { StateList, CategoryList, ItemsList } from "../../types/MainTypes"
-import { useInfoReducer } from '../../contexts/context'
-
 
 export const Home = () => {
 
@@ -42,7 +40,7 @@ export const Home = () => {
         getCategories()
     },[])
 
-     // Ads List Request 
+    // Ads List Request 
     useEffect(()=> {
         const getRecentAds = async () => {
             const json = await Api.getAds({
@@ -54,15 +52,10 @@ export const Home = () => {
         getRecentAds()
     }, [])
 
-    //_________________________________________
-    // const {state} = useInfoReducer()
-    // console.log(state.userImage)
-
     return(
         <>
             <C.SearchArea>
                 <PageContainer>
-
                     <div className="searchBox">
                         <form action="/ads" method="">
                             <input type="text" name="q" placeholder="O que procura?"/>
@@ -86,7 +79,6 @@ export const Home = () => {
                             </Link>
                         )}
                     </div>
-
                 </PageContainer>
             </C.SearchArea>
             <PageContainer>

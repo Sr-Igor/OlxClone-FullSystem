@@ -7,35 +7,35 @@ export const AuthValidator = {
             isLength: {
                 options: { min: 2 }
             },
-            errorMessage: "This field must be at least 2 characters long"
+            errorMessage: "Nome precisa ter pelo menos 2 caracteres"
         },
         email: {
             isEmail: true,
             normalizeEmail: true,
-            errorMessage: "Invalid E-mail"
+            errorMessage: "E-mail inválido"
         }, 
         password: {
             isLength: {
                 options: { min: 8 }
             },
-            errorMessage: "Invalid Passowrd"
+            errorMessage: "Senha deve conter pelo menos 8 caracteres"
         },
         state: {
             notEmpty: true,
-            errorMessage: "Invalid State"
+            errorMessage: "Estado inválido"
         }
     }),
     signIn: checkSchema({
         email: {
             isEmail: true,
             normalizeEmail: true,
-            errorMessage: "Invalid E-mail"
+            errorMessage: "E-mail inválido"
         },
         password: {
             isLength: {
                 options: { min: 2 }
             },
-            errorMessage: "Invalid Password"
+            errorMessage: "Senha inválida"
         }
     })
 }

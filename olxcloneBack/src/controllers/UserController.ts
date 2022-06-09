@@ -52,13 +52,10 @@ export const info = async (req: Request, res: Response) => {
         email: user.email,
         state: state.name,
         image,
-        ads: adList
     })
 }
 
 export const editActions = async (req: Request, res: Response) => {
-    console.log(req.body)
-
     // Verify Errors
     const errors = validationResult(req)
     if(!errors.isEmpty()){
@@ -79,7 +76,7 @@ export const editActions = async (req: Request, res: Response) => {
         const existentEmail = await User.findOne({email: data.email})
         if(existentEmail){
             res.status(400)
-            res.json({error: "E-mail already registered"})
+            res.json({error: "E-mail já registrado"})
             return
         }else {
             updates.email = data.email
@@ -91,14 +88,14 @@ export const editActions = async (req: Request, res: Response) => {
             const existentState = await State.findById(data.state)
             if(!existentState){
                 res.status(400)
-                res.json({error: "Invalid State"})
+                res.json({error: "Estado inválido"})
                 return
             }
             updates.state = data.state
         } 
         else {
             res.status(400)
-            res.json({error: {state:{msg: "State Code Invalid"}}})
+            res.json({error: {state:{msg: "Código de estado inválido"}}})
             return
         }
     }
@@ -111,28 +108,30 @@ export const editActions = async (req: Request, res: Response) => {
             updates.passwordHash = passwordHash
         }else{
             res.status(400)
-            res.json({error: "Invalid Current Password"})
+            res.json({error: "Senha atual incorreta"})
             return
         }
     }
     
     let image;
     if(req.file){
-        let file: any = req.file
+        let file = req.file as Express.Multer.File
             image = file.filename
             updates.image = image
             await sharp(file.path)
             .resize(500, 500)
             .toFormat("jpeg")
             .toFile(`./public/media/${file.filename}.jpg`)
-            await unlink(file.path, (err) => {
+            unlink(file.path, (err) => {
                 if (err) throw err;
-                console.log('path/file.txt was deleted');
-              })
+            })
     }
 
-
     if(data.delProfileImage){
+        let user = await User.findOne({token})
+        unlink(`./public/media/${user.image}.jpg`, (err) => {
+            if (err) throw err;
+        })
         updates.image = ""
     }
     
@@ -141,14 +140,3 @@ export const editActions = async (req: Request, res: Response) => {
     res.status(201)
     res.json({error: "", image: userImageProfile})
 }
-
-// export const findUser = async (req: Request, res: Response) => {
-//     let token = req.headers.authorization?.slice(7)
-//     let user = await User.findOne({token})
-//     if(!user){
-//         res.status(400)
-//         res.json({error: "Invalid Token"})
-//     }
-//     res.status(200)
-//     res.json({email: user.email})
-// }

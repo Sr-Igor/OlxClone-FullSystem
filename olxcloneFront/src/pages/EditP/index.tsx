@@ -12,20 +12,46 @@ import { Api } from "../../helpers/api"
 import {PageContainer} from "../../components/TemplateComponents"
 
 // Types
-import { CategoryList, ItemsList, StateList } from "../../types/MainTypes"
+import { CategoryList, ItemsList, StateList, SingleItem } from "../../types/MainTypes"
 
 //Mask price field (libs)
 import MaskedInput from 'react-text-mask'
 import { createNumberMask } from 'text-mask-addons'
 
-// Controller Delete Images (created out component)
-let delImages: any = []
+const initialItem = {
+    id: "",
+    title: "",
+    category: "",
+    price: 0,
+    dateCreated: new Date(),
+    priceNegotiable: false,
+    description: "",
+    state: "",
+    others: [],
+    images: [],
+    views: 0,
+    status: false,
+    userInfo: {
+        name: "",
+        email: "",
+        state: "",
+        image: ""
+    }
+}
+
+type ImagesInfo = {
+    url: string,
+    empty: boolean
+}
 
 export const EditP = () => {
 
     // Url Param
     let params = useParams()
-    let {id} = params
+    let id = params.id
+
+    // Controler files fields (FormData)
+    const fileField = useRef<HTMLInputElement>(null)
 
     // Navigate instance
     const navigate = useNavigate()
@@ -33,28 +59,24 @@ export const EditP = () => {
     // Request states (webService)
     const [stateList, setStateList] = useState([])
     const [catList, setCatList] = useState([])
-    const [pdInfo, setPdInfo] = useState<any>([])
+    const [pdInfo, setPdInfo] = useState<SingleItem>(initialItem)
 
     // Form fields
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
-    const [price, setPrice] = useState("")
+    const [price, setPrice] = useState("0")
     const [priceNeg, setPriceNeg] = useState(false)
     const [cat, setCat] = useState("")
     const [statePd, setStatePd] = useState("")
     const [status, setStatus] = useState(true)
-    const [currentImages, setCurrentImages] = useState<any>([])
+    const [currentImages, setCurrentImages] = useState<ImagesInfo[]>([])
 
     // Loading states controller
     const [disabled, setDisabled] = useState(false)
-    const [error, setError] = useState("")
-    const [warning, setWarning] = useState(true)
+    const [message, setMessage] = useState("")
+    const [colorMessage, setColorMessage] = useState("")
     const [displayModal, setDisplayModal] = useState("none")
-    const [loading, setLoading] = useState(true)
     const [recharge, setRecharge] = useState(false)
-
-    // Controler files fields (FormData)
-    const fileField: any = useRef()
 
     // Request States webSite
     useEffect(()=> {
@@ -76,20 +98,19 @@ export const EditP = () => {
 
     // Request Item (Ads)
     useEffect(()=> {
-        const getItem = async (id: any) => {
+        const getItem = async (id: string) => {
             const json = await Api.getItem(id, false)
             setPdInfo(json.productInfo)
-            setLoading(false)
             return
         }
-        getItem(id)
+        getItem(id as string)
     }, [id, recharge])
 
     // Set fields w/ current infos
     useEffect(()=> {
         setTitle(pdInfo.title)
         setDescription(pdInfo.description)
-        setPrice(pdInfo.price)
+        setPrice(pdInfo.price.toString())
         setPriceNeg(pdInfo.priceNegotiable)
         setCat(pdInfo.category)
         setStatePd(pdInfo.state)
@@ -99,7 +120,7 @@ export const EditP = () => {
     // Format images 
     useEffect(()=> {
         setRecharge(false)
-        let arrayInfoImages: any = []
+        let arrayInfoImages:ImagesInfo[] = []
         if(pdInfo.images){
             for (let i=0; i<5; i++){
                 if(pdInfo.images[i] && !(pdInfo.images[i].includes("default-img"))){
@@ -126,80 +147,89 @@ export const EditP = () => {
     })
 
     // Edit fields
-    const sendEdits = async (e: any) => {
-        e.preventDefault()
+    const sendEdits = async () => {
         setDisabled(true) // Disable buttons
-        setError("") // Clean error
-
-        let errors = []
+        setMessage("") // Clean error
+        setColorMessage("#c9242e") // Error color
 
         if(!title.trim()){  // Verify empty title
-            errors.push("Sem Titúlo")
+            setMessage("Preencha um titúlo para o anúncio")
+            setDisabled(false)
+            return
         }
 
         if(!cat){ // Verify empty category
-            errors.push("Sem Categoria")
+            setMessage("Selecione uma categoria")
+            setDisabled(false)
+            return
         }
         
         if(!price && !priceNeg){
-            errors.push("Sem preço ou negocição")
+            setMessage("Informe o preço ou aceite negociações")
+            setDisabled(false)
+            return
         }
 
-        if(errors.length === 0){
-            const formData = new FormData() // Create FormData
-            formData.append("state", statePd)
-            formData.append("cat", cat)
-            formData.append("title", title)
-            formData.append("priceNegotiable", priceNeg.toString())
-            formData.append("description", description)
-            formData.append("price", price)
-            
-            // Send Request
-            const json = await Api.editAds(formData, id)
+        const formData = new FormData() // Create FormData
+        formData.append("state", statePd)
+        formData.append("cat", cat)
+        formData.append("title", title)
+        formData.append("priceNegotiable", priceNeg.toString())
+        formData.append("description", description)
+        formData.append("price", price.toString())
+        
+        // Send Request
+        const json = await Api.editAds(formData, id as string)
 
-            if(json.error == ""){
-                navigate(`/ad/${id}`)
-            }else {
-                setError(json.error)
-                }
-        }else{
-            setError(errors.join("\n"))
-        }
+        if(json.error == ""){
+            navigate(`/ad/${id}`)
+        }else {
+            setMessage(json.error)
+            }
+
         setDisabled(false) 
     }
 
     // Request Edit Images (ADD)
     const addImage = async ()=> {
-        setError("") // Clean error
+        setMessage("") // Clean error
+        setColorMessage("#c9242e") // Error color
+
         // Request
         const formData = new FormData() // Create FormData
-
-        if(fileField.current.files.length > 0){
-            for(let i in fileField.current.files){
-                formData.append("images", fileField.current.files[i])
+        let fields = fileField.current as HTMLInputElement
+        let files = fields.files as FileList
+        if(files.length > 0){
+            for(let i in files){
+                formData.append("images", files[i])
             }
         }
         
         //  Send Request
-        const json = await Api.editAds(formData, id)
+        const json = await Api.editAds(formData, id as string)
 
          if(json.error == ""){
             setRecharge(true)
+            setColorMessage("#369F64")
+            setMessage("Imagens atualizadas com sucesso")
             return
          }
 
          if(json.error == 'Unexpected field'){
-             setError("Limite de imagens exedido")
+             setMessage("Limite de imagens exedido")
          }else{
-             setError(json.error)
+             setMessage(json.error)
          }
     }
     
     //  Request Edit Images (DELETE)
     const delImage = async (index: number) => {
-        setError("") // Clean error
+        setMessage("") // Clean error
+        setColorMessage("#c9242e")
+
         // Visual config 
-        delImages.push(currentImages[index].url)
+        
+        let delImages = currentImages[index].url
         let updateImages = [...currentImages]
         updateImages[index].url = "/images/no-pictures.png"
         updateImages[index].empty = true
@@ -210,46 +240,46 @@ export const EditP = () => {
         formData.append("delImages", delImages)
 
         // Send Request
-        const json = await Api.editAds(formData, id)
+        const json = await Api.editAds(formData, id as string)
 
         if(json.error == ""){
-            // navigate(`/ad/${id}`)
+            setColorMessage("#faad14")
+            setMessage("Imagem Excluida")
         }else {
-            setError(json.error)
+            setMessage(json.error)
         }
-
-        delImages = []
-     }
+    }
 
     // Set available or unavailable
     const setCondition = async (order: boolean) => {
-        setError("") // Clean error
-        setStatus(order)
+        setMessage("") // Clean error
+        setColorMessage("#c9242e") // Color error
+        setStatus(order) // Status Ads
+
         const formData = new FormData() 
         formData.append("status", order.toString())
 
         // Send Request
-        const json = await Api.editAds(formData, id)
+        const json = await Api.editAds(formData, id as string)
 
         if(json.error == ""){
             // navigate(`/ad/${id}`)
         }else {
-            setError(json.error)
+            setMessage(json.error)
         }
     }
 
     // Delete Ads
     const deleteAds = async () => {
-        setError("") // Clean error
-        await Api.deleteAds(id)
+        setMessage("") // Clean error
+        await Api.deleteAds(id as string)
         navigate("/")
     }
 
-    console.log(pdInfo)
     return(
         <PageContainer>
         
-              <C.Warning display={displayModal}>
+            <C.Warning display={displayModal}>
               <div className="box--warn">
                   <div className='warning'>
                       <img src="/icons/alert.png" alt="" />
@@ -264,32 +294,32 @@ export const EditP = () => {
                       <button className="cancel" onClick={e => setDisplayModal("none")}>Cancelar</button>
                   </div>
               </div>
-          </C.Warning>
+            </C.Warning>
            
-            <C.PageArea>
+            <C.PageArea color={colorMessage}>
                 <h2>Editar Anúncio</h2>
                 <hr />
-                {error &&
-                    <div className="errorMessage">{error}</div>
+                {message &&
+                    <div className="message">{message}</div>
                 }
                 <div className="ads--area">
                     <form action="">
-                            <C.InputFile>
-                                <label className='add'>
-                                        <input 
-                                            type="file"
-                                            ref={fileField}
-                                            disabled={disabled}
-                                            multiple
-                                            onChange={()=>addImage()}
-                                        />
-                                        <img src="/icons/plus.png" alt="add" />
-                                        Adiconar Imagens
-                                </label>
-                                <div>Max: 5</div>
-                            </C.InputFile>
+                        <C.InputFile>
+                            <label className='add'>
+                                    <input 
+                                        type="file"
+                                        ref={fileField}
+                                        disabled={disabled}
+                                        multiple
+                                        onChange={()=>addImage()}
+                                    />
+                                    <img src="/icons/plus.png" alt="add" />
+                                    Adiconar Imagens
+                            </label>
+                            <div>Max: 5</div>
+                        </C.InputFile>
                         <div className="images--area">
-                            {currentImages.map((i: any, k: number)=> 
+                            {currentImages.map((i: ImagesInfo , k: number)=> 
                                 <C.ImgArea key={k}>
                                     <C.Item>
                                         <img src={i.url} alt="" />
@@ -391,12 +421,12 @@ export const EditP = () => {
                                 </div>
                             </div>
                        </div>
-
-                       <div className="row-3">
+                    </form>
+                    <hr />
+                    <div className="row-3">
                            <button className="saveEdit" onClick={sendEdits} disabled={disabled}>Salvar Alterações</button>
                            <Link to="/" className="cancelEdit">Cancelar</Link>
-                       </div>
-                    </form>
+                    </div>
                 </div>
             </C.PageArea>
         </PageContainer>

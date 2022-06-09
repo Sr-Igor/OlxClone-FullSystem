@@ -76,6 +76,7 @@ export const Warning = styled.div<{display: string}>`
 
     }
 `
+
 export const PageArea = styled.div<{color: string}>`
     display: flex;
     flex-direction: column;
@@ -130,11 +131,11 @@ export const PageArea = styled.div<{color: string}>`
         margin-top: 20px;
         background-color: #fff;
         min-width: 800px;
+        min-height: 550px;
         border-radius: 5px;
         box-shadow: 0 0 5px #BBB;
         padding: 35px;
 
-        
         .currentImage {
             display: flex;
             justify-content: center;

@@ -44,8 +44,7 @@ export const SignUp = () => {
     }, [])
 
     // Send Action
-    const handleSubmit = async (e: any) => {
-        e.preventDefault()
+    const handleSubmit = async () => {
         setDisabled(true)
         setOpacity(0.5)
         setError("")
@@ -62,7 +61,7 @@ export const SignUp = () => {
         }
 
         if(!match){
-            setError("E-mail Inválido")
+            setError("E-mail inválido")
             setDisabled(false)
             setOpacity(1)
             return 
@@ -76,7 +75,7 @@ export const SignUp = () => {
         }
 
         if(!password || password.length < 8){
-            setError("Senha Inválida")
+            setError("Senha deve conter pelo menos 8 caracteres")
             setDisabled(false)
             setOpacity(1)
             return
@@ -156,7 +155,7 @@ export const SignUp = () => {
                 <span className='or'>ou</span>
                 {error &&
                     <div className='box-error'>
-                        <img src="/icons/alert.png" alt="alert-icon" />
+                        <img src="/icons/alert.png" alt="" />
                         <span className='text-messge'>{error}</span>
                     </div>
                 }
@@ -169,7 +168,6 @@ export const SignUp = () => {
                                 disabled={disabled}
                                 value={name}
                                 onChange={e=>setName(e.target.value)}
-                                required
                                 />
                         </div>
                     </label>
@@ -182,7 +180,6 @@ export const SignUp = () => {
                             disabled={disabled}
                             value={email}
                             onChange={e=>setEmail(e.target.value)}
-                            required
                             />
                         </div>
                     </label>
@@ -207,7 +204,6 @@ export const SignUp = () => {
                             disabled={disabled}
                             value={password}
                             onChange={e=>setPassword(e.target.value)}
-                            required
                             />
                         </div>
                     </label>
@@ -220,21 +216,15 @@ export const SignUp = () => {
                             disabled={disabled}
                             value={confirmPassword}
                             onChange={e=>setConfirmPassword(e.target.value)}
-                            required
                             />
                         </div>
                     </label>
-
-                    <label htmlFor="" className='area'>
-                        <div className='area--title'></div>
-                        <div className='area--input'>
-                            <button disabled={disabled} onClick={handleSubmit}>
-                                Entrar
-                            </button>
-                           
-                        </div>
-                    </label>
                 </form>
+                <div className='button-area'>
+                    <button disabled={disabled} onClick={handleSubmit}>
+                        Entrar
+                    </button>
+                </div>
                 <div className='signup--box'>
                     <span>Já tem uma conta? <Link to="/signin">Entrar</Link></span>
                 </div>
@@ -246,6 +236,6 @@ export const SignUp = () => {
                 comercializado, nem repassado por nenhuma instituição.
             </span>
         </C.PageArea>
-    </PageContainer>
+        </PageContainer>
     )
 }

@@ -88,7 +88,6 @@ export const Warning = styled.div<{display: string}>`
                 font-size: 15px;
             }
         }
-
     }
 `
 
@@ -109,7 +108,6 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
         margin-right: 20px;
 
         .box {
-            // display: flex;
             padding: 2px;
         }
 
@@ -158,17 +156,16 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
                     margin-left: ${props => props.currentImage}px;
                     height: 500px;
                     background-color: #fff;
-                    
                 }
     
                 .slide--Item{
                    width: 500px;
                    display: flex;
+
                     img {
                         max-width: 100%;
                         max-height: 500px;
                         margin: auto;
-
                     }
                 }
             }
@@ -200,7 +197,6 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
                     opacity: 0.5;
                 }
             }
-
         }
 
         .pdInfo {
@@ -221,8 +217,8 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
 
                 h2 {
                     margin: 0;
-                    // margin-top: 20px;
                 }
+
                 small {
                     color: #999;
                     font-size: 13px;
@@ -271,7 +267,6 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
             color: #FFF;
             height: 30px;
             border-radius: 5px;
-            // box-shadow: 0px 0px 4px #999;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -285,42 +280,45 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
                 text-decoration: none;
             }
                 
-                div {
-                    height: 30px;
-                    border-radius: 5px;
-                    // box-shadow: 0px 0px 4px #999;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    text-decoration: none;
-                    margin-top: 20px;
-                    color: #FFF;
-                    cursor: pointer;
-    
-                    &:hover {
-                        opacity: 0.8;
-                    }
-    
-                    img {
-                        width: 20px;
-                        margin-right: 5px;
-                    }
+            div {
+                height: 30px;
+                border-radius: 5px;
+                // box-shadow: 0px 0px 4px #999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-decoration: none;
+                margin-top: 20px;
+                color: #FFF;
+                cursor: pointer;
+
+                &:hover {
+                    opacity: 0.8;
                 }
-    
-                .editAdButton{
-                    background-color: #53576b;
-                }
-    
-                .statusAdButton{
-                    background-color: #faad14;
-                }
-    
-                .deleteAdButton{
-                    background-color: #c9242e;
+
+                img {
+                    width: 20px;
+                    margin-right: 5px;
                 }
             }
     
+            .editAdButton{
+                background-color: #086788;
+            }
+
+            .statusAdButton.available{
+                background-color: #369f64;
+            }
+
+            .statusAdButton.unavailable{
+                background-color: #faad14;
+            }
+
+            .deleteAdButton{
+                background-color: #c9242e;
+            }
         }
+    }
 
        
         .createdBy {
@@ -349,6 +347,7 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
 `
 
 export const OthersArea = styled.div`
+
     h2 {
         font-size: 20px;
     }

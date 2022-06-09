@@ -3,6 +3,7 @@ import * as C from './styled'
 
 // Hooks React
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 // Api Requests
 import { Api } from '../../helpers/api'
@@ -12,7 +13,7 @@ import { doLogin } from '../../helpers/AuthHandler'
 
 // Components folders
 import { PageContainer, PageTitle} from '../../components/TemplateComponents'
-import { Link } from 'react-router-dom'
+
 
 export const SignIn = () => {
     
@@ -29,18 +30,17 @@ export const SignIn = () => {
     //Visibility Password 
     const [visiblePassword, setVisiblePassword] = useState(false)
 
-    const handleSubmit = async (e: any) => {
-        e.preventDefault()
+    // Send request
+    const handleSubmit = async () => {
         setDisabled(true)
         setOpacity(0.5)
         setError("")
         
-
         let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ 
         let match = regex.test(email)
 
         if(!match && password){
-            setError("Email Inválido")
+            setError("E-mail inválido")
             setOpacity(1)
             setDisabled(false)
             return
@@ -109,7 +109,6 @@ export const SignIn = () => {
                                 disabled={disabled}
                                 value={email}
                                 onChange={e=>setEmail(e.target.value)}
-                                required
                                 />
                             </div>
                         </label>
@@ -123,8 +122,7 @@ export const SignIn = () => {
                                             type="password" 
                                             disabled={disabled}
                                             value={password}
-                                            onChange={e=>setPassword(e.target.value)}
-                                            required
+                                            onChange={e=>setPassword(e.target.value)}       
                                         />
                                         <img src="/icons/show.png" alt="show" onClick={()=> setVisiblePassword(true)}/>
                                     </div>
@@ -135,8 +133,7 @@ export const SignIn = () => {
                                             type="text" 
                                             disabled={disabled}
                                             value={password}
-                                            onChange={e=>setPassword(e.target.value)}
-                                            required
+                                            onChange={e=>setPassword(e.target.value)}       
                                         />
                                         <img src="/icons/hide.png" alt="hide" onClick={()=> setVisiblePassword(false)}/>
                                     </div>
@@ -156,17 +153,12 @@ export const SignIn = () => {
                                 />
                             </div>
                         </label>
-
-                        <label htmlFor="" className='area'>
-                            <div className='area--title'></div>
-                            <div className='area--input'>
-                                <button disabled={disabled} onClick={handleSubmit}>
-                                    Entrar
-                                </button>
-                               
-                            </div>
-                        </label>
                     </form>
+                    <div className='button-area'>
+                        <button disabled={disabled} onClick={handleSubmit}>
+                            Entrar
+                        </button>
+                    </div>
                     <div className='signup--box'>
                         <span>Não tem uma conta? <Link to="/signup">Cadaste-se</Link></span>
                     </div>

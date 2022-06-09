@@ -1,11 +1,9 @@
 import {Request, Response} from 'express'
-import { validationResult, matchedData } from 'express-validator'
 import sharp from 'sharp'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import { unlink } from 'fs/promises'
 import fs from "fs"
-import multer from 'multer'
 const Category = require('../models/category')
 const State = require("../models/state")
 const Ads = require("../models/ads")
@@ -13,7 +11,6 @@ const User = require("../models/user")
 
 dotenv.config()
 
-const upload = multer().array("images", 5)
 
 export const getCategories = async (req: Request, res: Response) => {
     const cats = await Category.find()
@@ -36,7 +33,7 @@ export const addAction = async (req: Request, res: Response, ) => {
     let user = await User.findOne({token}).exec()
 
     if(!title || !category){
-        res.json({error: "Title and/or category invalid"})
+        res.json({error: "Titulo e/ou categoria inválido(s)"})
         return
     }
 
@@ -52,12 +49,12 @@ export const addAction = async (req: Request, res: Response, ) => {
             const stateItem = await State.findById(state)
             if(!stateItem){
                 res.json({
-                    error: {state:{msg: "State Invalid"}}
+                    error: {state:{msg: "Estado inválido"}}
                 })
                 return
             }
         } else {
-            res.json({error: {state:{msg: "State Code Invalid"}}})
+            res.json({error: {state:{msg: "Código de estado inválido"}}})
             return
         }
     }
@@ -68,21 +65,21 @@ export const addAction = async (req: Request, res: Response, ) => {
             const categoryItem = await Category.findById(category)
             if(!categoryItem){
                 res.json({
-                    error: {state:{msg: "Category Invalid"}}
+                    error: {state:{msg: "Categoria inválida"}}
                 })
                 return
             }
         } else {
-            res.json({ error: { state:{msg: "Category Code Invalid" } } })
+            res.json({ error: { state:{msg: "Código de categoria inválido" } } })
             return
         }
     }
 
     // Images 
-    let images: any = []
+    let images: string[]= []
     if(req.files){
-        let files: any = req.files
-        files.forEach( async (item: any) => {
+        let files = req.files as Express.Multer.File[]
+        files.forEach( async (item) => {
             images.push(item.filename)
             await sharp(item.path)
             // .resize()
@@ -92,7 +89,7 @@ export const addAction = async (req: Request, res: Response, ) => {
         })
     }else {
         res.status(400)
-        res.json({error: "Arquivo Inválido"})
+        res.json({error: "Arquivo inválido"})
         return
     }
 
@@ -139,7 +136,6 @@ export const getList = async (req: Request, res: Response) => {
     .limit(Number(limit))
     let ads = []
     for (let i in adsData){
-
         let image = ""
         if(adsData[i].images[0]){
             image = `${process.env.BASE}/media/${adsData[i].images[0]}.jpg`
@@ -163,21 +159,18 @@ export const getItem = async (req: Request, res: Response) => {
     let {id, other = null} = req.query
     if(!id){
         res.status(400)
-        res.json({error: "Item Not Found"})
+        res.json({error: "Item não encontrado"})
         return
     }
 
     let item = await Ads.findById(id)
     if(!item){
         res.status(400)
-        res.json({error: "Item Not Found"})
+        res.json({error: "Item não encontrado"})
         return 
     }
 
-    item.views++
-    await item.save()
-
-    let images: any = []
+    let images: string[] = []
     for (let i in item.images){
         images.push(`${process.env.BASE}/media/${item.images[i]}.jpg`) 
     }
@@ -197,8 +190,7 @@ export const getItem = async (req: Request, res: Response) => {
         imageUser = ""
     }
 
-
-    let others: any = []
+    let others: object[] = []
     if(other === "true") {
         const otherProducts = await Ads.find({status: true, idUser: item.idUser}).limit(4)
         for(let i in otherProducts){
@@ -241,31 +233,33 @@ export const getItem = async (req: Request, res: Response) => {
         },
         others
     }
+
+    item.views++
+    await item.save()
     res.json({productInfo})   
 }
 
 export const editAction = async (req: Request, res: Response) => {
-    console.log(req.body)
     let { id } = req.params
     let {title, status, price, priceNegotiable, description, cat, delImages, state} = req.body
     let token = req.headers.authorization?.slice(7)
     if(id.length < 12){
         res.status(400)
-        res.json({error: "Invalid ID"})
+        res.json({error: "Id inválido"})
         return
     }
 
     let item = await Ads.findById(id)
     if(!item){
         res.status(400)
-        res.json({error: "Invalid Item"})
+        res.json({error: "Item inválido"})
         return
     }
 
     let user = await User.findOne({token})
     if(user._id.toString() !== item.idUser){
         res.status(400)
-        res.json({error: "User other than creator"})
+        res.json({error: "Anúncio não pertence ao usuário logado"})
         return
     }
 
@@ -289,7 +283,7 @@ export const editAction = async (req: Request, res: Response) => {
         const category = await Category.findOne({slug: cat})
         if(!category){
             res.status(400)
-            res.json({error: "Invalid Category"})
+            res.json({error: "Categoria inválida"})
             return
         }
         updates.category = category._id
@@ -299,10 +293,9 @@ export const editAction = async (req: Request, res: Response) => {
         const stateLoc = await State.findOne({name: state})
         if(!stateLoc){
             res.status(400)
-            res.json({error: "Invalid State"})
+            res.json({error: "Estado inválido"})
             return
         }
-        console.log(stateLoc)
         updates.state = stateLoc._id
     }
 
@@ -312,18 +305,18 @@ export const editAction = async (req: Request, res: Response) => {
 
      //Images 
      //(new Images)
-     let Newimages: any = []
+     let Newimages: string[] = []
      if(req.files){
-        let files: any = req.files
+        let files = req.files as Express.Multer.File[]
         let adsItem = await Ads.findById(id)
         let itemImages = adsItem.images
         let currentImages = (5 - itemImages.length)
         if(files.length > currentImages) {
             res.status(400)
-            res.json({error: "Image limit exceeded"})
+            res.json({error: "Limite de imagens exedido"})
             return
         }
-        files.forEach( async (item: any) => {
+        files.forEach( async (item) => {
             Newimages.push(item.filename)
             updates.images = [...adsItem.images, ...Newimages]
             await sharp(item.path)
@@ -335,7 +328,7 @@ export const editAction = async (req: Request, res: Response) => {
     }
      
     //(delete Images)
-    let editImages: any = []
+    let editImages: string[] = []
     if(delImages){
         delImages = delImages.split(",")
         let adsItem = await Ads.findById(id)
@@ -354,8 +347,7 @@ export const editAction = async (req: Request, res: Response) => {
             }else{
                 fs.unlink(`./public/media/${itemImages[i]}.jpg`, (err) => {
                     if (err) throw err;
-                    console.log(`media/${itemImages[i]}.jpg was deleted`);
-                  });
+                });
             }
         } 
 
@@ -370,7 +362,6 @@ export const editAction = async (req: Request, res: Response) => {
 export const adsUser = async (req: Request, res: Response) => {
     let token = req.headers.authorization?.slice(7)
     let {sort = "asc", offset= 0, limit = 8, status } = req.query
-    // let total = 0
     let statusBoo = status == "true"?true:false
 
     const user = await User.findOne({token})
@@ -378,7 +369,6 @@ export const adsUser = async (req: Request, res: Response) => {
     const adsTotalOff = await Ads.find({idUser: user._id, status: false})
     const totalOn = adsTotalOn.length
     const totalOff = adsTotalOff.length
-    // total = totalOn + totalOff
 
     const adsData = await Ads.find({idUser: user._id, status: statusBoo})
     .sort({dateCreated: (sort == "desc"? -1: 1)})
@@ -387,7 +377,6 @@ export const adsUser = async (req: Request, res: Response) => {
 
     let ads = []
     for (let i in adsData){
-
         let image = ""
         if(adsData[i].images[0]){
             image = `${process.env.BASE}/media/${adsData[i].images[0]}.jpg`
@@ -415,6 +404,15 @@ export const adsUser = async (req: Request, res: Response) => {
 
 export const deleteAds = async (req: Request, res: Response) => {
     let {id} = req.params
+    let ads = await Ads.findById(id)
+
+    if(ads.images){
+        for(let i in ads.images){
+            fs.unlink(`./public/media/${ads.images[i]}.jpg`, (err) => {
+                if (err) throw err;
+            });
+        }
+    }
     await Ads.findByIdAndDelete(id)
     res.json({error: ""})
 }

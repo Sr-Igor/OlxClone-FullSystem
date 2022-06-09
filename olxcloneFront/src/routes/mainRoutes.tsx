@@ -1,16 +1,21 @@
+// React-Router Config
 import { Routes, Route } from "react-router-dom";
+
+// Pages
 import { Home } from "../pages/Home";
 import { About } from "../pages/About";
 import { SignIn } from "../pages/SignIn";
 import { SignUp } from "../pages/SignUp";
 import { ProductPage } from "../pages/ProductPage";
-import { NotFound } from "../pages/NotFound";
 import { AddAd } from "../pages/AddAd";
-import { PrivateRoute } from "../helpers/PrivateRoute";
+import { NotFound } from "../pages/NotFound";
 import { ListAds } from "../pages/ListAds";
 import { SellerPage} from "../pages/Seller";
 import { EditP } from '../pages/EditP'
 import { Profile } from "../pages/Profile";
+
+// Helpers (Verify Private Page)
+import { PrivateRoute } from "../helpers/PrivateRoute";
 
 export const MainRoutes = () => {
     return(

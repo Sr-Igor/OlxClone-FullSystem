@@ -2,7 +2,7 @@
 import * as C from './styled'
 
 // Hooks React
-import { useEffect, useRef, useState } from 'react'
+import { ChangeEvent, FormEvent, FormEventHandler, MouseEventHandler, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // Api Requests
@@ -20,8 +20,11 @@ import { CategoryList, StateList } from '../../types/MainTypes'
 
 export const AddAd = () => {
 
+    // Create FormData
+    const formData = new FormData()
+
     // Controler send field (FormData)
-    const fileField: any = useRef()
+    const fileField = useRef<HTMLInputElement>(null)
 
     // Navigate instance
     const navigate = useNavigate()
@@ -43,9 +46,7 @@ export const AddAd = () => {
     const [error, setError] = useState("")
 
     //Prev Images 
-    const [pImages, setPImages] = useState([])
-
-    const formData = new FormData() // Create FormData
+    const [pImages, setPImages] = useState<string[]>([])
 
     // Request Categories webSite
     useEffect(()=> {
@@ -66,12 +67,10 @@ export const AddAd = () => {
     }, [])
 
     // Summit Action
-    const handleSubmit = async (e: any) => {
-        e.preventDefault() // Disable send
+    const handleSubmit = async () => {
         setDisabled(true) // Disable buttons
         setError("") // Clean error
 
-        
         if(!title.trim()){  // Verify empty title
            setError("Preencha um titúlo para o anúncio")
            setDisabled(false)
@@ -91,7 +90,7 @@ export const AddAd = () => {
         }
         
         if(!price && !priceNegotiable){
-            setError("Preencha o preço ou aceite negociações")
+            setError("Informe o preço ou aceite negociações")
             setDisabled(false)
             return
         }
@@ -105,9 +104,11 @@ export const AddAd = () => {
         formData.append("price", price)
         
         // Verify Images, format and append in formData
-        if(fileField.current.files.length > 0 && pImages.length !== 0){
-            for(let i in fileField.current.files){
-                formData.append("images", fileField.current.files[i])
+        let fields = fileField.current as HTMLInputElement
+        let files = fields.files as FileList
+        if(files.length > 0 && pImages.length !== 0){
+            for(let i in files){
+                formData.append("images", files[i])
             }
         }
 
@@ -121,29 +122,36 @@ export const AddAd = () => {
         }else {
             setError(json.error)
         }
-      
         setDisabled(false) 
     }
 
+    // Previews of images
     const prevImages = () => {
-        
-         // Verify Images, format and append in formData
-         console.log(fileField.current.value)
-         if(fileField.current.files.length > 0){
-            let blobImages: any = []
-            for(let i in fileField.current.files){
-                if(typeof(fileField.current.files[i]) == "object"){
-                    let imageUrl = URL.createObjectURL(fileField.current.files[i])
+        // Verify Images, format, number and append in formData
+        let fields = fileField.current as HTMLInputElement
+        let files = fields.files as FileList
+        if(files.length > 5){
+            setError("Limite de imagens exedido")
+            return
+        }
+
+        if(files.length > 0){
+            let blobImages: string[] = []
+            for(let i=0; i<files.length; i++){
+                if(typeof(files[i]) == "object"){
+                    let imageUrl = URL.createObjectURL(files[i])
                     blobImages.push(imageUrl)
                 }
-            }
-            setPImages(blobImages)
+        }
+        setPImages(blobImages)
         }
     }
 
+    //Clear image selection
     const cleanInputFile = () => {
         formData.delete("images")
-        fileField.current.value = ""
+        let fields = fileField.current as HTMLInputElement
+        fields.value = ""
         setPImages([])
     }
 
@@ -165,7 +173,7 @@ export const AddAd = () => {
                     <div className='box-error'>{error}</div>
                 }
 
-                <form action="" onSubmit={handleSubmit}>
+                <form action="">
                     <div className='col-1'>
                         <label htmlFor="" className='area'>
                             <div className='area--title'>Titulo</div>
@@ -182,30 +190,30 @@ export const AddAd = () => {
                         <label htmlFor="" className='area'>
                             <div className='area--title'>Categoria</div>
                             <div className='area--input'>
-                            <select 
-                                disabled={disabled}
-                                onChange={e=>setCategory(e.target.value)}
-                                >
-                                <option value=""></option>
-                                {categories && categories.map((i: CategoryList, key)=>
-                                    <option key={key} value={i._id}>{i.name}</option>
-                                )}
-                            </select>
+                                <select 
+                                    disabled={disabled}
+                                    onChange={e=>setCategory(e.target.value)}
+                                    >
+                                    <option value=""></option>
+                                    {categories && categories.map((i: CategoryList, key)=>
+                                        <option key={key} value={i._id}>{i.name}</option>
+                                    )}
+                                </select>
                             </div>
                         </label>
 
                         <label htmlFor="" className='area'>
                             <div className='area--title'>Estado</div>
                             <div className='area--input'>
-                            <select 
-                                disabled={disabled}
-                                onChange={e=>setStatePd(e.target.value)}
-                                >
-                                <option value=""></option>
-                                {statesLoc && statesLoc.map((i: StateList, key)=>
-                                    <option key={key} value={i._id}>{i.name}</option>
-                                )}
-                            </select>
+                                <select 
+                                    disabled={disabled}
+                                    onChange={e=>setStatePd(e.target.value)}
+                                    >
+                                    <option value=""></option>
+                                    {statesLoc && statesLoc.map((i: StateList, key)=>
+                                        <option key={key} value={i._id}>{i.name}</option>
+                                    )}
+                                </select>
                             </div>
                         </label>
 
@@ -238,18 +246,11 @@ export const AddAd = () => {
                         <label htmlFor="" className='area'>
                             <div className='area--title'>Descrição</div>
                             <div className='area--input'>
-                            <textarea
-                                disabled={disabled}
-                                value={desc}
-                                onChange={e=>setDesc(e.target.value)}
-                            ></textarea>
-                            </div>
-                        </label>
-
-                        <label htmlFor="" className='area'>
-                            <div className='area--title'></div>
-                            <div className='area--input'>
-                                <button disabled={disabled}>Adicionar Anúncio</button>
+                                <textarea
+                                    disabled={disabled}
+                                    value={desc}
+                                    onChange={e=>setDesc(e.target.value)}
+                                ></textarea>
                             </div>
                         </label>
                     </div>
@@ -257,6 +258,7 @@ export const AddAd = () => {
                     <div className='col-2'>
                         <label htmlFor="file" className='area'>
                             <div className='area--title'>Adicionar Imagens</div>
+                            <small>máx: 5</small>
                             <div className='area--input'>
                                 <input 
                                 type="file"
@@ -272,16 +274,16 @@ export const AddAd = () => {
                         <div className='box-images'>
                             {pImages.length > 0 &&
                             <>
-                             <div className='images'>
-                                {pImages.map((i,k)=>
-                                    <div className='image' key={k}>
-                                        <img src={i} alt="" />
-                                    </div>     
-                                )}
-                            </div>
-                            <div className='button'>
-                                <button onClick={cleanInputFile}>Limpar Seleção</button>
-                            </div>
+                                <div className='images'>
+                                    {pImages.map((i,k)=>
+                                        <div className='image' key={k}>
+                                            <img src={i} alt="" />
+                                        </div>     
+                                    )}
+                                </div>
+                                <div className='button'>
+                                    <button onClick={cleanInputFile}>Limpar Seleção</button>
+                                </div>
                             </>   
                             }
                             {pImages.length <= 0 &&
@@ -297,6 +299,10 @@ export const AddAd = () => {
                         </div>
                     </div>                    
                 </form>
+                <div className='button-area'>
+                    <button disabled={disabled} onClick={handleSubmit}>Adicionar Anúncio</button>
+                </div>
+                
             </C.PageArea>
         </PageContainer>
     )

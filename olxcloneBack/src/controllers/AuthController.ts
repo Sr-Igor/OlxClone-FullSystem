@@ -19,7 +19,7 @@ export const singIn = async (req: Request, res: Response) => {
     const user = await User.findOne({email: data.email})
     if(!user) { 
         res.status(400)
-        res.json({error: "E-mail and/or Password Incorrect"})
+        res.json({error: "E-mail e/ou senha incorreto(s)"})
         return 
     }
 
@@ -27,7 +27,7 @@ export const singIn = async (req: Request, res: Response) => {
     const match = await bcrypt.compare(data.password, user.passwordHash)
     if(!match) {
         res.status(400)
-        res.json({error: "E-mail and/or Password Incorrect"})
+        res.json({error: "E-mail e/ou senha incorreto(s)"})
         return
     }
 
@@ -56,7 +56,7 @@ export const singUp = async (req: Request, res: Response) => {
     if(user){
         res.status(400)
         res.json({
-            error: {email:{msg: "Email has already been registered"}}
+            error: {email:{msg: "E-mail já registrado"}}
         })
         return
     }
@@ -67,14 +67,14 @@ export const singUp = async (req: Request, res: Response) => {
         if(!stateItem){
             res.status(400)
             res.json({
-                error: {state:{msg: "State Invalid"}}
+                error: {state:{msg: "Estado inválido"}}
             })
             return
         }
     } else {
         res.status(400)
         res.json({
-            error: {state:{msg: "State Code Invalid"}}
+            error: {state:{msg: "Código de estado inválido"}}
         })
     }
 
