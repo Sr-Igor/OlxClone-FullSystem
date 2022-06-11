@@ -214,4 +214,30 @@ export const PageArea = styled.div<{opacity: number}>`
             font-weight: bold;
         }
     }
+
+@media (max-width:600px) {
+
+    margin-top: 0;
+
+    .signin--area {
+        width: 100vw;
+
+        .OAuth {
+            font-size: 13px;
+            padding-left: 25px;
+        }
+
+        form {
+            width: 90%;
+
+            small {
+                font-size: 10px;
+            }
+        }
+    }
+    
+    .info--area {
+        padding: 15px;
+    }
+}
 `

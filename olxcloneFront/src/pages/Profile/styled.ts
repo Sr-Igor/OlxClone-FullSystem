@@ -14,7 +14,7 @@ export const Warning = styled.div<{display: string}>`
 
     .box--warn {
         width: 600px;
-        height:250px;
+        height: 300px;
         background-color: #FFF;
         display: flex;
         justify-content: space-between;
@@ -130,7 +130,7 @@ export const PageArea = styled.div<{color: string}>`
     .box--info {
         margin-top: 20px;
         background-color: #fff;
-        min-width: 800px;
+        max-width: 800px;
         min-height: 550px;
         border-radius: 5px;
         box-shadow: 0 0 5px #BBB;
@@ -296,4 +296,33 @@ export const PageArea = styled.div<{color: string}>`
             }
         }
     }
+
+@media (max-width:600px){
+
+    .options{
+
+        div {
+            display: flex;
+            align-items: center;
+            flex: 1;  
+        }
+
+        .active {
+            width: auto;
+        }
+    }
+
+    .box--info {
+        min-width: 100%;
+        padding: 15px;
+
+        form {
+        
+            label {
+                width: 100%;
+            }
+        }
+               
+    }
+}
 `

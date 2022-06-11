@@ -10,6 +10,10 @@ export const PageArea = styled.div`
         padding: 10px;
     }
 
+    .message-mobile {
+        display: none;
+    }
+
     form {
         background-color: #FFF;
         border-radius: 3px;
@@ -21,7 +25,7 @@ export const PageArea = styled.div`
             flex: 1;
 
             .area--title {
-                width: 200px;
+                width: 100px;
                 text-align: right;
                 padding-right: 20px;
                 font-weight: bold;
@@ -61,6 +65,7 @@ export const PageArea = styled.div`
             margin-left: 15px;
 
             label {
+                flex-direction: column;
 
                 .area--title {
                     background-color: #FF8100;
@@ -79,7 +84,9 @@ export const PageArea = styled.div`
             }
 
             .box-images {
-
+                display: flex;
+                flex-wrap: wrap;
+                
                 .images{
                     display: flex;
                     justify-content: start;
@@ -92,6 +99,7 @@ export const PageArea = styled.div`
                         height: 150px;
                     }
                 }
+                
                 img {
                     width: 150px;
                     max-height: 150px;
@@ -115,7 +123,6 @@ export const PageArea = styled.div`
             }
         }
     }
-
 
     .button-area {
         width: 100%;
@@ -145,4 +152,136 @@ export const PageArea = styled.div`
         padding: 10px;
         max-width: 500px;
     }
+
+@media (max-width:600px) {
+
+    h2 {
+        width: 100%;
+        text-align: center;
+        color: #4a4a4a;
+    }
+
+    .box-error {
+        display: none;
+    }
+
+    .message-mobile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        z-index: 2;
+        top: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0,0,0,0.5);
+
+        .box-message {
+            background-color: #FFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            height: 250px;
+            width: 100%;
+
+            .title-message {
+                background-color: #c9242e;
+                color: #FFF;
+                width: 100%;
+                text-align: center;
+                padding: 10px 15px;
+                font-size: 20px;
+            }
+
+            .body-message {
+                padding: 10px;
+                text-align: center;
+                font-weight: bold;
+            }
+
+            .ok-button {
+                border: 1px solid #CCC;
+                padding: 3px 20px;
+            }
+            
+        }
+    }
+
+    form {
+        flex-direction: column;
+
+        .col-2 {
+
+            label {
+                flex-direction: column;
+                width: 100%;
+
+                .area--title {
+                    background-color: #1875FF;
+                    width:100%;
+                    border-radius: 0;
+                    text-align: center;
+                    margin-bottom: 10px;
+                }
+                small {
+                    color: #4a4a4a;
+                    font-weight: bold;
+                }
+            }
+
+            .box-images {
+                display: flex;
+                flex-wrap: wrap;
+                margin-bottom: 20px;
+
+                .images{
+
+                    .image {
+
+                        height: 50px;
+                    }
+                }
+
+                img {
+                    width: 50px;
+                    max-height: 50px;
+                }
+
+                .button {
+                    width: 100%;
+
+                    button {
+                        width: 100%;
+                        border-radius: 0;
+                    }
+                }
+            }
+        }
+
+        .col-1 {
+
+            .area {
+                flex-direction: column;
+                align-items: start;
+                
+            }
+
+            .area-checkbox {
+                flex-direction: row;
+            }
+
+            .area--title {
+                width: 200px;
+                text-align: start;
+                color: #4a4a4a;
+                width: auto;
+            }
+        
+            .area--input {
+                width: 100%;
+            }
+        }
+    }
+}
 `

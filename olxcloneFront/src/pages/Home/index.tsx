@@ -22,6 +22,9 @@ export const Home = () => {
     const [categories, setCategories] = useState([])
     const [adList, setAdList] = useState([])
 
+    // 
+    const [seeCat, setSeeCat] = useState("none")
+
     // Request States webSite
     useEffect(()=> {
         const getStates = async () => {
@@ -54,13 +57,13 @@ export const Home = () => {
 
     return(
         <>
-            <C.SearchArea>
-                <PageContainer>
+            <C.SearchArea seeCat={seeCat}>
+                <PageContainer >
                     <div className="searchBox">
                         <form action="/ads" method="">
                             <input type="text" name="q" placeholder="O que procura?"/>
                             <select>
-                                <option></option>
+                                <option value="">Selecione um Estado</option>
                                 {stateList.map((item: StateList, index)=> 
                                     <option key={index} value={item.name}>{item.name}</option>
                                 )}
@@ -79,12 +82,16 @@ export const Home = () => {
                             </Link>
                         )}
                     </div>
+                    <div className='seeCat' onClick={()=> setSeeCat(seeCat=="none"?"flex":"none")}>
+                            <span>Ver Categorias</span>
+                            <img src="/icons/arrow-down.png" alt="" />
+                    </div>
                 </PageContainer>
             </C.SearchArea>
             <PageContainer>
                 <C.PageArea>
 
-                <h2>Anuncios Recentes</h2>
+                <h2>Anúncios Recentes</h2>
 
                 <div className="list">
                     {adList.map((item: ItemsList, index)=> 

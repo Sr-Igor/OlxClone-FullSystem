@@ -10,4 +10,8 @@ export const FooterArea = styled.header`
     text-align: center;
     border-top: 1px solid #ccc;
     margin-top: 30px;
+
+@media (max-width:600px){
+    padding: 20px;
+}
 `

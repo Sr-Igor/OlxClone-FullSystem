@@ -166,8 +166,7 @@ export const ProductPage = () => {
                 </div>
             </C.Warning>
 
-            <C.BreadChumb>
-                Você está aqui: 
+            <C.BreadChumb> 
                 <Link to="/">Home</Link>/
                 <Link to={`/ads?state=${pdInfo.state}`}>{pdInfo.state}</Link>/
                 <Link to={`/ads?state=${pdInfo.state}&cat=${pdInfo.category}`}>{pdInfo.category}</Link>/

@@ -90,4 +90,60 @@ export const HeaderArea = styled.header`
             }
         }
     }
+
+@media (max-width: 600px) {
+    height: auto;
+
+    .container{
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .logo {
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    nav {
+
+        ul {
+            margin:0;
+            padding: 0;
+            justify-content: center;;
+            align-items: center;
+            flex-wrap: wrap;
+            height: auto;
+            margin-top: 10px;
+        
+            li {
+                width: 50%;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                margin-top: 10px;
+    
+                .button{
+                    border-radius: 5px;
+                }
+            }
+    
+            .l2 {
+                width: 100%;
+                display:flex;
+                justify-content: center;
+
+                .button{
+                    width: 100%;
+                    border-radius:0;
+                    margin:0;
+                    display: flex;
+                    justify-content: center;
+                    margin-bottom: -1px;
+                }
+            }
+        }
+    
+        
+    }
+}
 `

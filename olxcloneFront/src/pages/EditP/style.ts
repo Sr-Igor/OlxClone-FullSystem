@@ -87,11 +87,16 @@ export const PageArea = styled.div<{color: string}>`
         margin-bottom: 20px;
     }
 
+    .message-mobile {
+        display: none;
+    }
+
     .ads--area {
 
         .images--area {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .row-1 {
@@ -107,9 +112,8 @@ export const PageArea = styled.div<{color: string}>`
                     margin-right: 5px;
                 }
 
-                .unavailable {
+                .unavailable, .available, .del{
                     border: none;
-                    background-color: #413b6b;
                     color: #fff;
                     font-size: 15px;
                     border-radius: 5px;
@@ -118,6 +122,10 @@ export const PageArea = styled.div<{color: string}>`
                     transition: all ease .1s;
                     cursor: pointer;
                     display: flex;
+                }
+
+                .unavailable {
+                    background-color: #413b6b;
 
                     &:hover {
                         box-shadow: 0 0 1px #000;
@@ -127,16 +135,7 @@ export const PageArea = styled.div<{color: string}>`
                 }
 
                 .available {
-                    border: none;
                     background-color: #369F64;
-                    color: #fff;
-                    font-size: 15px;
-                    border-radius: 5px;
-                    padding: 5px 10px;
-                    box-shadow: 0 0 5px #ccc;
-                    transition: all ease .1s;
-                    cursor: pointer;
-                    display: flex;
 
                     &:hover {
                         box-shadow: 0 0 1px #000;
@@ -145,14 +144,7 @@ export const PageArea = styled.div<{color: string}>`
                 }
 
                 .del {
-                    border: none;
-                    font-size: 15px;
                     background-color: #d83018;
-                    border-radius: 5px;
-                    padding: 5px 10px;
-                    color: #fff;
-                    cursor: pointer;
-                    display: flex;
 
                     &:hover {
                         opacity: 0.7;
@@ -162,8 +154,10 @@ export const PageArea = styled.div<{color: string}>`
         }
 
         .row-2 {
+            width: 100%;
             display: flex;
             min-height: 200px;
+            flex-wrap: wrap;
             justify-content: space-around;
             align-items: start;
             margin-top: 50px;
@@ -182,8 +176,8 @@ export const PageArea = styled.div<{color: string}>`
                 }
 
                 label {
-                    margin-right: 10px;
-                    font-size: 15px;
+                    padding-right: 10px;
+                    font-size: 13px;
                     color: #555;
                     font-weight: bold;
                 }
@@ -250,6 +244,142 @@ export const PageArea = styled.div<{color: string}>`
             }
         }
     }
+
+@media (max-width:600px) {
+    .message {
+        display: none;
+    }
+
+    .message-mobile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        z-index: 2;
+        top: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0,0,0,0.5);
+
+        .box-message {
+            background-color: #FFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            height: 250px;
+            width: 100%;
+
+            .title-message {
+                background-color: ${props => props.color};
+                color: #FFF;
+                width: 100%;
+                text-align: center;
+                padding: 10px 15px;
+                font-size: 20px;
+            }
+
+            .body-message {
+                padding: 10px;
+                text-align: center;
+                font-weight: bold;
+            }
+
+            .ok-button {
+                border: 1px solid #CCC;
+                padding: 3px 20px;
+            } 
+        }
+    }
+
+    h2 {
+        width: 100;
+        text-align: center;
+        font-size: 20px;
+        color: #4a4a4a;
+    }
+
+    .ads--area {
+
+        .images--area {
+            flex-wrap: wrap;
+        }
+
+        .row-1 {
+            justify-content: center;
+    
+            .input--area {
+                margin: 0px 0px;
+                width: 100%;
+
+                img {
+                    width: 20px;
+                    height: 20px;
+                    margin-right: 10px;
+                }
+
+                .unavailable, .available, .del{
+                    align-items: center;
+                    height: 50px;
+                    font-size: 12px;
+                    border-radius: 0;
+                    box-shadow: none;
+                }
+            }
+        }
+
+        .row-2 {
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            margin-top: 6px;
+
+            .col {
+                align-items: center;
+                padding: 0px 0px;
+
+                .input--area {
+                    margin: 15px 0;
+                    align-items: start;
+                    flex-direction: column;
+                }
+
+                .input--checkbox--mobile {
+                    flex-direction: row;
+                    width: 100%;
+                }
+
+                label {
+                    margin-bottom: 3px;
+                }
+
+                input, select{
+                    width: 280px;
+                }
+
+                textarea {
+                    width: 280px;
+                }
+            }
+        }
+
+        .row-3 {
+            justify-content: center;
+            margin-top: 0px;
+
+            button, a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                font-size: 18px;
+                padding: 10px 15px;
+                border-radius: 0px;
+                margin: 0px 0px;
+            }
+        }
+    }
+}
 `
 
 export const ImgArea = styled.div`
@@ -286,6 +416,17 @@ export const ImgArea = styled.div`
     .del {
         background-color: #cf1500;
     }
+
+@media (max-width:600px) {
+    max-width: 30%;
+    padding: 0px;
+
+    .del {
+        width: 90px;
+        padding: 1px 4px;
+        border-radius: 0px;
+    }
+}
 `
 
 export const Item = styled.div`
@@ -304,12 +445,28 @@ export const Item = styled.div`
         object-position: center;
         margin: auto;
     }
+
+@media (max-width:600px) {
+    width: 90px;
+    height: 90px;
+    border-radius: 2px;
+    box-shadow: none;
+    margin: 10px;
+    border: 2px solid #ccc;
+    
+    img {
+        max-width: 80px;
+        max-height: 80px;
+    }
+}
 `
 
 export const InputFile = styled.div`
     display: flex;
-    justify-content: end;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    margin-top: 25px;
     margin-right: 20px;
 
     label {
@@ -321,7 +478,7 @@ export const InputFile = styled.div`
         align-items: center;
         color: #FFF;
         background-color: #e57706;
-        padding: 3px 7px;
+        padding: 10px 15px;
         border-radius: 3px;
         cursor: pointer;
 
@@ -341,6 +498,33 @@ export const InputFile = styled.div`
             img {
                 transform: scale(1);
             }
-       }
+        }
     }
+
+@media (max-width:600px) {
+    flex-direction: column;
+    justify-content: center;
+    margin: 0px;
+    margin-top: 20px;
+
+    label {
+        margin-right: 0px;
+    }
+
+    .add {
+        width: 100%;
+        justify-content: center;
+        background-color: #1875FF;
+        padding: 8px 12px;
+        font-size: 15px;
+        border-radius: 0px;
+        margin-bottom: 2px;
+    }
+
+    div {
+        font-size: 10px;
+        font-weight: bold;
+        color: #555;
+    }
+}
 `

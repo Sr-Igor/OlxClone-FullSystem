@@ -71,10 +71,10 @@ export const Header = () => {
                       Minha Conta
                     </Link>
                   </li>
-                  <li>
+                  <li className='l2'>
                     <button onClick={handleLogout}>Sair</button>
                   </li>
-                  <li>
+                  <li  className='l2'>
                     <Link to="post-on-ad" className='button'>Anunciar</Link>
                   </li>
                 </>
@@ -102,7 +102,7 @@ export const Header = () => {
                     Login
                   </Link>
                   </li>
-                  <li>
+                  <li className='l2'>
                     <Link to="/signin" className='button'>Anunciar</Link>
                   </li>
                 </>

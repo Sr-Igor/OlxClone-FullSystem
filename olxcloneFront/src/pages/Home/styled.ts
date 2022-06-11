@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const SearchArea = styled.div`
+export const SearchArea = styled.div<{seeCat: string}>`
     background-color: #6e0ad6;
     border-bottom: #CCC;
     padding: 20px 0;
@@ -24,6 +24,7 @@ export const SearchArea = styled.div`
                 font-size: 15px;
                 color: #000;
                 margin-right: 20px;
+                color: #777;
             }
 
             input {
@@ -51,10 +52,12 @@ export const SearchArea = styled.div`
     .categoryList {
         display: flex;
         margin-top: 20px;
+        flex-wrap: wrap;
         margin-bottom: 20px;
+        transition: all ease 0.5s;
 
         .categoryItem{
-            width: calc(100% / 12);
+            width: calc(100% / 6);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -62,7 +65,7 @@ export const SearchArea = styled.div`
             color: #FFF;
             text-decoration: none;
             text-align: center;
-            height: 50px;
+            height: 70px;
             margin: 10px;
             transition: all ease 0.2s;
 
@@ -87,6 +90,75 @@ export const SearchArea = styled.div`
             }
         }
     }
+
+    .seeCat{
+        display: none;
+    }
+
+    @media (max-width:600px){
+
+        .searchBox {
+
+            form {
+                flex-direction: column;
+
+                input {
+                    padding: 10px;
+                    margin-right: 0;
+                    margin-bottom: 10px;
+                }
+
+                select {
+                    width: 100%;
+                    margin-bottom: 10px;
+                }
+            }
+        }
+
+        .categoryList {
+            flex-wrap: wrap;
+            justify-content: center;
+            height: ${props => props.seeCat == "none"?"1px":"300px"};
+            transition: all ease 0.5s;
+
+            .categoryItem {
+                margin: 19px;
+                display: ${props => props.seeCat};
+                
+                .box-image {
+                    padding: 20px;
+
+                    img {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+
+                span {
+                    font-size: 8px;
+                }
+            }
+        }
+
+        .seeCat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            span{
+                color: #FFF;
+                font-size: 12px;
+                display: ${props => props.seeCat=="none"? "flex": "none"};
+            }
+            
+            img {
+                width: 20px;
+                height: auto;
+                transform: ${props => props.seeCat=="none"? "": "rotate(180deg)"};
+                transition: all ease 0.3s;
+            }
+        }
+    }
 `
 
 export const PageArea = styled.div`
@@ -107,10 +179,31 @@ export const PageArea = styled.div`
         display: inline-block;
         margin: 10px 0;
         font-size: 20px;
+        width: 100%;
+        text-align: center;
 
         &:hover {
             color: #9d9d9d;
         }
     }
+
+
+@media (max-width:600px){
+    margin: 5px;
+
+    h2 {
+        text-align: center;
+    }
+
+    .AdItem {
+        width: 100%;
+    }
+
+    .seeAllLink {
+        font-size: 15px;
+        color: #4a4a4a;
+    }
+    }
+}
 
 `

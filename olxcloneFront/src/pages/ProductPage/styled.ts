@@ -274,6 +274,30 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
             margin-top: 20px;
         }
 
+        .createdBy {
+            margin-top: 20px;
+            background-color: #FFF;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #000;
+    
+            .img-name {
+                display: flex;
+                align-items: center;
+    
+                img{
+                    max-width: 50px;
+                    border-radius: 25px;
+                    margin-right: 20px;
+                }
+            }
+        }
+    
+        .createdBy small{
+            display: block;
+            color: #999;
+            margin-top: 10px;
+        }
+
         .action-buttons {
             
             a {
@@ -281,14 +305,11 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
             }
                 
             div {
-                height: 30px;
-                border-radius: 5px;
-                // box-shadow: 0px 0px 4px #999;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 text-decoration: none;
-                margin-top: 20px;
+                padding: 10px 15px;
                 color: #FFF;
                 cursor: pointer;
 
@@ -320,30 +341,153 @@ export const PageArea = styled.div<{width: number, currentImage: number}>`
         }
     }
 
-       
-        .createdBy {
-            margin-top: 20px;
-            background-color: #FFF;
-            border-radius: 5px;
-            box-shadow: 0 0 5px #000;
 
-            .img-name {
-                display: flex;
-                align-items: center;
+@media (max-width:600px) {
+    flex-direction: column;
 
-                img{
-                    width: 50px;
-                    border-radius: 25px;
-                    margin-right: 20px;
+    .leftSide {
+        margin:0;
+
+        .area--image {
+
+            .productImage{
+                width: 100vw;
+                height: 300px;
+    
+                .arrow {
+                    margin: 3px;
+                    opacity: 1;
+
+                    img {
+                        width: 30px;
+                    }
                 }
+
+                .slide--Area{
+                    display: flex;
+                    align-items: center;
+                    position: relative;
+                    width: calc(${props => props.width/500} * 100vw);
+                    margin-left: calc(${props => props.currentImage/500} * 100vw);
+                    height: 100%;
+                    padding:0;
+                    background-color: #eee;
+                }
+    
+                .slide--Item{
+                   width: 100vw;
+                   display: flex;
+                   justify-content: center;
+
+                    img {
+                        max-width: 100%;
+                        height: auto;
+                        // margin: auto;
+                        margin: 0;
+                    }
+                }
+            }
+
+            .mini--images{
+                display: none;
             }
         }
 
+        .pdInfo {
+            flex: 1;
+            padding: 15px 2px;
+
+            .descTitle {
+                font-size: 20px;
+                margin: 5px;
+            }
+
+            .pdDescription {
+                margin: 15px 5px;
+                width: 100%;
+                font-size: 15px;
+                color: #4a4a4a;
+            }
+            
+            .pdName {
+                margin-bottom: 5px;
+
+                h2 {
+                    margin: 0;
+                }
+
+                small {
+                    color: #999;
+                    font-size: 11px;
+                }
+
+                .sub-infos {
+
+                    small {
+                        margin-right: 20px;
+                    }
+                }
+            }
+        }
+    }
+
+    .rightSide {
+        width: 100%;
+
+        .box-price{
+            border-radius: 0;
+        }
+
+        .price span {
+            text-align: center;
+        }
+
+        .contactSelletLink {
+            border-radius: 0;
+            margin-top: 0px;
+        }
+
+        .createdBy {
+            margin-top: 10px;
+            border-radius: 5px;
+            box-shadow: none;
+            border: 1px solid #ccc;
+    
+            .img-name {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px;
+    
+                img{
+                    border-radius: 25px;
+                    margin-right: 0px;
+                }
+            }
+        }
+    
         .createdBy small{
             display: block;
             color: #999;
             margin-top: 10px;
         }
+
+        .action-buttons {
+            margin-bottom: 10px;
+            
+            a {
+                text-decoration: none;
+            }
+                
+            div {
+                height: 30px;
+                border-radius: 0;
+                margin-top: 0px;
+                padding: 30px 10px;
+            }
+        }
+    }
+}
 `
 
 export const OthersArea = styled.div`
@@ -356,6 +500,25 @@ export const OthersArea = styled.div`
         display: flex;
         flex-wrap: wrap;
     }
+
+@media (max-width:600px) {
+
+    h2 {
+        width: 100%;
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 18px;
+        color: #4a4a4a;
+    }
+    
+    .list {
+        flex-direction: column;
+
+        .AdItem {
+            width: 100%;
+        }
+    }
+}
 `
 
 export const BreadChumb = styled.div`
@@ -365,14 +528,19 @@ export const BreadChumb = styled.div`
     a {
         display: inline-block;
         margin: 0px 5px;
-        text-decoration: underline;
+        text-decoration: none;
         color: #000;
     }
     
     div {
-        color: blue;
+        color: #999;
         display: inline-block;
         margin: 0px 5px;
         cursor: default;
     }
+
+@media (max-width: 600px) {
+    font-size: 9px;
+    margin-left: 10px;
+}
 `

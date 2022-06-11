@@ -52,6 +52,7 @@ export const ListAds = () => {
     // Loading state controller
     const [loading, setLoading] = useState(true)
     const [opacity, setOpacity] = useState(1)
+    const [seeCat, setSeeCat] = useState("none")
 
     // Ads List Request 
     const getAdsList = async () => {
@@ -129,7 +130,7 @@ export const ListAds = () => {
 
     return(
     <PageContainer>
-        <C.PageArea>
+        <C.PageArea seeCat={seeCat}>
             <div className="leftSide">
                 <form method="GET">
 
@@ -151,10 +152,10 @@ export const ListAds = () => {
 
                     <div className="filterName">Categoria:</div>
                     <ul>
-                    <li  className={"categoryItem"} onClick={()=> setCat("")}>
-                        <img src="/icons/category.png" alt="" />
-                        <span>Todas as Categorias</span>
-                    </li>
+                        <li  className={"categoryItem"} onClick={()=> setCat("")}>
+                            <img src="/icons/category.png" alt="" />
+                            <span>Todas as Categorias</span>
+                        </li>
                         {categories.map((i: CategoryList, k)=> 
                             <li 
                             key={k} 
@@ -165,8 +166,10 @@ export const ListAds = () => {
                                 <span>{i.name}</span>
                             </li>
                         )}
+                    <div className='arrow-down' onClick={e=>setSeeCat((seeCat=="none"?"flex":"none"))}>
+                        <img src="/icons/arrow-down.png" alt="" />
+                    </div>
                     </ul>
-
                 </form>
             </div>
             <div className="rightSide">

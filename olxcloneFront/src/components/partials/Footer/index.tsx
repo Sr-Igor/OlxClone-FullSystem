@@ -5,7 +5,10 @@ export const Footer = () => {
   return(
     <C.FooterArea>
         Todos os direitos autorais reservados
-        Olx-Clone
+        <br />
+        Igor de Sousa
+        <br />
+         Projeto Clone Olx para composição de portifólio, sem intenção ou valor comercial
     </C.FooterArea>
   )
 }

@@ -166,14 +166,66 @@ export const AddAd = () => {
 
     return(
         <PageContainer>
-            <PageTitle>Postar um anúncio</PageTitle>
             <C.PageArea>
-
+                <h2>Postar um anúncio</h2>
                 {error && 
+                <>
                     <div className='box-error'>{error}</div>
+                    <div className="message-mobile">
+                        <div className="box-message">
+                            <div className="title-message">Aviso</div>
+                            <div className="body-message">{error}</div>
+                            <div className="ok-button" onClick={()=>setError("")}>OK</div>
+                        </div>
+                    </div>
+                </>
                 }
 
                 <form action="">
+                <div className='col-2'>
+                        <label htmlFor="file" className='area'>
+                            <div className='area--title'>Adicionar Imagens</div>
+                            <small>máx: 5</small>
+                            <div className='area--input'>
+                                <input 
+                                type="file"
+                                disabled={disabled}
+                                ref={fileField}
+                                id="file"
+                                multiple
+                                onChange={prevImages}
+                                />
+                            </div>
+                        </label>
+
+                        <div className='box-images'>
+                            {pImages.length > 0 &&
+                            <>
+                                <div className='images'>
+                                    {pImages.map((i,k)=>
+                                        <div className='image' key={k}>
+                                            <img src={i} alt="" />
+                                        </div>     
+                                    )}
+                                </div>
+                                <div className='button'>
+                                    <button onClick={cleanInputFile}>Limpar Seleção</button>
+                                </div>
+                            </>   
+                            }
+                            {pImages.length <= 0 &&
+                            <>
+                                <img src="/images/no-pictures.png" alt="" />
+                                <img src="/images/no-pictures.png" alt="" />
+                                <img src="/images/no-pictures.png" alt="" />
+                                <img src="/images/no-pictures.png" alt="" />
+                                <img src="/images/no-pictures.png" alt="" />
+                            </>
+                            }
+                           
+                        </div>
+                    </div> 
+
                     <div className='col-1'>
                         <label htmlFor="" className='area'>
                             <div className='area--title'>Titulo</div>
@@ -230,7 +282,7 @@ export const AddAd = () => {
                             </div>
                         </label>
 
-                        <label htmlFor="" className='area'>
+                        <label htmlFor="" className='area area-checkbox'>
                             <div className='area--title'>Preço Negociável</div>
                             <div className='area--input'>
                                 <input 
@@ -253,51 +305,7 @@ export const AddAd = () => {
                                 ></textarea>
                             </div>
                         </label>
-                    </div>
-                    
-                    <div className='col-2'>
-                        <label htmlFor="file" className='area'>
-                            <div className='area--title'>Adicionar Imagens</div>
-                            <small>máx: 5</small>
-                            <div className='area--input'>
-                                <input 
-                                type="file"
-                                disabled={disabled}
-                                ref={fileField}
-                                id="file"
-                                multiple
-                                onChange={prevImages}
-                                />
-                            </div>
-                        </label>
-
-                        <div className='box-images'>
-                            {pImages.length > 0 &&
-                            <>
-                                <div className='images'>
-                                    {pImages.map((i,k)=>
-                                        <div className='image' key={k}>
-                                            <img src={i} alt="" />
-                                        </div>     
-                                    )}
-                                </div>
-                                <div className='button'>
-                                    <button onClick={cleanInputFile}>Limpar Seleção</button>
-                                </div>
-                            </>   
-                            }
-                            {pImages.length <= 0 &&
-                            <>
-                                <img src="/images/no-pictures.png" alt="" />
-                                <img src="/images/no-pictures.png" alt="" />
-                                <img src="/images/no-pictures.png" alt="" />
-                                <img src="/images/no-pictures.png" alt="" />
-                                <img src="/images/no-pictures.png" alt="" />
-                            </>
-                            }
-                           
-                        </div>
-                    </div>                    
+                    </div>                   
                 </form>
                 <div className='button-area'>
                     <button disabled={disabled} onClick={handleSubmit}>Adicionar Anúncio</button>

@@ -300,24 +300,19 @@ export const EditP = () => {
                 <h2>Editar Anúncio</h2>
                 <hr />
                 {message &&
+                <>
                     <div className="message">{message}</div>
+                    <div className="message-mobile">
+                        <div className="box-message">
+                            <div className="title-message">Aviso</div>
+                            <div className="body-message">{message}</div>
+                            <div className="ok-button" onClick={()=>setMessage("")}>OK</div>
+                        </div>
+                    </div>
+                </>
                 }
                 <div className="ads--area">
                     <form action="">
-                        <C.InputFile>
-                            <label className='add'>
-                                    <input 
-                                        type="file"
-                                        ref={fileField}
-                                        disabled={disabled}
-                                        multiple
-                                        onChange={()=>addImage()}
-                                    />
-                                    <img src="/icons/plus.png" alt="add" />
-                                    Adiconar Imagens
-                            </label>
-                            <div>Max: 5</div>
-                        </C.InputFile>
                         <div className="images--area">
                             {currentImages.map((i: ImagesInfo , k: number)=> 
                                 <C.ImgArea key={k}>
@@ -332,6 +327,20 @@ export const EditP = () => {
                                 </C.ImgArea>
                             )}  
                         </div>
+                        <C.InputFile>
+                            <label className='add'>
+                                    <input 
+                                        type="file"
+                                        ref={fileField}
+                                        disabled={disabled}
+                                        multiple
+                                        onChange={()=>addImage()}
+                                    />
+                                    <img src="/icons/plus.png" alt="add" />
+                                    Adiconar Imagens
+                            </label>
+                            <div>Max: 5</div>
+                        </C.InputFile>
                         <hr />
                         <div className="row-1">
                             <div className="input--area">
@@ -391,7 +400,7 @@ export const EditP = () => {
                                     />
                                 </div>
 
-                                <div className="input--area">
+                                <div className="input--area input--checkbox--mobile">
                                     <label htmlFor="">Preço Negociável:</label>
                                     <input type="checkbox" 
                                         checked={priceNeg} 

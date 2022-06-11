@@ -21,7 +21,6 @@ export const PageArea = styled.div`
     }
 
     .container {
-        width: 98%;
         margin: auto;
         min-height: 500px;
         border: 1px solid #CCC;
@@ -34,7 +33,6 @@ export const PageArea = styled.div`
             flex-wrap: wrap;
 
             .AdItem {
-                width: 20%;
 
                 img {
                     width: 150px;
@@ -82,4 +80,67 @@ export const PageArea = styled.div`
             opacity: 0.5;
         }
     }
+
+@media (max-width:600px) {
+
+    h2 {
+        width: 100;
+        text-align: center;
+        font-size: 20px;
+        color: #4a4a4a;
+    }
+
+    .box-filter {
+        margin: 20px 0;
+        display: flex;
+        padding: 0px;
+
+        span {
+            width:50%;
+            margin: 0px;
+            border-bottom: none;
+            padding-bottom: 0;
+            padding: 8px 3px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        span:hover, .active {
+            color: #FFF;
+            background-color: #6e0ad7;
+            border-bottom:none;
+        }
+    }
+
+    .container {
+        box-shadow: none;
+        border-radius: 0;
+        padding: 5px;
+
+        .list {
+            flex-direction: column;
+
+            .AdItem {
+                width: 100%;
+
+                img {
+                    width: 100px;
+                    height: 100px;
+                }
+            }
+        }
+
+        .emptyMessage {
+
+            img {
+                width: 100px;
+            }
+
+            div {
+                font-size: 15px;
+                text-align: center;
+            }
+        }
+    }
+}
 `
