@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
+    "postinstall": "tsc",
     "test": "set NODE_ENV=test& jest --runInBand",
-    "dev": "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts",
+    "start": "node dist/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -44,6 +49,7 @@
     "@types/uuid": "^8.3.4",
     "@types/validator": "^13.7.2",
     "jest": "^28.1.1",
+    "passport-mock-strategy": "^2.0.0",
     "ts-jest": "^28.0.4"
   }
 }

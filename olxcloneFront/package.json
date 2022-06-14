@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "postinstall": "tsc && vite build",
     "preview": "vite preview",
     "test": "set NODE_ENV=test& jest --runInBand"
   },
