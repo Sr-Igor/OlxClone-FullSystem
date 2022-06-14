@@ -20,7 +20,7 @@ type PropsChildren = {
 }
 
 const initialData: State = {
-    userImage: "/public/images/default-profile.jpg"
+    userImage: "/images/default-profile.jpg"
 }
 
 // Context 

@@ -172,7 +172,7 @@ export const EditP = () => {
 
         const formData = new FormData() // Create FormData
         formData.append("state", statePd)
-        formData.append("cat", cat)
+        formData.append("category", cat)
         formData.append("title", title)
         formData.append("priceNegotiable", priceNeg.toString())
         formData.append("description", description)

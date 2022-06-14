@@ -19,7 +19,7 @@ import { AdItem } from "../../components/partials/AdItem"
 import { StateList, CategoryList, ItemsList } from "../../types/MainTypes"
 
 // Timer for search Request (created out component for disable loop )
-let timer: number
+let timer: NodeJS.Timeout
 
 export const ListAds = () => {
 
@@ -99,7 +99,7 @@ export const ListAds = () => {
             }
             navigate(`?${queryString.join("&")}`, { replace: true })
         
-       timer = setTimeout(()=> {
+      timer = setTimeout(()=> {
             getAdsList()
         },2000)
     }, [q, cat, stateUser, currentPage])

@@ -57,10 +57,11 @@ const apiFetchPost = async (endpoint: string, body: FetchPost) => {
 
 const apiFetchGet = async (endpoint: string, query?: FetchGet ) => {
     let token = Cookie.get("token")
+    
     const res = await fetch(`${BASEAPI+endpoint}?${qs.stringify(query)}`, {
         method: "GET",
         headers: {
-            'Authorization': `Bearer ${(token ? token : '')}`
+            'Authorization': `Bearer ${token}`
         },
     })
     const json = await res.json()
@@ -77,7 +78,7 @@ const apiFecthFile = async (endpoint: string, body?: FormData) => {
     const res = await fetch(BASEAPI+endpoint, {
         method: "POST",
         headers: {
-            'Authorization': `Bearer ${(token ? token : '')}`
+            'Authorization': `Bearer ${token}`
         },
         body
     })

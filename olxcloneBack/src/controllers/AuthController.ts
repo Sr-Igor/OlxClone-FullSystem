@@ -3,8 +3,10 @@ import { validationResult, matchedData } from 'express-validator'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import { generateToken } from '../config/passport'
-const User = require("../models/user")
-const State = require("../models/state")
+// const User = require("../models/user")
+// const State = require("../models/state")
+import * as MainServices from "../services/MainServices"
+import * as UserServices from "../services/UserServices"
 
 export const singIn = async (req: Request, res: Response) => {
     // Verify Errors
@@ -15,29 +17,15 @@ export const singIn = async (req: Request, res: Response) => {
     };
     const data = matchedData(req)
 
-    // Verify User for Email
-    const user = await User.findOne({email: data.email})
-    if(!user) { 
-        res.status(400)
-        res.json({error: "E-mail e/ou senha incorreto(s)"})
-        return 
-    }
+    const result = await UserServices.singInUser(data)
 
-    // Verify User for password
-    const match = await bcrypt.compare(data.password, user.passwordHash)
-    if(!match) {
+    if(result instanceof Error){
         res.status(400)
-        res.json({error: "E-mail e/ou senha incorreto(s)"})
+        res.json({error: result.message})
         return
     }
-
-    //Generate Token 
-    const token = generateToken(data)
-
-    // Save new Token
-    user.token = token 
-    await user.save()
-    res.json({token, email: data.email})
+   
+    res.json({token: result, email: data.email})
 }
 
 export const singUp = async (req: Request, res: Response) => {
@@ -48,51 +36,14 @@ export const singUp = async (req: Request, res: Response) => {
         return
     };
     const data = matchedData(req)
+    const result = await UserServices.createUser(data)
 
-    // Verify existent user
-    const user = await User.findOne({
-        email: data.email
-    })
-    if(user){
+    if(result instanceof Error){
         res.status(400)
-        res.json({
-            error: {email:{msg: "E-mail já registrado"}}
-        })
+        res.json({error: result.message})
         return
     }
-
-    // Verify available State
-    const stateItem = await State.findById(data.state)
-    if(mongoose.Types.ObjectId.isValid(data.state) && data.state){
-        if(!stateItem){
-            res.status(400)
-            res.json({
-                error: {state:{msg: "Estado inválido"}}
-            })
-            return
-        }
-    } else {
-        res.status(400)
-        res.json({
-            error: {state:{msg: "Código de estado inválido"}}
-        })
-    }
-
-    // Crypt password
-    const passwordHash = await bcrypt.hash(data.password, 10)
-
-    // Generate Token
-    const token = generateToken(data)
-
-    // Create User
-    const newUser = new User({
-        name: data.name,
-        email: data.email,
-        passwordHash,
-        token,
-        state: data.state
-    })
-    await newUser.save()
+  
     res.status(201)
-    res.json({status: true, token})
+    res.json({status: true, token: result})
 }

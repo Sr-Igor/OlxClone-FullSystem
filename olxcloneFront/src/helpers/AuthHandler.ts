@@ -3,6 +3,7 @@ import Cookie from 'js-cookie'
 
 export const isLogged = () => {
     let token = Cookie.get("token")
+    
     if(token){
         let email = localStorage.getItem("email")
         return({logged: true, email})

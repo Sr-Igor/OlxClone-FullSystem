@@ -147,6 +147,7 @@ export const ProductPage = () => {
         navigate("/")
     }
 
+    console.log(pdInfo)
     return(
         <PageContainer>
             <C.Warning display={displayModal}>
