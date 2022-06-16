@@ -29,6 +29,7 @@ export const singIn = async (req: Request, res: Response) => {
 }
 
 export const singUp = async (req: Request, res: Response) => {
+    console.log("email em Controller", req.body.email)
     // Verify Errors
     const errors = validationResult(req)
     if(!errors.isEmpty()){

@@ -11,7 +11,8 @@ export const AuthValidator = {
         },
         email: {
             isEmail: true,
-            normalizeEmail: true,
+            // normalizeEmail: true,
+            toLowerCase: true,
             errorMessage: "E-mail inválido"
         }, 
         password: {
@@ -28,7 +29,8 @@ export const AuthValidator = {
     signIn: checkSchema({
         email: {
             isEmail: true,
-            normalizeEmail: true,
+            // normalizeEmail: true,
+            toLowerCase: true,
             errorMessage: "E-mail inválido"
         },
         password: {

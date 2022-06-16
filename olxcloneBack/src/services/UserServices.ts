@@ -81,6 +81,7 @@ export const updateUser = async (token: string|undefined, data:Record<string, an
 }
 
 export const createUser = async (data:Record<string, any>) => {
+    console.log("email em serivces", data.email)
   // Verify existent user
   const user = await User.findOne({email: data.email})
   if(user){
