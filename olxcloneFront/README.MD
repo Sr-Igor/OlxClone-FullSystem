@@ -20,7 +20,9 @@
     text-mask-addons
 
 #### Aviso Importante 
-    A documentação do VITE para deploy no HEROKU está obsoleta e não apresentou bom funcionamento, devido a circunstância o projeto foi refatorado para CRATE-REACT-APP e a realização do deploy em FrontEnd, ocorreu através do mesmo. Você pode ter acesso ao repositório de deploy através do link: 
+    A documentação do VITE para deploy no HEROKU está obsoleta e não apresentou bom funcionamento, 
+    devido a circunstância o projeto foi refatorado para CRATE-REACT-APP e a realização do deploy em FrontEnd, 
+    ocorreu através do mesmo. Você pode ter acesso ao repositório de deploy através do link: 
     https://github.com/Sr-Igor/olx-Frontend
 
     Algumas correções foram aplicadas diretamente o repositório original de deploy
