@@ -21,6 +21,7 @@ const initialItem = {
     id: "",
     title: "",
     category: "",
+    categoryName: "",
     price: 0,
     dateCreated: new Date(),
     priceNegotiable: false,
@@ -170,7 +171,7 @@ export const ProductPage = () => {
             <C.BreadChumb> 
                 <Link to="/">Home</Link>/
                 <Link to={`/ads?state=${pdInfo.state}`}>{pdInfo.state}</Link>/
-                <Link to={`/ads?state=${pdInfo.state}&cat=${pdInfo.category}`}>{pdInfo.category}</Link>/
+                <Link to={`/ads?state=${pdInfo.state}&cat=${pdInfo.category}`}>{pdInfo.categoryName}</Link>/
                 <div>{pdInfo.title}</div>
             </C.BreadChumb>
 

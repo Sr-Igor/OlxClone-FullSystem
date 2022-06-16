@@ -32,9 +32,7 @@ type FetchGet = {
     offset?: number
 }
 
-
-
-const BASEAPI = 'http://localhost:3001'
+const BASEAPI = import.meta.env.VITE_BASE
 
 const apiFetchPost = async (endpoint: string, body: FetchPost) => {
     const res = await fetch(BASEAPI+endpoint, {

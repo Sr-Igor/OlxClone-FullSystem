@@ -213,6 +213,7 @@ export const findAd = async (id: string, other: string|null) => {
         views: item.views,
         images,
         category: category.slug,
+        categoryName: category.name,
         state: stateProduct.name,
         status: item.status,
         userInfo: {

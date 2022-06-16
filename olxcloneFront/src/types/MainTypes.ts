@@ -14,6 +14,7 @@ export type SingleItem = {
     id: string
     title: string,
     category: string,
+    categoryName: string,
     price: number,
     dateCreated: Date,
     priceNegotiable: boolean,

@@ -118,7 +118,7 @@ export const SearchArea = styled.div<{seeCat: string}>`
         .categoryList {
             flex-wrap: wrap;
             justify-content: center;
-            height: ${props => props.seeCat == "none"?"1px":"300px"};
+            height: ${props => props.seeCat == "none"?"1px":"500"};
             transition: all ease 0.5s;
 
             .categoryItem {
