@@ -33,5 +33,4 @@ export const s3Delete = async (file: Express.Multer.File) => {
     }
 
    await s3.deleteObject(params).promise()
-
 }
