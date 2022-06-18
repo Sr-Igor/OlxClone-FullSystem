@@ -16,7 +16,7 @@ export const info = async (req: Request, res: Response) => {
 
     let image
     if(user.image && user.image !== ""){
-        image = `${process.env.BASE}/media/${user.image}.jpg`
+        image = `${process.env.AWS_BASE_ROUTE_IMAGE}/media/${user.image}.jpg`
     }else{
         image = ""
     }
