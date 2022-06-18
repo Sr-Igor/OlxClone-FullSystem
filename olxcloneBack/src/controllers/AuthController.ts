@@ -1,11 +1,5 @@
 import {Request, Response} from 'express'
 import { validationResult, matchedData } from 'express-validator'
-import mongoose from 'mongoose'
-import bcrypt from 'bcrypt'
-import { generateToken } from '../config/passport'
-// const User = require("../models/user")
-// const State = require("../models/state")
-import * as MainServices from "../services/MainServices"
 import * as UserServices from "../services/UserServices"
 
 export const singIn = async (req: Request, res: Response) => {
@@ -29,7 +23,6 @@ export const singIn = async (req: Request, res: Response) => {
 }
 
 export const singUp = async (req: Request, res: Response) => {
-    console.log("email em Controller", req.body.email)
     // Verify Errors
     const errors = validationResult(req)
     if(!errors.isEmpty()){

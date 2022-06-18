@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 import { Request } from "express"
 import sharp from 'sharp'
 import { unlink } from 'fs'
+import { s3Delete, s3Upload } from '../config/aws'
 
 
 export const findUserEmail = async (email: string) => {
@@ -62,6 +63,7 @@ export const updateUser = async (token: string|undefined, data:Record<string, an
             .resize(500, 500)
             .toFormat("jpeg")
             .toFile(`./public/media/${file.filename}.jpg`)
+            // s3Upload(file)
             unlink(file.path, (err) => {
                 if (err) throw err;
             })
@@ -69,9 +71,18 @@ export const updateUser = async (token: string|undefined, data:Record<string, an
 
     if(data.delProfileImage){
         let user = await User.findOne({token})
-        unlink(`./public/media/${user.image}.jpg`, (err) => {
-            if (err) throw err;
-        })
+        // s3Delete(user.image)
+
+        // Controller crash Heroku 
+        // This function is commented to avoid the crash of Heroku, 
+        //which does not store files permanently and when deleted cause instability on the server
+
+        //_________________________________________________________________
+        // unlink(`./public/media/${user.image}.jpg`, (err) => {
+        //     if (err) throw err;
+        // })
+        //_________________________________________________________________
+
         updates.image = ""
     }
     
@@ -81,7 +92,6 @@ export const updateUser = async (token: string|undefined, data:Record<string, an
 }
 
 export const createUser = async (data:Record<string, any>) => {
-    console.log("email em serivces", data.email)
   // Verify existent user
   const user = await User.findOne({email: data.email})
   if(user){

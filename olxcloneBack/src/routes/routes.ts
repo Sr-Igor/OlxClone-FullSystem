@@ -8,7 +8,7 @@ import { privateRoute } from '../config/passport'
 import { UserValidator } from '../validators/UserValidator'
 import multer from 'multer'
 
-const upload = multer({
+export const upload = multer({
     dest: "./tmp",
     fileFilter: (req, file, cb) => {
         const allowed: string[] = ['image/jpg', 'image/jpeg', 'image/png']

@@ -7,6 +7,7 @@ import { unlink } from 'fs/promises'
 import sharp from 'sharp'
 import {Request} from 'express'
 import fs from "fs"
+import { s3Delete, s3Upload } from "../config/aws"
 
 type Data = {
     title: string
@@ -63,7 +64,7 @@ export const AddAds = async (data: Data, req: Request ) => {
             return new Error("Código de categoria inválido" )
         }
     }
-
+    
     // Images 
     let images: string[]= []
     if(req.files){
@@ -74,6 +75,7 @@ export const AddAds = async (data: Data, req: Request ) => {
             // .resize()
             .toFormat("jpeg")
             .toFile(`./public/media/${item.filename}.jpg`)
+            // await s3Upload(item)
             await unlink (item.path)
         })
     }else {
@@ -120,7 +122,7 @@ export const findCustomAds = async (
         if(s){options.state = s._id}
     }
 
-    const adsTotal = await Ads.find()
+    const adsTotal = await Ads.find(options)
     total = adsTotal.length
 
     let adsData = await Ads.find(options)
@@ -132,7 +134,7 @@ export const findCustomAds = async (
     for (let i in adsData){
         let image = ""
         if(adsData[i].images[0]){
-            image = `${process.env.BASE}/media/${adsData[i].images[0]}.jpg`
+            image = `${process.env.AWS_BASE_ROUTE_IMAGE}/media/${adsData[i].images[0]}.jpg`
         }else {
             image = `${process.env.BASE}/media/default-img.jpg`
         }
@@ -161,7 +163,7 @@ export const findAd = async (id: string, other: string|null) => {
 
     let images: string[] = []
     for (let i in item.images){
-        images.push(`${process.env.BASE}/media/${item.images[i]}.jpg`) 
+        images.push(`${process.env.AWS_BASE_ROUTE_IMAGE}/media/${item.images[i]}.jpg`) 
     }
     if(images.length == 0){
         images.push(`${process.env.BASE}/media/default-img.jpg`)
@@ -174,7 +176,7 @@ export const findAd = async (id: string, other: string|null) => {
 
     let imageUser
     if(userInfo.image !== ""){
-        imageUser = `${process.env.BASE}/media/${userInfo.image}.jpg`
+        imageUser = `${process.env.AWS_BASE_ROUTE_IMAGE}/media/${userInfo.image}.jpg`
     }else{
         imageUser = ""
     }
@@ -187,7 +189,7 @@ export const findAd = async (id: string, other: string|null) => {
             if(otherProducts[i]._id.toString() !== item._id.toString()){
                 let image = ""
                 if(otherProducts[i].images[0]){
-                    image = `${process.env.BASE}/media/${otherProducts[i].images[0]}.jpg`
+                    image = `${process.env.AWS_BASE_ROUTE_IMAGE}/media/${otherProducts[i].images[0]}.jpg`
                 }else {
                     image = `${process.env.BASE}/media/default-img.jpg`
                 }
@@ -301,6 +303,7 @@ export const updateAds = async (id: string, data: Data, req: Request) => {
             .resize(500)
             .toFormat("jpeg")
             .toFile(`./public/media/${item.filename}.jpg`)
+            // await s3Upload(item)
             await unlink (item.path) 
         })
     }
@@ -315,7 +318,7 @@ export const updateAds = async (id: string, data: Data, req: Request) => {
         let formatLink: string[] = []
         for (let i in delImages){
             formatLink.push(
-                delImages[i].replace(`${process.env.BASE}/media/`, "").replace(".jpg", "")
+                delImages[i].replace(`${process.env.AWS_BASE_ROUTE_IMAGE}/media/`, "").replace(".jpg", "")
             )
         }
 
@@ -323,9 +326,17 @@ export const updateAds = async (id: string, data: Data, req: Request) => {
             if(!formatLink.includes(itemImages[i])){
                 editImages.push(itemImages[i])
             }else{
-                fs.unlink(`./public/media/${itemImages[i]}.jpg`, (err) => {
-                    if (err) throw err;
-                });
+                // s3Delete(itemImages[i])
+
+                // Controller crash Heroku 
+                // This function is commented to avoid the crash of Heroku, 
+                //which does not store files permanently and when deleted cause instability on the server
+
+                //_________________________________________________________________
+                // fs.unlink(`./public/media/${itemImages[i]}.jpg`, (err) => {
+                //     if (err) throw err;
+                // });
+                //__________________________________________________________________
             }
         } 
 
@@ -352,6 +363,7 @@ export const deleteAds = async (id: string) => {
 
     if(ads.images){
         for(let i in ads.images){
+            // s3Delete(ads.images[i])
             fs.unlink(`./public/media/${ads.images[i]}.jpg`, (err) => {
                 if (err) throw err;
             });
