@@ -11,7 +11,7 @@
     * O arquivo `.env.example` foi inserido, para definir as variáveis de ambiente 
 
 #### Informações sobre o Banco de Dados 
-    * **Mongo DB** é o bando de dados para desenvolvimento, você pode usar Compass ou Atlas para realizar as coneções 
+    * **Mongo DB** é o banco de dados para desenvolvimento, você pode usar Compass ou Atlas para realizar as coneções 
 
 #### Bibliotecas 
     bcrypt 
